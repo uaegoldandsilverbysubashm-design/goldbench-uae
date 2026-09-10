@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="light dark">
+<title>GoldBench UAE - Live Precious Metals Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&display=swap');
+/* ═══════════════════════════════════════════════════
+   GoldBench UAE — "jeweller's bench" precision terminal
+   Palette derived from the material: fine gold, sterling
+   silver, forged charcoal. Warm-lit surfaces, hallmark
+   accents. All variable names preserved for the JS layer.
+   ═══════════════════════════════════════════════════ */
+/* ═══ DARK (default — forged charcoal + fine gold) ═══ */
+:root{
+  --a:#E7BE5A;--a2:#FBE29A;--a3:#9A7526;
+  --sv:#AEBECE;--sv2:#DCE6F0;--sv3:#6A7888;
+  --pt:#DADAD4;--pt3:#A0A0A0;--pd:#C6C8C4;--pd3:#888A88;
+  --bg0:#0B0A0C;--bg1:#151319;--bg2:#1C1922;--bg3:#252230;--bg4:#302C3C;
+  --br:#2A2634;--br2:#3C3750;
+  --tx:#FBF8FF;--tx2:#CFC9DE;--tx3:#948EAA;
+  --gn:#2FE08A;--rd:#FF5B6E;--aed:#F0C868;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 8px 30px rgba(0,0,0,.38);
+  --sh-gold:0 6px 24px rgba(231,190,90,.16);
+  --glass:rgba(15,13,20,.72);
+  --ins:#C9A227;--ins2:#E8C547;--ins3:#FFF3CC;
+  --warn:#F6A623;--warn-bg:rgba(246,166,35,.12);
+  --gold-grad:linear-gradient(135deg,#FBE29A 0%,#E7BE5A 42%,#9A7526 100%);
+  --sheen:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 46%);
+  --hair:rgba(231,190,90,.22);
+}
+@media(prefers-color-scheme:light){:root{
+  --a:#9A751E;--a2:#7A5A12;--a3:#D4AA4E;
+  --sv:#3A4858;--sv2:#26313F;--sv3:#90A0B0;
+  --pt:#4A4A4A;--pt3:#888;--pd:#585858;--pd3:#999;
+  --bg0:#EFEAE1;--bg1:#FFFFFF;--bg2:#F7F4EE;--bg3:#EEE9E0;--bg4:#E4DDD0;
+  --br:#E0D8CA;--br2:#CFC5B2;
+  --tx:#1A140A;--tx2:#453B2C;--tx3:#7A6E5A;
+  --gn:#0A7A3F;--rd:#C42638;--aed:#8A6A1E;
+  --sh:0 1px 2px rgba(80,60,20,.06),0 10px 28px rgba(90,70,30,.08);
+  --sh-gold:0 8px 26px rgba(154,117,30,.14);
+  --glass:rgba(255,253,248,.82);
+  --ins:#8A6A1E;--ins2:#C9A227;--ins3:#FFF8E1;
+  --warn:#9A6A0A;--warn-bg:rgba(154,106,10,.1);
+  --gold-grad:linear-gradient(135deg,#B78F2E 0%,#9A751E 48%,#6E5210 100%);
+  --sheen:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,0) 52%);
+  --hair:rgba(154,117,30,.28);
+}}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:'Sora',sans-serif;background:var(--bg0);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  transition:background .3s,color .3s;position:relative;
+}
+/* Ambient forge-light: a warm gold glow bleeding from the top,
+   settling into charcoal. Fixed so it reads as atmosphere, not content. */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(120% 60% at 50% -8%,rgba(231,190,90,.14),transparent 60%),
+    radial-gradient(90% 50% at 92% 4%,rgba(174,190,206,.06),transparent 55%),
+    radial-gradient(70% 40% at 0% 12%,rgba(231,190,90,.05),transparent 60%);
+}
+.mn{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.app{max-width:780px;margin:0 auto;padding:0 14px 56px}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px;border-radius:4px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* ═══ HEADER ═══ */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 4px;margin-bottom:2px;
+  background:linear-gradient(180deg,var(--bg0) 62%,transparent);
+  border-bottom:1px solid var(--br);
+  backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+}
+.hdr::after{content:'';position:absolute;left:4px;right:4px;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--hair),transparent)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.mark{
+  width:38px;height:38px;border-radius:11px;
+  background:var(--gold-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#1a1206;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:-.5px;
+  box-shadow:0 3px 12px rgba(231,190,90,.34),inset 0 1px 1px rgba(255,255,255,.55),inset 0 -2px 4px rgba(120,86,20,.4);
+  position:relative;
+}
+.mark::after{content:'';position:absolute;inset:0;border-radius:11px;background:linear-gradient(150deg,rgba(255,255,255,.5),transparent 42%)}
+.hdr-t{font-size:16px;font-weight:800;letter-spacing:2.5px;line-height:1}
+.hdr-t span{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-sub{font-size:8px;letter-spacing:2.5px;color:var(--tx3);font-weight:700;text-transform:uppercase;margin-top:4px}
+.hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pill{
+  display:flex;align-items:center;gap:6px;padding:5px 11px;
+  background:var(--bg2);border:1px solid var(--br);border-radius:999px;
+  font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;
+  cursor:default;white-space:nowrap;box-shadow:var(--sh);
+}
+.pill.live{color:var(--gn)}
+.pill.live.stale{color:var(--warn)}
+.pill.live.off{color:var(--rd)}
+.pill .d{width:6px;height:6px;border-radius:50%;background:var(--gn);animation:p 2s ease-in-out infinite;box-shadow:0 0 6px var(--gn)}
+.pill.live.stale .d{background:var(--warn);box-shadow:0 0 6px var(--warn);animation:none}
+.pill.live.off .d{background:var(--rd);box-shadow:0 0 6px var(--rd);animation:none}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(47,224,138,.5)}50%{box-shadow:0 0 0 5px rgba(47,224,138,0)}}
+.pill.time{color:var(--tx2)}
+/* ═══ DATA SOURCE BANNER ═══ */
+.src-banner{
+  display:none;align-items:flex-start;gap:10px;
+  background:var(--warn-bg);border:1px solid var(--warn);border-radius:12px;
+  padding:11px 13px;margin:10px 0;font-size:10.5px;line-height:1.5;color:var(--tx2);
+}
+.src-banner.show{display:flex}
+.src-banner .ic{flex-shrink:0;font-size:14px;line-height:1}
+.src-banner b{color:var(--warn)}
+#srcBannerText{flex:1 1 180px;min-width:0}
+.src-banner button{
+  background:none;border:1px solid var(--warn);color:var(--warn);
+  border-radius:7px;padding:4px 11px;font-size:9px;font-weight:700;
+  cursor:pointer;flex-shrink:0;margin-left:auto;font-family:'Sora',sans-serif;
+  transition:background .2s,color .2s;
+}
+.src-banner button:hover{background:var(--warn);color:var(--bg0)}
+/* ═══ TICKER ═══ */
+.tkr{margin:10px 0;border-radius:12px;overflow:hidden;border:1px solid var(--br);background:var(--bg1);min-height:48px;box-shadow:var(--sh)}
+.tkr iframe{background:var(--bg1)!important}
+/* ═══ PANEL ═══ */
+.panel{
+  background:linear-gradient(180deg,var(--bg1),var(--bg1)),var(--sheen);
+  background-blend-mode:normal;
+  border:1px solid var(--br);border-radius:16px;
+  padding:16px;margin-bottom:12px;box-shadow:var(--sh);position:relative;
+}
+.panel::before{content:'';position:absolute;inset:0;border-radius:16px;background:var(--sheen);pointer-events:none}
+.panel-title{font-size:10px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:14px;height:2px;border-radius:2px;background:var(--gold-grad)}
+.sel-row{display:flex;gap:10px}
+.sel-col{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.sel-col label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3)}
+.sel-col-label{display:block;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
+.sel-col select{
+  padding:11px 34px 11px 13px;border-radius:10px;border:1px solid var(--br2);
+  background:var(--bg2);color:var(--tx);font-family:'Sora',sans-serif;
+  font-size:14px;font-weight:600;outline:none;cursor:pointer;width:100%;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23E7BE5A' viewBox='0 0 16 16'%3E%3Cpath d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  transition:border-color .2s,box-shadow .2s;
+}
+.sel-col select:hover{border-color:var(--a3)}
+.sel-col select:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(231,190,90,.16)}
+/* ═══ BREAKDOWN ═══ */
+.bd-label{font-size:12px;font-weight:700;color:var(--tx2);margin:14px 0 10px 2px;letter-spacing:.3px}
+.bd-label strong{font-weight:800;color:var(--tx)}
+.bd-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.bd-c{
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  border:1px solid var(--br);border-radius:14px;
+  padding:15px 12px;position:relative;overflow:hidden;text-align:center;
+  transition:transform .16s ease,border-color .2s,box-shadow .2s;
+}
+.bd-c::before{content:'';position:absolute;inset:0;background:var(--sheen);pointer-events:none}
+.bd-c:hover{transform:translateY(-2px);box-shadow:var(--sh-gold);border-color:var(--br2)}
+.bd-c:active{transform:scale(.98)}
+.bd-c::after{content:'';position:absolute;top:0;left:14%;right:14%;height:2px;border-radius:0 0 3px 3px}
+.bd-c.gc::after{background:var(--gold-grad)}.bd-c.sc::after{background:linear-gradient(90deg,var(--sv3),var(--sv2))}
+.bd-c.pc::after{background:var(--pt)}.bd-c.dc::after{background:var(--pd)}
+.bd-c .k{font-size:23px;font-weight:800;line-height:1;letter-spacing:-.5px}
+.bd-c .k.gt{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.bd-c .k.st{color:var(--sv2)}
+.bd-c .k.pt{color:var(--pt)}.bd-c .k.dt{color:var(--pd)}
+.bd-c .pu{font-size:9.5px;color:var(--tx3);margin:4px 0 9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.bd-c .pr{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;line-height:1.1;letter-spacing:-.5px}
+.bd-c .pr .u{font-size:10px;color:var(--aed);font-weight:600;margin-left:3px}
+.bd-c .pg{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--tx3);margin-top:5px;font-weight:600}
+/* ═══ DIVIDER ═══ */
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--br) 15%,var(--br) 85%,transparent);margin:6px 0 16px}
+/* ═══ TROY OZ ═══ */
+.oz-sec-title{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx2);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.oz-sec-title::before{content:'';width:16px;height:2px;border-radius:2px;background:var(--gold-grad)}
+.oz{
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  border:1px solid var(--br);border-radius:14px;
+  padding:16px 18px 16px 20px;margin-bottom:10px;position:relative;overflow:hidden;
+  box-shadow:var(--sh);transition:border-color .2s,box-shadow .2s;
+}
+.oz::before{content:'';position:absolute;inset:0;background:var(--sheen);pointer-events:none}
+.oz:hover{box-shadow:var(--sh),var(--sh-gold)}
+.oz::after{content:'';position:absolute;top:0;left:0;bottom:0;width:4px}
+.oz.go::after{background:var(--gold-grad);box-shadow:0 0 16px rgba(231,190,90,.45)}
+.oz.si::after{background:linear-gradient(180deg,var(--sv2),var(--sv3))}
+.oz.pt::after{background:var(--pt)}.oz.pd::after{background:var(--pd)}
+.oz .lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx2);margin-bottom:7px;padding-left:2px;display:flex;justify-content:space-between;align-items:center}
+.oz .lbl .src-tag{font-size:7px;letter-spacing:.5px;color:var(--tx3);font-weight:600;text-transform:none;padding:2px 6px;border:1px solid var(--br2);border-radius:6px;background:var(--bg2)}
+.oz .aed{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:700;line-height:1.1;letter-spacing:-1px}
+.oz .aed .c{font-size:14px;color:var(--aed);font-weight:500;margin-left:5px;letter-spacing:0}
+.oz .aed.fl{animation:fl .45s ease-out}
+@keyframes fl{0%{opacity:.35;filter:brightness(1.6)}50%{opacity:1}}
+.oz .usd{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--tx2);font-weight:700;margin-top:4px}
+.oz .det{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--tx3);font-weight:600;margin-top:3px}
+.oz .age-tag{display:none;font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--warn);margin-top:6px}
+.oz.is-stale .aed{opacity:.5}
+.oz.is-stale .age-tag{display:block}
+.oz.is-stale::after{background:var(--warn)!important;box-shadow:none!important}
+.oz .errd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--rd);font-weight:600;padding:4px 0}
+.sk{display:inline-block;width:130px;height:30px;border-radius:6px;background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shm 1.5s ease-in-out infinite;vertical-align:middle}
+@keyframes shm{to{background-position:-200% 0}}
+/* ═══ AED QUICK STRIP ═══ */
+.qs{display:flex;gap:6px;margin:8px 0 12px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.qs::-webkit-scrollbar{display:none}
+.qs-item{flex:1;min-width:62px;background:linear-gradient(180deg,var(--bg1),var(--bg2));border:1px solid var(--br);border-radius:12px;padding:10px 4px;text-align:center;box-shadow:var(--sh);transition:transform .15s,border-color .2s}
+.qs-item:hover{transform:translateY(-2px);border-color:var(--br2)}
+.qs-k{font-size:9px;font-weight:800;color:var(--a);display:block;letter-spacing:1px;margin-bottom:4px}
+.qs-k.qs-sv{color:var(--sv2)}
+.qs-v{font-size:12.5px;font-weight:700;display:block;letter-spacing:-.3px}
+/* ═══ MARKET INDICATORS ═══ */
+.mi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mi-card{background:linear-gradient(180deg,var(--bg1),var(--bg2));border:1px solid var(--br);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--sh);transition:transform .15s,border-color .2s}
+.mi-card:hover{transform:translateY(-2px);border-color:var(--br2)}
+.mi-lbl{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
+.mi-val{font-size:21px;font-weight:700;color:var(--tx);letter-spacing:-.5px}
+.mi-sub{font-size:8px;color:var(--tx3);margin-top:3px}
+/* ═══ WEIGHT CONVERTER ═══ */
+.wc-results{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wc-item{background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center}
+.wc-unit{font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px}
+.wc-val{font-size:13px;font-weight:700;color:var(--tx);font-family:'IBM Plex Mono',monospace}
+/* ═══ KARAT CALC + ALLOY ═══ */
+.kc-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:10px 13px;margin-bottom:6px}
+.kc-lbl{font-size:11px;font-weight:700;color:var(--tx2)}
+.kc-val{font-size:14px;font-weight:700;color:var(--tx);font-family:'IBM Plex Mono',monospace}
+.kc-gold{color:var(--a)!important}
+.kc-alloy{color:var(--sv2)!important}
+/* ═══ CALCULATOR ═══ */
+.calc-input{
+  padding:11px 13px;border-radius:10px;border:1px solid var(--br2);
+  background:var(--bg2);color:var(--tx);font-family:'IBM Plex Mono',monospace;
+  font-size:15px;font-weight:700;outline:none;width:100%;
+  transition:border-color .2s,box-shadow .2s;
+}
+.calc-input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(231,190,90,.16)}
+.mk-row{display:flex;gap:8px}
+.mk-sel{
+  padding:11px 30px 11px 11px;border-radius:10px;border:1px solid var(--br2);
+  background:var(--bg2);color:var(--tx);font-family:'Sora',sans-serif;
+  font-size:11px;font-weight:700;outline:none;cursor:pointer;flex:1.2;min-width:0;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23E7BE5A' viewBox='0 0 16 16'%3E%3Cpath d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  transition:border-color .2s,box-shadow .2s;
+}
+.mk-input{
+  padding:11px;border-radius:10px;border:1px solid var(--br2);
+  background:var(--bg2);color:var(--tx);font-family:'IBM Plex Mono',monospace;
+  font-size:15px;font-weight:700;outline:none;flex:1;min-width:0;
+  transition:border-color .2s,box-shadow .2s;
+}
+.mk-input:focus,.mk-sel:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(231,190,90,.16)}
+.calc-results{margin-top:18px;border-top:1px solid var(--br);padding-top:14px}
+.cr-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--br)}
+.cr-row:last-child{border-bottom:none}
+.cr-lbl{font-size:12px;font-weight:700;color:var(--tx2)}
+.cr-val{font-size:14px;font-weight:700;color:var(--tx)}
+.cr-row.cr-sub{padding-top:11px}
+.cr-row.cr-disc .cr-lbl{color:var(--gn);font-weight:800}
+.cr-row.cr-disc .cr-val{color:var(--gn);font-weight:800}
+.cr-row.cr-sub .cr-lbl,.cr-row.cr-sub .cr-val{color:var(--tx)}
+.cr-row.cr-vat .cr-lbl{color:var(--rd);font-weight:800}
+.cr-row.cr-vat .cr-val{color:var(--rd);font-weight:800}
+.cr-row.cr-total{padding:14px 0 4px;border-bottom:none;border-top:2px solid transparent;border-image:var(--gold-grad) 1;margin-top:4px}
+.cr-row.cr-total .cr-lbl{font-size:14px;font-weight:800;color:var(--a);letter-spacing:1px}
+.cr-row.cr-total .cr-val{font-size:23px;font-weight:800;color:var(--a);letter-spacing:-.5px}
+.reset-btn{
+  padding:6px 15px;border-radius:8px;border:1px solid var(--rd);
+  background:transparent;color:var(--rd);font-family:'IBM Plex Mono',monospace;
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.reset-btn:hover{background:var(--rd);color:#fff}
+.reset-btn:active{transform:scale(.96)}
+/* ═══ REFRESH + BUTTONS ═══ */
+.ref{display:flex;align-items:center;gap:10px;margin:6px 0 16px;flex-wrap:wrap}
+.ref-b{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
+  background:var(--bg1);border:1px solid var(--br2);color:var(--tx2);
+  border-radius:10px;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:var(--sh);
+}
+.ref-b:hover{border-color:var(--a);color:var(--tx)}
+.ref-b:active{transform:scale(.97)}
+.ref-b:disabled{opacity:.55;cursor:wait}
+.ref-b.ld .sp{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ref-b .sp{display:inline-block}
+.ref .at{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--tx3);letter-spacing:.5px}
+/* ═══ SECTIONS ═══ */
+.sec{margin-bottom:18px}
+.sec-t{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--tx2);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.sec-t::before{content:'';width:16px;height:2px;border-radius:2px;background:var(--gold-grad);flex-shrink:0}
+/* header rows that carry a Reset button keep the accent tick on the label only */
+.sec-t[style*="space-between"]::before{display:none}
+.sec-t[style*="space-between"] > span:first-child{display:inline-flex;align-items:center;gap:9px}
+.sec-t[style*="space-between"] > span:first-child::before{content:'';width:16px;height:2px;border-radius:2px;background:var(--gold-grad);flex-shrink:0}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cb{background:var(--bg1);border:1px solid var(--br);border-radius:14px;overflow:hidden;box-shadow:var(--sh)}
+.tradingview-widget-copyright{display:none!important}
+/* ═══ ECONOMIC CALENDAR ═══ */
+#ecoCalWrap{padding:12px;min-height:560px}
+.ecw-copyright{font-size:8px;color:var(--tx3);text-align:right;margin-top:8px;letter-spacing:.2px;font-family:'Sora',sans-serif}
+.ecw-copyright a{color:var(--tx3);text-decoration:none}
+.ecw-copyright a:hover{color:var(--a)}
+/* ═══ QUOTES OVERVIEW (MetaTrader/MQL5) ═══ */
+#quotesWrap{padding:12px;min-height:220px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#quotesWidgetOverview{width:100%;max-width:100%}
+#quotesWidgetOverview iframe{width:100%!important;max-width:100%!important;border:0!important}
+.qw-copyright{font-size:8px;color:var(--tx3);text-align:right;margin-top:8px;letter-spacing:.2px;font-family:'Sora',sans-serif}
+.qw-copyright a{color:var(--tx3);text-decoration:none}
+.qw-copyright a:hover{color:var(--a)}
+@media(max-width:420px){
+  #quotesWrap{padding:10px}
+}
+/* ═══ FOOTER ═══ */
+.ft{text-align:center;padding:18px 6px;margin-top:10px;border-top:1px solid var(--br);font-size:9px;color:var(--tx3);line-height:1.7;font-family:'IBM Plex Mono',monospace;font-weight:500}
+/* ═══ PDF QUOTATION ═══ */
+.q-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.pdf-btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+  margin-top:12px;padding:13px 16px;border:none;border-radius:12px;cursor:pointer;
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:800;letter-spacing:.4px;
+  color:#1a1206;background:var(--gold-grad);
+  box-shadow:0 4px 16px rgba(231,190,90,.28),inset 0 1px 1px rgba(255,255,255,.45);
+  transition:transform .15s,box-shadow .2s,opacity .2s;
+}
+.pdf-btn:hover{box-shadow:0 6px 22px rgba(231,190,90,.42),inset 0 1px 1px rgba(255,255,255,.5)}
+.pdf-btn:active{transform:scale(.98)}
+.pdf-btn:disabled{opacity:.6;cursor:wait}
+.pdf-ic{flex-shrink:0}
+.q-hint{font-size:9px;color:var(--tx3);text-align:center;margin-top:7px;letter-spacing:.3px}
+/* live-rate "rate card" bar */
+.rc-bar{display:flex;gap:8px;align-items:stretch;margin:2px 0 16px}
+.rc-bar input{flex:1;min-width:0}
+.pdf-btn-sm{width:auto;margin-top:0;padding:11px 18px;white-space:nowrap;border-radius:10px;font-size:12px}
+@media(max-width:420px){.rc-bar{flex-direction:column}.pdf-btn-sm{width:100%}}
+/* toast */
+.gb-toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);
+  background:var(--bg3);color:var(--tx);border:1px solid var(--br2);
+  padding:11px 16px;border-radius:10px;font-size:12px;font-weight:600;
+  box-shadow:var(--sh);z-index:9999;opacity:0;pointer-events:none;max-width:90vw;text-align:center;
+  transition:opacity .25s,transform .25s;
+}
+.gb-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:420px){.q-fields{grid-template-columns:1fr}}
+/* ═══ QUICK NAV ═══ */
+.qnav{
+  position:sticky;top:0;z-index:99;display:flex;gap:6px;overflow-x:auto;
+  padding:8px 2px;margin:0 -2px 4px;scrollbar-width:none;
+  background:linear-gradient(180deg,var(--bg0) 75%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.qnav::-webkit-scrollbar{display:none}
+.qnav a{
+  flex-shrink:0;padding:7px 13px;border-radius:999px;background:var(--bg2);
+  border:1px solid var(--br);color:var(--tx2);font-size:10.5px;font-weight:700;
+  text-decoration:none;letter-spacing:.3px;white-space:nowrap;transition:border-color .2s,color .2s;
+}
+.qnav a:hover{border-color:var(--a);color:var(--a)}
+.back-top{
+  position:fixed;right:16px;bottom:22px;z-index:200;width:42px;height:42px;
+  border-radius:50%;background:var(--gold-grad);border:none;color:#1a1206;
+  font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(231,190,90,.35);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  transform:translateY(8px);transition:opacity .2s,transform .2s;
+}
+.back-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+/* ═══ MARKET STATUS ═══ */
+.mkt-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.mkt-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;
+  font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+  background:rgba(47,224,138,.12);color:var(--gn);border:1px solid rgba(47,224,138,.35);
+}
+.mkt-pill .d{width:7px;height:7px;border-radius:50%;background:var(--gn);box-shadow:0 0 6px var(--gn);animation:p 2s ease-in-out infinite}
+.mkt-pill.closed{background:rgba(255,91,110,.12);color:var(--rd);border-color:rgba(255,91,110,.35)}
+.mkt-pill.closed .d{background:var(--rd);box-shadow:0 0 6px var(--rd);animation:none}
+.mkt-pill.brk{background:var(--warn-bg);color:var(--warn);border-color:rgba(246,166,35,.35)}
+.mkt-pill.brk .d{background:var(--warn);box-shadow:0 0 6px var(--warn);animation:none}
+.mkt-countdown{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--tx2);font-weight:600}
+.mkt-countdown b{color:var(--tx);font-weight:800}
+.mkt-clock{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--tx3);margin-bottom:14px}
+.mkt-break{
+  display:flex;align-items:center;gap:8px;background:var(--warn-bg);border:1px solid var(--warn);
+  border-radius:10px;padding:9px 12px;font-size:10.5px;color:var(--tx2);margin-bottom:14px;
+}
+.mkt-break b{color:var(--warn)}
+.thd-tt{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+.thd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px}
+.thd-c{
+  background:var(--bg2);border:1px solid var(--br);border-radius:10px;
+  padding:8px 4px;text-align:center;
+}
+.thd-c.off{opacity:.45}
+.thd-c.now{border-color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+.thd-d{font-size:8.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px}
+.thd-h{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--tx2);font-weight:600;line-height:1.3}
+.sess-card.active{border-color:var(--a);box-shadow:var(--sh),0 0 0 1px var(--a) inset}
+.sess-card.active .mi-lbl{color:var(--a)}
+.mkt-note{font-size:8.5px;color:var(--tx3);line-height:1.5;margin-top:10px}
+@media(max-width:420px){
+  .thd-grid{grid-template-columns:repeat(2,1fr)}
+  .thd-c:nth-child(5){grid-column:1 / -1}
+}
+.oz.cu::after{background:linear-gradient(180deg,#D98E5C,#8B4A24)}
+.oz .aed .u2{font-size:12px;color:var(--tx3);font-weight:600;margin-left:4px}
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:420px){
+  .app{padding:0 10px 40px}
+  .bd-c .k{font-size:19px}.bd-c .pr{font-size:17px}
+  .oz .aed{font-size:25px}
+  .cg{grid-template-columns:1fr}
+  .hdr{flex-direction:column;align-items:flex-start;gap:8px}
+  .hdr-r{justify-content:flex-start;width:100%}
+}
+@media(min-width:421px) and (max-width:768px){.cg{grid-template-columns:1fr}}
+@media(min-width:769px){.bd-g{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hdr">
+    <div class="hdr-l">
+      <div class="mark">Au</div>
+      <div>
+        <div class="hdr-t"><span>GOLD</span>BENCH UAE</div>
+        <div class="hdr-sub">by Subash M | live rates</div>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div class="pill live" id="livePill" title="Data freshness"><div class="d"></div><span id="liveS">...</span></div>
+      <div class="pill time" id="tsUp">--:--</div>
+    </div>
+  </header>
+  <nav class="qnav" aria-label="Quick navigation">
+    <a href="#secRates" onclick="return jumpTo(event,'secRates')">Rates</a>
+    <a href="#secMarket" onclick="return jumpTo(event,'secMarket')">Market Status</a>
+    <a href="#secCalc" onclick="return jumpTo(event,'secCalc')">Calculator</a>
+    <a href="#secTools" onclick="return jumpTo(event,'secTools')">Karat Tools</a>
+    <a href="#secCurrency" onclick="return jumpTo(event,'secCurrency')">Currency</a>
+  </nav>
+  <div class="tkr" id="tickerWrap"></div>
+  <div class="src-banner" id="srcBanner">
+    <div class="ic">⚠️</div>
+    <div id="srcBannerText">Live feed unavailable. Showing last known prices.</div>
+    <button onclick="dismissBanner()">Dismiss</button>
+  </div>
+  <!-- ═══ AED QUICK STRIP ═══ -->
+  <div class="qs" id="qStrip">
+    <div class="qs-item"><span class="qs-k">24K</span><span class="qs-v mn" id="qs24">-</span></div>
+    <div class="qs-item"><span class="qs-k">22K</span><span class="qs-v mn" id="qs22">-</span></div>
+    <div class="qs-item"><span class="qs-k">21K</span><span class="qs-v mn" id="qs21">-</span></div>
+    <div class="qs-item"><span class="qs-k">18K</span><span class="qs-v mn" id="qs18">-</span></div>
+    <div class="qs-item"><span class="qs-k qs-sv">925</span><span class="qs-v mn" id="qs925">-</span></div>
+  </div>
+  <div class="panel">
+    <div class="sel-row">
+      <div class="sel-col">
+        <label for="selMetal">Metal</label>
+        <select id="selMetal" onchange="render()">
+          <option value="gold">Gold</option>
+          <option value="silver">Silver</option>
+          <option value="platinum">Platinum</option>
+          <option value="palladium">Palladium</option>
+        </select>
+      </div>
+      <div class="sel-col">
+        <label for="selWeight">Weight</label>
+        <select id="selWeight" onchange="render()">
+          <option value="1">Gram (1g)</option>
+          <option value="31.1035">Troy Ounce (31.1035g)</option>
+          <option value="11.6638">Tola (11.6638g)</option>
+          <option value="8">Pavan / Sovereign (8g)</option>
+          <option value="10">10 Grams</option>
+          <option value="1000">Kilogram (1000g)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="bd-label" id="bdHead">Loading...</div>
+  <div class="bd-g" id="bdGrid"></div>
+  <div class="div"></div>
+  <div class="oz-sec-title" id="secRates">Troy Ounce | Live Rates</div>
+  <div class="oz go" id="ozGold">
+    <div class="lbl">Gold | XAU <span class="src-tag" id="srcG">-</span></div>
+    <div class="aed" id="oG"><span class="sk"></span></div>
+    <div class="usd" id="ouG">-</div>
+    <div class="det" id="odG">fetching...</div>
+    <div class="age-tag" id="ageG"></div>
+  </div>
+  <div class="oz si" id="ozSilver">
+    <div class="lbl">Silver | XAG <span class="src-tag" id="srcS">-</span></div>
+    <div class="aed" id="oS"><span class="sk"></span></div>
+    <div class="usd" id="ouS">-</div>
+    <div class="det" id="odS">fetching...</div>
+    <div class="age-tag" id="ageS"></div>
+  </div>
+  <div class="oz pt" id="ozPlat">
+    <div class="lbl">Platinum | XPT <span class="src-tag" id="srcP">-</span></div>
+    <div class="aed" id="oP"><span class="sk"></span></div>
+    <div class="usd" id="ouP">-</div>
+    <div class="det" id="odP">fetching...</div>
+    <div class="age-tag" id="ageP"></div>
+  </div>
+  <div class="oz pd" id="ozPall">
+    <div class="lbl">Palladium | XPD <span class="src-tag" id="srcD">-</span></div>
+    <div class="aed" id="oD"><span class="sk"></span></div>
+    <div class="usd" id="ouD">-</div>
+    <div class="det" id="odD">fetching...</div>
+    <div class="age-tag" id="ageD"></div>
+  </div>
+  <div class="oz cu" id="ozCopper">
+    <div class="lbl">Copper | HG <span class="src-tag" id="srcCu">-</span></div>
+    <div class="aed" id="oCu"><span class="sk"></span></div>
+    <div class="usd" id="ouCu">-</div>
+    <div class="det" id="odCu">fetching...</div>
+    <div class="age-tag" id="ageCu"></div>
+  </div>
+  <div class="mkt-note" style="margin:-2px 0 14px">Copper is a base metal reference (COMEX, priced per pound) shown for alloy/scrap costing — it isn't a troy-ounce jewellery metal like the four above.</div>
+  <div class="ref">
+    <button class="ref-b" id="rb" onclick="fetchAll()"><span class="sp">&#8635;</span>Refresh</button>
+    <span class="at" id="atText">auto 30s</span>
+  </div>
+  <div class="rc-bar">
+    <input id="rcShop" class="calc-input" type="text" placeholder="Shop / entity for rate card (optional)">
+    <button class="pdf-btn pdf-btn-sm" id="pdfBtnRates" onclick="downloadRateCardPDF()">
+      <svg class="pdf-ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+      <span class="pdf-btn-label">Rate Card PDF · all karats</span>
+    </button>
+  </div>
+  <!-- ═══ RATIO + SPREAD ═══ -->
+  <div class="sec">
+    <div class="sec-t">Market Indicators</div>
+    <div class="mi-grid">
+      <div class="mi-card">
+        <div class="mi-lbl">Gold / Silver Ratio</div>
+        <div class="mi-val mn" id="gsRatio">-</div>
+        <div class="mi-sub" id="gsNote">oz gold = ? oz silver</div>
+      </div>
+      <div class="mi-card">
+        <div class="mi-lbl">Gold Spread</div>
+        <div class="mi-val mn" id="spGold">-</div>
+        <div class="mi-sub">bid-ask USD</div>
+      </div>
+      <div class="mi-card">
+        <div class="mi-lbl">Silver Spread</div>
+        <div class="mi-val mn" id="spSilver">-</div>
+        <div class="mi-sub">bid-ask USD</div>
+      </div>
+      <div class="mi-card">
+        <div class="mi-lbl">Platinum Spread</div>
+        <div class="mi-val mn" id="spPlat">-</div>
+        <div class="mi-sub">bid-ask USD</div>
+      </div>
+    </div>
+  </div>
+  <!-- ═══ MARKET STATUS ═══ -->
+  <div class="sec" id="secMarket">
+    <div class="sec-t">Market Status</div>
+    <div class="panel">
+      <div class="mkt-top">
+        <span class="mkt-pill" id="mktPill"><span class="d"></span><span id="mktPillText">...</span></span>
+        <span class="mkt-countdown" id="mktCountdown">-</span>
+      </div>
+      <div class="mkt-clock" id="mktClock">-</div>
+      <div style="margin-bottom:14px">
+        <label class="sel-col-label" for="mktTz">Timezone</label>
+        <select id="mktTz" class="mk-sel" style="width:100%" onchange="onTzChange()"></select>
+      </div>
+      <div class="thd-tt" id="thdTt">Indicative Trading Hours by Day</div>
+      <div class="thd-grid" id="thdGrid"></div>
+      <div class="mkt-break" id="mktBreakBanner">
+        <span id="mktBreakIcon">⏸</span><span><b>Daily break</b> · <span id="mktBreakWindow">-</span> — most brokers pause dealing briefly for rollover<span id="mktBreakLive" style="display:none"> · <b style="color:var(--warn)">happening now</b></span></span>
+      </div>
+      <div class="thd-tt" id="sessTt" style="margin-top:14px">Trading Sessions</div>
+      <div class="mi-grid" id="sessGrid"></div>
+      <div class="mkt-note">Closed Saturday &amp; Sunday (also the UAE weekend). Spot gold trades alongside global FX markets, roughly Sunday evening to Friday evening UTC, with a short daily settlement break. Exact minute-level hours vary by broker/platform and shift slightly around US/UK daylight-saving changes — treat this as a general guide, not your dealing platform's official calendar.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Live Quotes</div>
+    <div class="cb" id="quotesWrap"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Charts</div>
+    <div class="cg" id="chartsGrid"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Advanced Chart</div>
+    <div class="cb" style="height:420px" id="advChart"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Economic Calendar</div>
+    <div class="cb" id="ecoCalWrap"></div>
+  </div>
+  <!-- ═══ RATE CALCULATOR ═══ -->
+  <div class="sec" id="secCalc">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Rate Calculator | UAE VAT</span>
+      <button class="reset-btn" onclick="resetCalc()">Reset</button>
+    </div>
+    <div class="panel" id="calcPanel">
+      <div class="sel-row" style="margin-bottom:12px">
+        <div class="sel-col">
+          <label for="cMetal">Metal</label>
+          <select id="cMetal" onchange="calcRate()">
+            <option value="gold">Gold</option>
+            <option value="silver">Silver</option>
+            <option value="platinum">Platinum</option>
+            <option value="palladium">Palladium</option>
+          </select>
+        </div>
+        <div class="sel-col">
+          <label for="cPurity">Purity / Karat</label>
+          <select id="cPurity" onchange="calcRate()"></select>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="sel-col-label" for="cWeight">Weight (grams)</label>
+        <input type="number" id="cWeight" value="1" min="0.01" step="any" oninput="calcRate()" class="calc-input">
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="sel-col-label">Making Charge</label>
+        <div class="mk-row">
+          <select id="cMkType" onchange="calcRate()" class="mk-sel">
+            <option value="per_gram">Per Gram</option>
+            <option value="total">Whole / Flat</option>
+            <option value="percent">% of Metal</option>
+          </select>
+          <input type="number" id="cMkVal" value="0" min="0" step="any" oninput="calcRate()" class="mk-input" placeholder="0">
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="sel-col-label">Discount</label>
+        <div class="mk-row">
+          <select id="cDiscType" onchange="calcRate()" class="mk-sel">
+            <option value="flat">Flat (AED)</option>
+            <option value="percent">% off</option>
+            <option value="per_gram">Per Gram</option>
+          </select>
+          <input type="number" id="cDiscVal" value="0" min="0" step="any" oninput="calcRate()" class="mk-input" placeholder="0">
+        </div>
+      </div>
+      <div class="calc-results" id="calcResults">
+        <div class="cr-row"><span class="cr-lbl">Metal Value</span><span class="cr-val mn" id="crMetal">-</span></div>
+        <div class="cr-row"><span class="cr-lbl">Making Charge</span><span class="cr-val mn" id="crMaking">-</span></div>
+        <div class="cr-row cr-disc"><span class="cr-lbl" id="crDiscLabel">Discount</span><span class="cr-val mn" id="crDisc">0.00 AED</span></div>
+        <div class="cr-row cr-sub"><span class="cr-lbl">Subtotal</span><span class="cr-val mn" id="crSub">-</span></div>
+        <div class="cr-row cr-vat"><span class="cr-lbl" id="crVatLabel">VAT 5%</span><span class="cr-val mn" id="crVat">-</span></div>
+        <div class="cr-row cr-total"><span class="cr-lbl">TOTAL</span><span class="cr-val mn" id="crTotal">-</span></div>
+      </div>
+      <div class="q-fields">
+        <div><label class="sel-col-label" for="qcRate">Customer (optional)</label><input id="qcRate" class="calc-input" type="text" placeholder="Customer name"></div>
+        <div><label class="sel-col-label" for="qsRate">Shop / Entity (optional)</label><input id="qsRate" class="calc-input" type="text" placeholder="Shop / entity name"></div>
+      </div>
+      <button class="pdf-btn" id="pdfBtnRate" onclick="downloadQuotationPDF('rate')">
+        <svg class="pdf-ic" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+        <span class="pdf-btn-label">Download PDF Quotation</span>
+      </button>
+      <div class="q-hint">Uses the live rate at the moment you download</div>
+    </div>
+  </div>
+  <!-- ═══ WEIGHT CONVERTER ═══ -->
+  <div class="sec" id="secTools">
+    <div class="sec-t">Weight Converter</div>
+    <div class="panel">
+      <div style="margin-bottom:10px">
+        <label class="sel-col-label" for="wcVal">Enter Weight</label>
+        <div class="mk-row">
+          <input type="number" id="wcVal" value="0" min="0.001" step="any" oninput="convertWeight()" class="mk-input" style="flex:1">
+          <select id="wcFrom" onchange="convertWeight()" class="mk-sel">
+            <option value="g">Gram</option>
+            <option value="oz">Troy Oz</option>
+            <option value="tola">Tola</option>
+            <option value="pavan">Pavan</option>
+            <option value="kg">Kilogram</option>
+            <option value="dwt">Pennyweight</option>
+            <option value="tael">Tael</option>
+          </select>
+        </div>
+      </div>
+      <div class="wc-results" id="wcResults"></div>
+    </div>
+  </div>
+  <!-- ═══ GOLD KARAT CONVERSION ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Gold Karat Conversion</span>
+      <button class="reset-btn" onclick="resetKC()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Convert gold from one karat to another with alloy details</div>
+      <div style="margin-bottom:10px">
+        <label class="sel-col-label" for="kcWt">Gold Weight</label>
+        <div class="mk-row">
+          <input type="number" id="kcWt" value="0" min="0.01" step="any" class="mk-input" style="flex:1">
+          <select id="kcUnit" class="mk-sel"><option value="g">Gram</option><option value="oz">Troy Oz</option><option value="tola">Tola</option><option value="pavan">Pavan</option></select>
+        </div>
+      </div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="kcFrom">From Karat</label>
+          <select id="kcFrom"><option value="24">24K (100%)</option><option value="22" selected>22K (91.67%)</option><option value="21">21K (87.50%)</option><option value="18">18K (75.00%)</option><option value="14">14K (58.33%)</option><option value="10">10K (41.67%)</option><option value="9">9K (37.50%)</option></select>
+        </div>
+        <div class="sel-col">
+          <label for="kcTo">To Karat</label>
+          <select id="kcTo"><option value="24">24K (100%)</option><option value="22">22K (91.67%)</option><option value="21" selected>21K (87.50%)</option><option value="18">18K (75.00%)</option><option value="14">14K (58.33%)</option><option value="10">10K (41.67%)</option><option value="9">9K (37.50%)</option></select>
+        </div>
+      </div>
+      <button class="ref-b" style="width:100%;justify-content:center;margin-bottom:10px;background:var(--a);color:#000;border-color:var(--a);font-weight:800" onclick="calcKC()">Calculate Conversion</button>
+      <div id="kcResults"></div>
+    </div>
+  </div>
+  <!-- ═══ ALLOY MIX CALCULATOR ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Alloy Mix Calculator</span>
+      <button class="reset-btn" onclick="resetMix()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Calculate exact alloy composition for making specific gold karat</div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="mxTarget">Target Karat</label>
+          <select id="mxTarget"><option value="22">22K (91.67%)</option><option value="21">21K (87.50%)</option><option value="18" selected>18K (75.00%)</option><option value="14">14K (58.33%)</option><option value="10">10K (41.67%)</option><option value="9">9K (37.50%)</option></select>
+        </div>
+        <div class="sel-col">
+          <label for="mxTotalWt">Total Weight (g)</label>
+          <input type="number" id="mxTotalWt" value="0" min="0.1" step="any" class="calc-input">
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <label class="sel-col-label" for="mxAlloy">Alloy Type</label>
+        <select id="mxAlloy" style="width:100%;padding:10px 32px 10px 12px;border-radius:7px;border:1px solid var(--br2);background:var(--bg2);color:var(--tx);font-family:'Sora',sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238884A0' viewBox='0 0 16 16'%3E%3Cpath d='M2 5l6 6 6-6'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center">
+          <option value="red">Red Gold (100% Copper)</option>
+          <option value="rose">Rose Gold (75% Cu + 22.5% Ag + 2.5% Zn)</option>
+          <option value="pink">Pink Gold (50% Cu + 45% Ag + 5% Zn)</option>
+          <option value="yellow" selected>Yellow Gold (50% Cu + 50% Ag)</option>
+          <option value="yellow_zn">Yellow Gold + Zinc (40% Cu + 45% Ag + 15% Zn)</option>
+          <option value="white_ni">White Gold - Nickel (85% Ni + 10% Cu + 5% Zn)</option>
+          <option value="white_pd">White Gold - Palladium (90% Pd + 10% Ag)</option>
+          <option value="green">Green Gold (100% Silver)</option>
+        </select>
+      </div>
+      <button class="ref-b" style="width:100%;justify-content:center;margin-bottom:10px;background:var(--a);color:#000;border-color:var(--a);font-weight:800" onclick="calcMix()">Calculate Alloy Mix</button>
+      <div id="mxResults"></div>
+    </div>
+  </div>
+  <!-- ═══ SILVER STERLING CALCULATOR ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Silver Purity Converter</span>
+      <button class="reset-btn" onclick="resetSilver()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Convert silver between purity levels</div>
+      <div style="margin-bottom:10px">
+        <label class="sel-col-label" for="scWt">Silver Weight (grams)</label>
+        <input type="number" id="scWt" value="0" min="0.01" step="any" class="calc-input">
+      </div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="scFrom">From Purity</label>
+          <select id="scFrom"><option value="999">Fine Silver (999)</option><option value="990">990</option><option value="970">Britannia (970)</option><option value="950">950</option><option value="925">Sterling (925)</option><option value="900">Coin (900)</option><option value="835">835</option><option value="800">800</option></select>
+        </div>
+        <div class="sel-col">
+          <label for="scTo">To Purity</label>
+          <select id="scTo"><option value="999">Fine Silver (999)</option><option value="990">990</option><option value="970">Britannia (970)</option><option value="950">950</option><option value="925" selected>Sterling (925)</option><option value="900">Coin (900)</option><option value="835">835</option><option value="800">800</option></select>
+        </div>
+      </div>
+      <button class="ref-b" style="width:100%;justify-content:center;margin-bottom:10px;background:var(--sv);color:#000;border-color:var(--sv);font-weight:800" onclick="calcSilver()">Calculate Silver Conversion</button>
+      <div id="scResults"></div>
+    </div>
+  </div>
+  <!-- ═══ SCRAP GOLD VALUATION ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Scrap Gold Valuation</span>
+      <button class="reset-btn" onclick="resetScrap()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Add multiple items of different karats to get total pure gold + value</div>
+      <div class="sel-row" style="margin-bottom:8px">
+        <div class="sel-col">
+          <label for="sgKarat">Karat</label>
+          <select id="sgKarat">
+            <option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option><option value="14">14K</option><option value="10">10K</option><option value="9">9K</option>
+          </select>
+        </div>
+        <div class="sel-col">
+          <label for="sgWt">Weight (g)</label>
+          <input type="number" id="sgWt" value="" min="0.01" step="any" class="calc-input" placeholder="0">
+        </div>
+      </div>
+      <button class="ref-b" style="width:100%;justify-content:center;margin-bottom:8px" onclick="addScrapItem()">+ Add Item</button>
+      <div id="sgItems"></div>
+      <div id="sgTotal"></div>
+    </div>
+  </div>
+  <!-- ═══ ASSAY ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Assay Report / AU% Converter</span>
+      <button class="reset-btn" onclick="resetAssay()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Enter Gold AU% from lab assay report</div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="auPct">Gold AU%</label>
+          <input type="number" id="auPct" value="" min="0" max="999.9" step="any" oninput="calcAssay()" class="calc-input" placeholder="e.g. 879.72">
+        </div>
+        <div class="sel-col">
+          <label for="auWt">Bar Weight (g)</label>
+          <input type="number" id="auWt" value="" min="0" step="any" oninput="calcAssay()" class="calc-input" placeholder="e.g. 1857.81">
+        </div>
+      </div>
+      <div id="auResults"></div>
+    </div>
+  </div>
+  <!-- ═══ MELTING LOSS ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Melting Loss Calculator</span>
+      <button class="reset-btn" onclick="resetMelt()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Calculate gold recovery after melting</div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="mlBefore">Before Melting (g)</label>
+          <input type="number" id="mlBefore" value="0" min="0" step="any" oninput="calcMelt()" class="calc-input">
+        </div>
+        <div class="sel-col">
+          <label for="mlKarat">Karat</label>
+          <select id="mlKarat" onchange="calcMelt()">
+            <option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option><option value="14">14K</option><option value="9">9K</option>
+          </select>
+        </div>
+      </div>
+      <div class="sel-row" style="margin-bottom:10px">
+        <div class="sel-col">
+          <label for="mlAfter">After Melting (g)</label>
+          <input type="number" id="mlAfter" value="0" min="0" step="any" oninput="calcMelt()" class="calc-input">
+        </div>
+        <div class="sel-col">
+          <label for="mlExpected">Expected Loss %</label>
+          <select id="mlExpected" onchange="calcMelt()">
+            <option value="0.5">0.5% (Bars/Ingots)</option>
+            <option value="1" selected>1% (Clean Jewellery)</option>
+            <option value="2">2% (Mixed/Stones)</option>
+            <option value="3">3% (Heavy Enamel)</option>
+            <option value="5">5% (Low Grade Scrap)</option>
+          </select>
+        </div>
+      </div>
+      <div id="mlResults"></div>
+    </div>
+  </div>
+  <!-- ═══ JEWELLERY ORDER ESTIMATOR ═══ -->
+  <div class="sec">
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Jewellery Order Estimator</span>
+      <button class="reset-btn" onclick="resetOrder()">Reset</button>
+    </div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:10px">Estimate customer order with gold + stones + making + VAT</div>
+      <div class="sel-row" style="margin-bottom:8px">
+        <div class="sel-col">
+          <label for="joGoldWt">Gold Weight (g)</label>
+          <input type="number" id="joGoldWt" value="0" min="0" step="any" oninput="calcOrder()" class="calc-input">
+        </div>
+        <div class="sel-col">
+          <label for="joKarat">Karat</label>
+          <select id="joKarat" onchange="calcOrder()">
+            <option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option><option value="14">14K</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <label class="sel-col-label" for="joMaking">Making Charge (AED/gram)</label>
+        <input type="number" id="joMaking" value="0" min="0" step="any" oninput="calcOrder()" class="calc-input">
+      </div>
+      <div style="margin-bottom:8px">
+        <label class="sel-col-label" for="joStone">Stone / Diamond Value (AED)</label>
+        <input type="number" id="joStone" value="0" min="0" step="any" oninput="calcOrder()" class="calc-input">
+      </div>
+      <div style="margin-bottom:8px">
+        <label class="sel-col-label" for="joOther">Other Charges (AED)</label>
+        <input type="number" id="joOther" value="0" min="0" step="any" oninput="calcOrder()" class="calc-input">
+      </div>
+      <div id="joResults"></div>
+      <div class="q-fields">
+        <div><label class="sel-col-label" for="qcOrder">Customer (optional)</label><input id="qcOrder" class="calc-input" type="text" placeholder="Customer name"></div>
+        <div><label class="sel-col-label" for="qsOrder">Shop / Entity (optional)</label><input id="qsOrder" class="calc-input" type="text" placeholder="Shop / entity name"></div>
+      </div>
+      <button class="pdf-btn" id="pdfBtnOrder" onclick="downloadQuotationPDF('order')">
+        <svg class="pdf-ic" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+        <span class="pdf-btn-label">Download PDF Quotation</span>
+      </button>
+      <div class="q-hint">Uses the live gold rate at the moment you download</div>
+    </div>
+  </div>
+  <!-- ═══ CURRENCY CONVERTER ═══ -->
+  <div class="sec" id="secCurrency">
+    <div class="sec-t">Currency Converter</div>
+    <div class="panel">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:12px">Live daily rates | 40+ currencies</div>
+      <div style="margin-bottom:12px">
+        <label class="sel-col-label" for="fxAmt">Amount</label>
+        <input type="number" id="fxAmt" value="1" min="0" step="any" oninput="calcFX()" class="calc-input" style="font-size:22px;font-weight:800;text-align:center">
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:14px">
+        <div style="flex:1">
+          <label class="sel-col-label" for="fxFrom">From</label>
+          <select id="fxFrom" onchange="loadFXRates()" style="width:100%;padding:12px 10px;border-radius:8px;border:1px solid var(--br2);background:var(--bg2);color:var(--tx);font-family:'Sora',sans-serif;font-size:13px;font-weight:700;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238884A0' viewBox='0 0 16 16'%3E%3Cpath d='M2 5l6 6 6-6'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center">
+            <option value="usd" selected>USD - US Dollar</option>
+            <option value="aed">AED - UAE Dirham</option>
+            <option value="eur">EUR - Euro</option>
+            <option value="gbp">GBP - British Pound</option>
+            <option value="inr">INR - Indian Rupee</option>
+            <option value="sar">SAR - Saudi Riyal</option>
+            <option value="kwd">KWD - Kuwaiti Dinar</option>
+            <option value="bhd">BHD - Bahraini Dinar</option>
+            <option value="omr">OMR - Omani Rial</option>
+            <option value="qar">QAR - Qatari Riyal</option>
+            <option value="jpy">JPY - Japanese Yen</option>
+            <option value="cny">CNY - Chinese Yuan</option>
+            <option value="chf">CHF - Swiss Franc</option>
+            <option value="aud">AUD - Australian Dollar</option>
+            <option value="cad">CAD - Canadian Dollar</option>
+            <option value="sgd">SGD - Singapore Dollar</option>
+            <option value="myr">MYR - Malaysian Ringgit</option>
+            <option value="pkr">PKR - Pakistani Rupee</option>
+            <option value="lkr">LKR - Sri Lankan Rupee</option>
+            <option value="egp">EGP - Egyptian Pound</option>
+            <option value="bdt">BDT - Bangladeshi Taka</option>
+            <option value="php">PHP - Philippine Peso</option>
+            <option value="npr">NPR - Nepalese Rupee</option>
+            <option value="jod">JOD - Jordanian Dinar</option>
+            <option value="try">TRY - Turkish Lira</option>
+            <option value="zar">ZAR - South African Rand</option>
+            <option value="thb">THB - Thai Baht</option>
+            <option value="idr">IDR - Indonesian Rupiah</option>
+            <option value="vnd">VND - Vietnamese Dong</option>
+            <option value="ils">ILS - Israeli Shekel</option>
+            <option value="kes">KES - Kenyan Shilling</option>
+            <option value="mad">MAD - Moroccan Dirham</option>
+            <option value="hkd">HKD - Hong Kong Dollar</option>
+            <option value="krw">KRW - South Korean Won</option>
+            <option value="sek">SEK - Swedish Krona</option>
+            <option value="nok">NOK - Norwegian Krone</option>
+            <option value="dkk">DKK - Danish Krone</option>
+            <option value="mxn">MXN - Mexican Peso</option>
+            <option value="brl">BRL - Brazilian Real</option>
+            <option value="rub">RUB - Russian Ruble</option>
+            <option value="nzd">NZD - New Zealand Dollar</option>
+          </select>
+        </div>
+        <button onclick="swapFX()" style="background:var(--a);border:none;color:#000;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;font-weight:800;flex-shrink:0;margin-bottom:1px" aria-label="Swap currencies">&#8645;</button>
+        <div style="flex:1">
+          <label class="sel-col-label" for="fxTo">To</label>
+          <select id="fxTo" onchange="calcFX()" style="width:100%;padding:12px 10px;border-radius:8px;border:1px solid var(--br2);background:var(--bg2);color:var(--tx);font-family:'Sora',sans-serif;font-size:13px;font-weight:700;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238884A0' viewBox='0 0 16 16'%3E%3Cpath d='M2 5l6 6 6-6'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center">
+            <option value="aed" selected>AED - UAE Dirham</option>
+            <option value="usd">USD - US Dollar</option>
+            <option value="eur">EUR - Euro</option>
+            <option value="gbp">GBP - British Pound</option>
+            <option value="inr">INR - Indian Rupee</option>
+            <option value="sar">SAR - Saudi Riyal</option>
+            <option value="kwd">KWD - Kuwaiti Dinar</option>
+            <option value="bhd">BHD - Bahraini Dinar</option>
+            <option value="omr">OMR - Omani Rial</option>
+            <option value="qar">QAR - Qatari Riyal</option>
+            <option value="jpy">JPY - Japanese Yen</option>
+            <option value="cny">CNY - Chinese Yuan</option>
+            <option value="chf">CHF - Swiss Franc</option>
+            <option value="aud">AUD - Australian Dollar</option>
+            <option value="cad">CAD - Canadian Dollar</option>
+            <option value="sgd">SGD - Singapore Dollar</option>
+            <option value="myr">MYR - Malaysian Ringgit</option>
+            <option value="pkr">PKR - Pakistani Rupee</option>
+            <option value="lkr">LKR - Sri Lankan Rupee</option>
+            <option value="egp">EGP - Egyptian Pound</option>
+            <option value="bdt">BDT - Bangladeshi Taka</option>
+            <option value="php">PHP - Philippine Peso</option>
+            <option value="npr">NPR - Nepalese Rupee</option>
+            <option value="jod">JOD - Jordanian Dinar</option>
+            <option value="try">TRY - Turkish Lira</option>
+            <option value="zar">ZAR - South African Rand</option>
+            <option value="thb">THB - Thai Baht</option>
+            <option value="idr">IDR - Indonesian Rupiah</option>
+            <option value="vnd">VND - Vietnamese Dong</option>
+            <option value="ils">ILS - Israeli Shekel</option>
+            <option value="kes">KES - Kenyan Shilling</option>
+            <option value="mad">MAD - Moroccan Dirham</option>
+            <option value="hkd">HKD - Hong Kong Dollar</option>
+            <option value="krw">KRW - South Korean Won</option>
+            <option value="sek">SEK - Swedish Krona</option>
+            <option value="nok">NOK - Norwegian Krone</option>
+            <option value="dkk">DKK - Danish Krone</option>
+            <option value="mxn">MXN - Mexican Peso</option>
+            <option value="brl">BRL - Brazilian Real</option>
+            <option value="rub">RUB - Russian Ruble</option>
+            <option value="nzd">NZD - New Zealand Dollar</option>
+          </select>
+        </div>
+      </div>
+      <div id="fxResult" style="text-align:center;padding:16px;background:var(--bg2);border:1px solid var(--br);border-radius:12px;min-height:60px"></div>
+      <div id="fxMetalRates" style="margin-top:10px"></div>
+      <div id="fxGrid" style="margin-top:10px"></div>
+      <div style="font-size:8px;color:var(--tx3);text-align:center;margin-top:8px">Rates updated daily via fawazahmed0 Exchange API</div>
+    </div>
+  </div>
+  <div class="ft">
+    <b>Disclaimer:</b> Information provided is for general informational and educational purposes only. Does not constitute financial, investment, or trading advice. Prices are indicative and may differ from actual dealer rates. UAE VAT calculations follow Federal Decree-Law No. 8 of 2017 and Cabinet Decision No. 127 of 2024. Consult a qualified financial advisor or FTA-registered tax agent before making investment or tax decisions. Use at your own risk.
+  </div>
+  <div style="text-align:center;padding:16px 0 8px;border-top:1px solid var(--br);margin-top:12px">
+    <div style="font-size:13px;font-weight:800;color:var(--a);letter-spacing:1px">GoldBench UAE</div>
+    <div style="font-size:10px;color:var(--tx3);margin-top:4px">Idea and Coded by <b style="color:var(--tx2)">Subash M</b></div>
+    <div style="font-size:9px;color:var(--tx3);margin-top:2px">Copyright 2025-2026 Subash M. All rights reserved.</div>
+    <div style="font-size:8px;color:var(--tx3);margin-top:2px">Live data: Swissquote / Gold-API.com (fallback) | Charts: TradingView | Calendar: Tradays (MQL5)</div>
+  </div>
+</div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+<script>
+const OZ=31.1035,FX=3.6725;
+function getTheme(){return window.matchMedia?.('(prefers-color-scheme:light)').matches?'light':'dark'}
+
+// ═══ METALS DATA ═══
+const BD={
+  gold:{name:'Gold',cc:'gc',tc:'gt',items:[
+    {l:'24K',p:'99.9% Pure',f:1},{l:'22K',p:'91.6%',f:22/24},
+    {l:'21K',p:'87.5%',f:21/24},{l:'18K',p:'75.0%',f:18/24},
+    {l:'14K',p:'58.3%',f:14/24},{l:'9K',p:'37.5%',f:9/24}
+  ]},
+  silver:{name:'Silver',cc:'sc',tc:'st',items:[
+    {l:'925',p:'Sterling Silver',f:.925},{l:'999',p:'Fine Silver',f:.999},
+    {l:'990',p:'99.0%',f:.99},{l:'970',p:'97.0%',f:.97},
+    {l:'900',p:'Coin Silver',f:.9},{l:'835',p:'83.5%',f:.835},
+    {l:'800',p:'80.0%',f:.8}
+  ]},
+  platinum:{name:'Platinum',cc:'pc',tc:'pt',items:[
+    {l:'999',p:'Fine',f:.999},{l:'950',p:'Jewellery',f:.95},
+    {l:'900',p:'90%',f:.9},{l:'850',p:'85%',f:.85}
+  ]},
+  palladium:{name:'Palladium',cc:'dc',tc:'dt',items:[
+    {l:'999',p:'Fine',f:.999},{l:'950',p:'Jewellery',f:.95},{l:'500',p:'50%',f:.5}
+  ]}
+};
+const WN={'1':'Gram','31.1035':'Troy Ounce','11.6638':'Tola','8':'Pavan','10':'10 Grams','1000':'Kilogram'};
+let spot={gold:0,silver:0,platinum:0,palladium:0};
+function fm(v){
+  if(v===null||v===undefined||isNaN(v))return'-';
+  if(v===0)return'0.00';
+  if(v>=100000)return v.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(v>=10)return v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4});
+}
+function render(){
+  const m=document.getElementById('selMetal').value;
+  const wg=parseFloat(document.getElementById('selWeight').value);
+  const wn=WN[document.getElementById('selWeight').value]||'';
+  const bd=BD[m],s=spot[m];
+  if(!s){document.getElementById('bdHead').innerHTML=`<strong>${bd.name}</strong> | ${wn} - waiting for price...`;document.getElementById('bdGrid').innerHTML='';return;}
+  const ppg=(s/OZ)*FX;
+  document.getElementById('bdHead').innerHTML=`<strong>${bd.name}</strong> | ${wn} (${wg}g) | AED`;
+  document.getElementById('bdGrid').innerHTML=bd.items.map(i=>{
+    const aed=ppg*i.f*wg,pg=ppg*i.f;
+    return`<div class="bd-c ${bd.cc}"><div class="k ${bd.tc}">${i.l}</div><div class="pu">${i.p}</div><div class="pr">${fm(aed)}<span class="u">AED</span></div><div class="pg">/g ${fm(pg)}</div></div>`;
+  }).join('');
+}
+// ═══ BACK TO TOP ═══
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('show',window.scrollY>500);
+},{passive:true});
+// ═══ QUICK NAV ═══
+// Scrolls with JS instead of letting the browser follow href="#id" —
+// when this page is opened inside an embedded/sandboxed preview (Google
+// Drive/Docs viewers wrap it in a googleusercontent.com iframe), default
+// hash navigation can get treated as a real link and reload the whole
+// frame from that embed URL, resetting every live price/timer on the
+// page. preventDefault() keeps this to a same-page scroll no matter how
+// the file is being viewed.
+function jumpTo(e,id){
+  if(e&&e.preventDefault)e.preventDefault();
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  return false;
+}
+// ═══════════════════════════════════════════════════════════
+// MARKET STATUS (indicative spot gold / FX trading hours)
+// Spot gold trades alongside global FX, roughly Sun 22:00 UTC through
+// Fri 22:00 UTC, with a short daily settlement/rollover break most
+// brokers observe around 21:00-22:00 UTC. These are widely-cited,
+// broker-agnostic approximations (not any single platform's official
+// calendar) — the UI says so explicitly. State is found by scanning
+// forward in small time steps rather than hand-rolled weekday/DST
+// arithmetic, which is easy to get subtly wrong at the week boundary.
+// ═══════════════════════════════════════════════════════════
+const MKT_BREAK_START_H=21,MKT_BREAK_END_H=22; // UTC hour, daily
+const SESSIONS_UTC=[
+  {k:'sydney',name:'Sydney / Asia',startH:22,endH:7},
+  {k:'london',name:'London',startH:8,endH:17},
+  {k:'newyork',name:'New York',startH:13,endH:22},
+  {k:'overlap',name:'Peak Liquidity',startH:13,endH:17}
+];
+// Curated list matching the currencies above — the UAE's own big expat/
+// remittance corridors, plus the usual FX-session anchors.
+const TZ_LIST=[
+  {tz:'Asia/Dubai',l:'Dubai, UAE (GST)'},
+  {tz:'UTC',l:'UTC'},
+  {tz:'Asia/Kolkata',l:'India (IST)'},
+  {tz:'Asia/Karachi',l:'Pakistan (PKT)'},
+  {tz:'Asia/Dhaka',l:'Bangladesh'},
+  {tz:'Asia/Colombo',l:'Sri Lanka'},
+  {tz:'Asia/Kathmandu',l:'Nepal'},
+  {tz:'Asia/Manila',l:'Philippines'},
+  {tz:'Asia/Riyadh',l:'Saudi Arabia'},
+  {tz:'Africa/Cairo',l:'Egypt'},
+  {tz:'Europe/London',l:'London, UK'},
+  {tz:'America/New_York',l:'New York, US'},
+  {tz:'Asia/Singapore',l:'Singapore'},
+  {tz:'Asia/Hong_Kong',l:'Hong Kong'},
+  {tz:'Australia/Sydney',l:'Sydney, Australia'}
+];
+let selectedTz='Asia/Dubai';
+function initTzSelect(){
+  const sel=document.getElementById('mktTz');
+  if(!sel||sel.options.length)return;
+  sel.innerHTML=TZ_LIST.map(t=>`<option value="${t.tz}"${t.tz===selectedTz?' selected':''}>${t.l}</option>`).join('');
+}
+function onTzChange(){
+  selectedTz=document.getElementById('mktTz').value;
+  updateMarketStatus();
+}
+function mktWeeklyOpen(d){
+  const day=d.getUTCDay(),hour=d.getUTCHours();
+  if(day===6) return false;                 // Saturday: fully closed
+  if(day===5 && hour>=22) return false;      // after Friday 22:00 UTC
+  if(day===0 && hour<22) return false;       // before Sunday 22:00 UTC
+  return true;
+}
+function mktDailyBreak(d){
+  if(!mktWeeklyOpen(d)) return false;
+  const h=d.getUTCHours();
+  return h>=MKT_BREAK_START_H && h<MKT_BREAK_END_H;
+}
+function mktState(d){
+  if(!mktWeeklyOpen(d)) return 'closed';
+  if(mktDailyBreak(d)) return 'break';
+  return 'open';
+}
+function mktNextTransition(now){
+  const stepMs=5*60*1000;
+  const startState=mktState(now);
+  let cur=new Date(now.getTime());
+  for(let i=0;i<9*24*12;i++){ // up to 9 days in 5-min steps
+    cur=new Date(cur.getTime()+stepMs);
+    if(mktState(cur)!==startState){
+      // refine to the minute
+      let refined=new Date(cur.getTime()-stepMs);
+      for(let j=0;j<6;j++){
+        const next=new Date(refined.getTime()+60000);
+        if(mktState(next)===mktState(cur)){refined=next;break;}
+        refined=next;
+      }
+      return {from:startState,to:mktState(cur),at:refined};
+    }
+  }
+  return null;
+}
+function fmtCountdown(ms){
+  if(ms<0)ms=0;
+  const totalMin=Math.floor(ms/60000);
+  const d=Math.floor(totalMin/1440),h=Math.floor((totalMin%1440)/60),m=totalMin%60;
+  if(d>0) return `${d}d ${h}h`;
+  if(h>0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+function tzHM(date,tz){return date.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz});}
+function utcHourToTzLabel(h,tz,minAdd){
+  const d=new Date();d.setUTCHours(h,minAdd||0,0,0);
+  return tzHM(d,tz||selectedTz);
+}
+// Weekday name ("Mon".."Sun") as it currently reads in a given tz — using
+// a forward toLocaleString conversion (always correct for any offset or
+// DST) rather than reverse-engineering UTC from a local wall-clock time.
+function tzWeekdayName(tz,date){return (date||new Date()).toLocaleString('en-US',{timeZone:tz,weekday:'short'});}
+const THD_DAYS=['Mon','Tue','Wed','Thu','Fri'];
+// The weekly-closed window is Fri 22:00 UTC through Sun 22:00 UTC. Across
+// every real-world UTC offset (-12..+14) that never eats into Monday or
+// Friday's local trading time, so — regardless of the selected timezone —
+// Mon-Fri always share the same "one daily break, otherwise open" shape;
+// only the break's local clock time (and which weekday currently reads as
+// "today") changes with the timezone picker.
+function renderTradingHoursGrid(){
+  const el=document.getElementById('thdGrid');
+  if(!el)return;
+  const breakStart=utcHourToTzLabel(MKT_BREAK_START_H),breakEnd=utcHourToTzLabel(MKT_BREAK_END_H);
+  const todayName=tzWeekdayName(selectedTz);
+  el.innerHTML=THD_DAYS.map(d=>{
+    return `<div class="thd-c ${d===todayName?'now':''}"><div class="thd-d">${d}</div><div class="thd-h">${breakEnd} – ${breakStart}</div></div>`;
+  }).join('');
+}
+function renderSessions(){
+  const el=document.getElementById('sessGrid');
+  if(!el)return;
+  const nowUtcH=new Date().getUTCHours();
+  el.innerHTML=SESSIONS_UTC.map(s=>{
+    const active=s.startH<s.endH?(nowUtcH>=s.startH&&nowUtcH<s.endH):(nowUtcH>=s.startH||nowUtcH<s.endH);
+    return `<div class="mi-card sess-card ${active?'active':''}"><div class="mi-lbl">${s.name}</div><div class="mi-val mn" style="font-size:14px">${utcHourToTzLabel(s.startH)}–${utcHourToTzLabel(s.endH)}</div><div class="mi-sub">${active?'Active now':'local time'}</div></div>`;
+  }).join('');
+}
+function updateMarketStatus(){
+  initTzSelect();
+  const now=new Date();
+  const state=mktState(now);
+  const pill=document.getElementById('mktPill'),pt=document.getElementById('mktPillText');
+  if(!pill)return;
+  const tzInfo=TZ_LIST.find(t=>t.tz===selectedTz)||{l:selectedTz};
+  pill.classList.remove('closed','brk');
+  if(state==='open'){pt.textContent='Market Open';}
+  else if(state==='break'){pill.classList.add('brk');pt.textContent='Daily Break';}
+  else{pill.classList.add('closed');pt.textContent='Market Closed';}
+  document.getElementById('mktClock').textContent=now.toLocaleString('en-GB',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:selectedTz})+' · '+tzInfo.l;
+  const brkBanner=document.getElementById('mktBreakBanner');
+  if(brkBanner){
+    document.getElementById('mktBreakWindow').textContent=utcHourToTzLabel(MKT_BREAK_START_H)+' – '+utcHourToTzLabel(MKT_BREAK_END_H)+' ('+tzInfo.l+')';
+    document.getElementById('mktBreakLive').style.display=state==='break'?'inline':'none';
+  }
+  const thdTt=document.getElementById('thdTt'),sessTt=document.getElementById('sessTt');
+  if(thdTt)thdTt.textContent='Indicative Trading Hours by Day ('+tzInfo.l+')';
+  if(sessTt)sessTt.textContent='Trading Sessions ('+tzInfo.l+')';
+  const trans=mktNextTransition(now);
+  const cd=document.getElementById('mktCountdown');
+  if(cd){
+    if(!trans){cd.textContent='';}
+    else{
+      const label=trans.to==='open'?(trans.from==='break'?'Resumes in':'Opens in'):trans.to==='break'?'Break in':'Closes in';
+      cd.innerHTML=`${label} <b>${fmtCountdown(trans.at-now)}</b>`;
+    }
+  }
+  renderTradingHoursGrid();
+  renderSessions();
+}
+setInterval(updateMarketStatus,1000);
+// ═══════════════════════════════════════════════════════════
+// LIVE DATA: multi-source fetch with fallback + staleness tracking
+// Primary: Swissquote bank feed (has real bid/ask) via CORS proxies.
+// Fallback: gold-api.com (CORS-enabled directly, no proxy, no key,
+//           but single mid price only — spread is synthesized).
+// ═══════════════════════════════════════════════════════════
+const SQ_SYM={gold:'XAU',silver:'XAG',platinum:'XPT',palladium:'XPD'};
+const GA_SYM={gold:'XAU',silver:'XAG',platinum:'XPT',palladium:'XPD'};
+// Typical bid/ask spreads (USD/oz) used only to synthesize a display
+// spread when the fallback source gives us a single mid price.
+const TYPICAL_SPREAD={gold:1.0,silver:0.04,platinum:6,palladium:10};
+let lastGoodAt={gold:0,silver:0,platinum:0,palladium:0};
+let lastSource={gold:null,silver:null,platinum:null,palladium:null};
+let consecutiveFailures=0;
+const STALE_MS=90*1000;     // amber warning threshold
+const DEAD_MS=5*60*1000;    // treat as fully offline after this long
+function withTimeout(promise,ms){
+  return Promise.race([
+    promise,
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))
+  ]);
+}
+async function tryDirect(url){
+  const r=await withTimeout(fetch(url,{mode:'cors',cache:'no-store'}),7000);
+  if(!r.ok) throw new Error('http '+r.status);
+  return await r.text();
+}
+async function tryProxy(proxyBuilder,url){
+  const r=await withTimeout(fetch(proxyBuilder(url),{cache:'no-store'}),8000);
+  if(!r.ok) throw new Error('http '+r.status);
+  return await r.text();
+}
+// Ordered list of ways to reach an arbitrary URL cross-origin.
+const PROXIES=[
+  url=>url, // direct attempt first (works if target sends permissive CORS, or via browser extensions)
+  url=>`https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url=>`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+async function fetchViaProxies(url){
+  let lastErr=null;
+  for(const build of PROXIES){
+    try{
+      const text=await tryProxy(build,url);
+      if(text) return text;
+    }catch(e){lastErr=e;}
+  }
+  throw lastErr||new Error('all proxies failed');
+}
+async function fetchSwissquote(metal){
+  const sym=SQ_SYM[metal];
+  const url=`https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/${sym}/USD`;
+  const raw=await fetchViaProxies(url);
+  const j=JSON.parse(raw);
+  const p=j?.[0]?.spreadProfilePrices?.[0];
+  if(!p||typeof p.bid!=='number'||typeof p.ask!=='number') throw new Error('bad shape');
+  return{bid:p.bid,ask:p.ask,mid:+(((p.bid+p.ask)/2).toFixed(4)),source:'Swissquote'};
+}
+async function fetchGoldApi(metal){
+  const sym=GA_SYM[metal];
+  // gold-api.com has CORS enabled directly — no proxy needed.
+  const text=await tryDirect(`https://api.gold-api.com/price/${sym}`);
+  const j=JSON.parse(text);
+  const mid=j?.price;
+  if(typeof mid!=='number'||!isFinite(mid)||mid<=0) throw new Error('bad shape');
+  const half=TYPICAL_SPREAD[metal]/2;
+  return{bid:+(mid-half).toFixed(4),ask:+(mid+half).toFixed(4),mid:+mid.toFixed(4),source:'gold-api.com (est. spread)'};
+}
+async function fetchMetal(metal){
+  // Try primary first, then fallback. Either can win.
+  try{
+    return await fetchSwissquote(metal);
+  }catch(e1){
+    try{
+      return await fetchGoldApi(metal);
+    }catch(e2){
+      return null;
+    }
+  }
+}
+// ═══ COPPER (base metal reference) ═══
+// gold-api.com is the only free, no-key source among the ones this app
+// already trusts that also carries copper (symbol HG, COMEX, USD/lb) —
+// Swissquote's feed only covers XAU/XAG/XPT/XPD, and there's no free
+// live source for rhodium, so copper is the one extra metal that can
+// actually be added here without faking a price. It's priced per pound,
+// not per troy ounce, so it gets its own small fetch/render path rather
+// than being forced through the OZ-based fetchMetal()/updOz() pipeline.
+const LB_G=453.59237;
+let copperUsdLb=0,copperLastGoodAt=0,copperSource=null;
+async function fetchCopper(){
+  try{
+    const text=await tryDirect('https://api.gold-api.com/price/HG');
+    const j=JSON.parse(text);
+    const usdPerLb=j?.price;
+    if(typeof usdPerLb!=='number'||!isFinite(usdPerLb)||usdPerLb<=0) throw new Error('bad shape');
+    return{usdPerLb,source:'gold-api.com'};
+  }catch(e){return null;}
+}
+function updCopper(data){
+  const el=document.getElementById('oCu');
+  if(!el)return;
+  if(!data){
+    if(!copperUsdLb){el.innerHTML='<span class="errd">No data yet</span>';document.getElementById('ouCu').textContent='-';document.getElementById('odCu').textContent='Waiting for first successful fetch...';}
+    return;
+  }
+  copperUsdLb=data.usdPerLb;copperLastGoodAt=Date.now();copperSource=data.source;
+  const usdPerGram=data.usdPerLb/LB_G;
+  const aedPerKg=usdPerGram*1000*FX,aedPerG=usdPerGram*FX;
+  el.innerHTML=`${fm(aedPerKg)}<span class="c">AED<span class="u2">/kg</span></span>`;
+  el.classList.remove('fl');void el.offsetWidth;el.classList.add('fl');
+  document.getElementById('ouCu').textContent=`$${fm(data.usdPerLb)} / lb`;
+  document.getElementById('odCu').textContent=`/g AED ${fm(aedPerG)} | source: ${data.source}`;
+  const srcEl=document.getElementById('srcCu');if(srcEl)srcEl.textContent=data.source;
+  const wrap=document.getElementById('ozCopper'),ageEl=document.getElementById('ageCu');
+  if(wrap)wrap.classList.remove('is-stale');
+  if(ageEl)ageEl.textContent='';
+}
+function checkCopperStaleness(){
+  const wrap=document.getElementById('ozCopper'),ageEl=document.getElementById('ageCu');
+  if(!wrap||!copperLastGoodAt)return;
+  const age=Date.now()-copperLastGoodAt;
+  if(age>STALE_MS){wrap.classList.add('is-stale');if(ageEl)ageEl.textContent='⚠ Last updated '+fmtAgo(age)+' — refresh failed';}
+  else{wrap.classList.remove('is-stale');if(ageEl)ageEl.textContent='';}
+}
+setInterval(checkCopperStaleness,15000);
+function fmtAgo(ms){
+  const s=Math.round(ms/1000);
+  if(s<60) return s+'s ago';
+  const m=Math.round(s/60);
+  return m+'m ago';
+}
+function updOz(metal,aId,uId,dId,srcId,data){
+  const el=document.getElementById(aId);
+  if(!data){
+    // keep showing last good value; just mark detail row if we have nothing at all
+    if(!spot[metal]){
+      el.innerHTML=`<span class="errd">No data yet</span>`;
+      document.getElementById(uId).textContent='-';
+      document.getElementById(dId).textContent='Waiting for first successful fetch...';
+    }
+    return;
+  }
+  const aed=data.mid*FX;
+  el.innerHTML=`${fm(aed)}<span class="c">AED</span>`;
+  el.classList.remove('fl');void el.offsetWidth;el.classList.add('fl');
+  document.getElementById(uId).textContent=`$${fm(data.mid)} / troy oz`;
+  document.getElementById(dId).textContent=`bid $${fm(data.bid)} | ask $${fm(data.ask)} | /g AED ${fm((data.mid/OZ)*FX)}`;
+  const srcEl=document.getElementById(srcId);
+  if(srcEl) srcEl.textContent=data.source==='Swissquote'?'Swissquote':'fallback';
+}
+let metalData={gold:{bid:0,ask:0},silver:{bid:0,ask:0},platinum:{bid:0,ask:0},palladium:{bid:0,ask:0}};
+function setLivePill(state,text){
+  const pill=document.getElementById('livePill');
+  pill.classList.remove('stale','off');
+  if(state==='stale') pill.classList.add('stale');
+  if(state==='off') pill.classList.add('off');
+  document.getElementById('liveS').textContent=text;
+}
+function showBanner(msg){
+  document.getElementById('srcBannerText').textContent=msg;
+  document.getElementById('srcBanner').classList.add('show');
+}
+function dismissBanner(){document.getElementById('srcBanner').classList.remove('show');}
+const CARD_WRAP={gold:'ozGold',silver:'ozSilver',platinum:'ozPlat',palladium:'ozPall'};
+const CARD_AGE={gold:'ageG',silver:'ageS',platinum:'ageP',palladium:'ageD'};
+function checkStaleness(){
+  const now=Date.now();
+  const metals=['gold','silver','platinum','palladium'];
+  metals.forEach(m=>{
+    const wrap=document.getElementById(CARD_WRAP[m]);
+    const ageEl=document.getElementById(CARD_AGE[m]);
+    if(!lastGoodAt[m]){wrap.classList.remove('is-stale');return;}
+    const age=now-lastGoodAt[m];
+    if(age>STALE_MS){
+      wrap.classList.add('is-stale');
+      ageEl.textContent='⚠ Last updated '+fmtAgo(age)+' — refresh failed';
+    }else{
+      wrap.classList.remove('is-stale');
+    }
+  });
+  const ages=metals.filter(m=>lastGoodAt[m]>0).map(m=>now-lastGoodAt[m]);
+  if(!ages.length){setLivePill('off','OFF');return;}
+  const maxAge=Math.max(...ages);
+  if(maxAge>DEAD_MS){
+    setLivePill('off','OFF');
+  }else if(maxAge>STALE_MS){
+    setLivePill('stale','STALE · '+fmtAgo(maxAge));
+  }else{
+    setLivePill('live','LIVE');
+  }
+}
+setInterval(checkStaleness,15000);
+let retryTimer=null;
+async function fetchAll(isRetry){
+  const btn=document.getElementById('rb');
+  btn.classList.add('ld');btn.disabled=true;
+  if(!isRetry) setLivePill('live','...');
+  if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+  const metals=['gold','silver','platinum','palladium'];
+  const [results,copperResult]=await Promise.all([
+    Promise.all(metals.map(m=>fetchMetal(m))),
+    fetchCopper()
+  ]);
+  updCopper(copperResult);
+  let anySuccess=false;
+  metals.forEach((m,i)=>{
+    const data=results[i];
+    if(data){
+      anySuccess=true;
+      spot[m]=data.mid;
+      metalData[m]=data;
+      lastGoodAt[m]=Date.now();
+      lastSource[m]=data.source;
+    }
+  });
+  updOz('gold','oG','ouG','odG','srcG',results[0]);
+  updOz('silver','oS','ouS','odS','srcS',results[1]);
+  updOz('platinum','oP','ouP','odP','srcP',results[2]);
+  updOz('palladium','oD','ouD','odD','srcD',results[3]);
+  if(anySuccess){
+    consecutiveFailures=0;
+    render();calcRate();updateQS();updateIndicators();renderQuotesFallback();
+    checkStaleness();
+    dismissBanner();
+    document.getElementById('atText').textContent='auto 30s';
+    retryTimer=setTimeout(()=>fetchAll(true),30000);
+  }else{
+    consecutiveFailures++;
+    checkStaleness();
+    showBanner('Live price feed unreachable (network blocked or all sources down). Showing last known prices'+(lastGoodAt.gold?' from '+fmtAgo(Date.now()-lastGoodAt.gold):'')+'. Will keep retrying automatically.');
+    // back off faster retries on failure instead of waiting the full 30s
+    const retryIn=Math.min(10000*Math.pow(1.5,Math.min(consecutiveFailures,5)),30000);
+    document.getElementById('atText').textContent='retrying in '+Math.round(retryIn/1000)+'s';
+    retryTimer=setTimeout(()=>fetchAll(true),retryIn);
+  }
+  btn.classList.remove('ld');btn.disabled=false;
+  document.getElementById('tsUp').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Asia/Dubai'});
+}
+function injectTV(c,type,cfg){
+  const d=document.createElement('div');d.className='tradingview-widget-container';
+  const i=document.createElement('div');i.className='tradingview-widget-container__widget';
+  if(cfg.autosize){i.style.cssText='height:calc(100% - 32px);width:100%';d.style.cssText='height:100%;width:100%';}
+  d.appendChild(i);
+  const s=document.createElement('script');s.type='text/javascript';
+  s.src=`https://s3.tradingview.com/external-embedding/embed-widget-${type}.js`;
+  s.async=true;s.textContent=JSON.stringify(cfg);d.appendChild(s);c.appendChild(d);
+}
+// ═══ ECONOMIC CALENDAR (Tradays / MQL5) ═══
+// Same "clear container, re-inject a fresh <script> tag with a JSON config
+// body" pattern as injectTV above — the vendor script reads its own
+// textContent for options and locates the target div by id. Re-run on
+// theme change so the calendar follows the app's light/dark toggle.
+function injectEcoCal(){
+  const wrap=document.getElementById('ecoCalWrap');
+  if(!wrap)return;
+  wrap.innerHTML='';
+  const box=document.createElement('div');box.id='economicCalendarWidget';
+  wrap.appendChild(box);
+  const cw=document.createElement('div');cw.className='ecw-copyright';
+  cw.innerHTML='<a href="https://www.mql5.com/?utm_source=calendar.widget&utm_medium=link&utm_term=economic.calendar&utm_content=visit.mql5.calendar&utm_campaign=202.calendar.widget" rel="noopener nofollow" target="_blank">MQL5 Algo Trading Community</a>';
+  wrap.appendChild(cw);
+  const t=getTheme();
+  const s=document.createElement('script');
+  s.async=true;s.type='text/javascript';s.setAttribute('data-type','calendar-widget');
+  s.src='https://www.tradays.com/c/js/widgets/calendar/widget.js?v=15';
+  // theme: 0 = light, 1 = dark (per vendor script's integer-parsed "theme" key)
+  s.textContent=JSON.stringify({width:'100%',height:'540',mode:'2',fw:'html',lang:'en',theme:t==='dark'?1:0});
+  wrap.appendChild(s);
+}
+// ═══ LIVE QUOTES OVERVIEW (MetaTrader/MQL5) ═══
+// Same injection pattern again. This widget's config explicitly carries
+// an "id" that must match the container div's id, unlike the calendar
+// widget above — kept as given rather than guessed, since a mismatch
+// here means the vendor script has nothing to attach to.
+// mql5QuotesFailed tracks whether the MQL5 quotes widget is known to be
+// down, so the fallback table below can be (re)rendered from the same
+// Swissquote/gold-api data (metalData{}) that already powers the rest of
+// this page, and kept fresh on every fetchAll() cycle while it's active.
+let mql5QuotesFailed=false;
+function markQuotesFailed(){
+  if(mql5QuotesFailed)return;
+  mql5QuotesFailed=true;
+  renderQuotesFallback();
+}
+let quotesResizeTimer=null,quotesLastW=0;
+function injectQuotes(){
+  const wrap=document.getElementById('quotesWrap');
+  if(!wrap)return;
+  mql5QuotesFailed=false;
+  wrap.innerHTML='';
+  const box=document.createElement('div');box.id='quotesWidgetOverview';
+  wrap.appendChild(box);
+  const cw=document.createElement('div');cw.className='qw-copyright';
+  cw.innerHTML='<a href="https://www.metatrader.com/?utm_source=quotes.widget&utm_medium=link&utm_term=quotes.overview&utm_content=visit.mql5.quotes&utm_campaign=quotes.overview.widget" rel="noopener nofollow" target="_blank">MetaTrader World Markets</a>';
+  wrap.appendChild(cw);
+  // Fit the widget's declared width/height to the actual box on THIS
+  // device instead of the vendor snippet's fixed 700x420 — that fixed
+  // pixel width is what was overflowing/getting clipped on mobile.
+  const cssW=Math.max(280,Math.floor(wrap.clientWidth||wrap.getBoundingClientRect().width||320));
+  const isNarrow=cssW<480;
+  const cssH=isNarrow?Math.round(cssW*0.62):420;
+  quotesLastW=cssW;
+  const s=document.createElement('script');
+  s.async=true;s.type='text/javascript';s.setAttribute('data-type','quotes-widget');
+  s.src='https://c.mql5.com/js/widgets/quotes/widget.js?v=3';
+  s.textContent=JSON.stringify({type:'overview',style:'table',filter:['XAUUSD','XAGUSD','XPTUSD','XPDUSD'],width:cssW,height:cssH,period:'D1',id:'quotesWidgetOverview',fw:'html'});
+  s.onerror=markQuotesFailed;
+  wrap.appendChild(s);
+  // The script can also load fine but never render (ad/tracker blocker,
+  // CSP, a blocked or slow MQL5 endpoint) without ever firing onerror —
+  // give it a window to populate the box, then fall back if nothing showed.
+  setTimeout(()=>{
+    const b=document.getElementById('quotesWidgetOverview');
+    if(!mql5QuotesFailed&&b&&!b.firstChild) markQuotesFailed();
+  },9000);
+}
+// Re-fit on real size changes (rotation, resize, dragging into split-screen)
+// so the widget doesn't stay sized for whatever viewport it first loaded in.
+// Debounced + threshold-gated to avoid re-injecting the vendor widget on
+// every pixel during a desktop window drag.
+window.addEventListener('resize',()=>{
+  clearTimeout(quotesResizeTimer);
+  quotesResizeTimer=setTimeout(()=>{
+    if(mql5QuotesFailed)return;
+    const wrap=document.getElementById('quotesWrap');
+    if(!wrap)return;
+    const w=Math.floor(wrap.clientWidth||wrap.getBoundingClientRect().width||0);
+    if(w&&Math.abs(w-quotesLastW)>40) injectQuotes();
+  },450);
+});
+const QUOTE_SYMS=[{k:'gold',sym:'XAUUSD',name:'Gold'},{k:'silver',sym:'XAGUSD',name:'Silver'},{k:'platinum',sym:'XPTUSD',name:'Platinum'},{k:'palladium',sym:'XPDUSD',name:'Palladium'}];
+function renderQuotesFallback(){
+  if(!mql5QuotesFailed)return;
+  const wrap=document.getElementById('quotesWrap');
+  if(!wrap)return;
+  const rows=QUOTE_SYMS.map(q=>{
+    const d=metalData[q.k];
+    const has=d&&d.bid;
+    return`<div class="kc-row"><span class="kc-lbl">${q.sym} <span style="color:var(--tx3);font-weight:600">(${q.name})</span></span><span class="kc-val">${has?`bid ${fm(d.bid)} · ask ${fm(d.ask)}`:'waiting…'}</span></div>`;
+  }).join('');
+  wrap.innerHTML=`<div style="padding:14px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:9.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--warn)">⚠ MQL5 widget unavailable — showing GoldBench live feed</div>
+    ${rows}
+    <button class="ref-b" style="margin-top:10px" onclick="injectQuotes()"><span class="sp">&#8635;</span>Retry MQL5 widget</button>
+  </div>`;
+}
+function loadWidgets(){
+  const t=getTheme(),bg=t==='dark'?'rgba(12,12,18,1)':'rgba(255,255,255,1)';
+  const tk=document.getElementById('tickerWrap');tk.innerHTML='';
+  injectTV(tk,'ticker-tape',{symbols:[
+    {description:'Gold',proName:'OANDA:XAUUSD'},{description:'Silver',proName:'OANDA:XAGUSD'},
+    {description:'Platinum',proName:'OANDA:XPTUSD'},{description:'Palladium',proName:'OANDA:XPDUSD'},
+    {description:'Gold/Silver',proName:'TVC:GOLDSILVER'},
+    {description:'Gold Idx',proName:'TVC:GOLD'},{description:'Silver Idx',proName:'TVC:SILVER'},
+    {description:'DXY',proName:'INDEX:DXY'},{description:'USD/AED',proName:'FX_IDC:USDAED'},
+    {description:'EUR/USD',proName:'FX:EURUSD'},{description:'GBP/USD',proName:'FX:GBPUSD'},
+    {description:'USD/JPY',proName:'FX:USDJPY'},{description:'Crude Oil',proName:'TVC:USOIL'}
+  ],showSymbolLogo:true,colorTheme:t,isTransparent:true,displayMode:'compact',locale:'en'});
+  const cg=document.getElementById('chartsGrid');cg.innerHTML='';
+  [{n:'Gold',s:'OANDA:XAUUSD|1D',c:t==='dark'?'rgba(201,168,76,1)':'rgba(154,123,47,1)',tc:t==='dark'?'rgba(201,168,76,.1)':'rgba(154,123,47,.06)'},
+   {n:'Silver',s:'OANDA:XAGUSD|1D',c:t==='dark'?'rgba(139,153,168,1)':'rgba(90,104,120,1)',tc:t==='dark'?'rgba(139,153,168,.1)':'rgba(90,104,120,.06)'},
+   {n:'Platinum',s:'TVC:PLATINUM|1D',c:t==='dark'?'rgba(196,196,192,1)':'rgba(96,96,96,1)',tc:t==='dark'?'rgba(196,196,192,.1)':'rgba(96,96,96,.06)'},
+   {n:'Palladium',s:'TVC:PALLADIUM|1D',c:t==='dark'?'rgba(168,170,168,1)':'rgba(112,112,112,1)',tc:t==='dark'?'rgba(168,170,168,.1)':'rgba(112,112,112,.06)'}
+  ].forEach(m=>{
+    const b=document.createElement('div');b.className='cb';
+    injectTV(b,'symbol-overview',{symbols:[[m.n,m.s]],chartOnly:false,width:'100%',height:260,locale:'en',colorTheme:t,autosize:false,showVolume:false,showMA:true,hideDateRanges:false,hideMarketStatus:false,hideSymbolLogo:false,scalePosition:'right',scaleMode:'Normal',noTimeScale:false,valuesTracking:'1',changeMode:'price-and-percent',chartType:'area',maLineColor:m.c,maLineWidth:1,maLength:9,backgroundColor:bg,lineWidth:2,lineType:0,dateRanges:['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M'],lineColor:m.c,topColor:m.tc,bottomColor:m.tc.replace(/[\d.]+\)$/,'0)')});
+    cg.appendChild(b);
+  });
+  const ac=document.getElementById('advChart');ac.innerHTML='';
+  injectTV(ac,'advanced-chart',{autosize:true,symbol:'OANDA:XAUUSD',interval:'15',timezone:'Asia/Dubai',theme:t,style:'1',locale:'en',backgroundColor:bg,gridColor:t==='dark'?'rgba(28,28,42,.4)':'rgba(220,220,226,.4)',allow_symbol_change:true,save_image:false,calendar:false,details:true,support_host:'https://www.tradingview.com'});
+  injectEcoCal();
+  injectQuotes();
+}
+if(window.matchMedia){window.matchMedia('(prefers-color-scheme:light)').addEventListener('change',()=>{loadWidgets()});}
+// ═══ RATE CALCULATOR ═══
+const CALC_PURITIES={
+  gold:[{l:'24K (999)',f:1,inv:true},{l:'22K',f:22/24,inv:false},{l:'21K',f:21/24,inv:false},{l:'18K',f:18/24,inv:false},{l:'14K',f:14/24,inv:false},{l:'9K',f:9/24,inv:false}],
+  silver:[{l:'999 Fine',f:.999,inv:true},{l:'925 Sterling',f:.925,inv:false},{l:'990',f:.99,inv:true},{l:'970',f:.97,inv:false},{l:'900',f:.9,inv:false},{l:'835',f:.835,inv:false},{l:'800',f:.8,inv:false}],
+  platinum:[{l:'999 Fine',f:.999,inv:true},{l:'950 Jewellery',f:.95,inv:false},{l:'900',f:.9,inv:false},{l:'850',f:.85,inv:false}],
+  palladium:[{l:'999 Fine',f:.999,inv:true},{l:'950 Jewellery',f:.95,inv:false},{l:'500',f:.5,inv:false}]
+};
+function populatePurity(){
+  const m=document.getElementById('cMetal').value;
+  const sel=document.getElementById('cPurity');
+  sel.innerHTML=CALC_PURITIES[m].map((p,i)=>`<option value="${i}">${p.l}${p.inv?' [0% VAT]':''}</option>`).join('');
+}
+function calcRate(){
+  const m=document.getElementById('cMetal').value;
+  const pIdx=parseInt(document.getElementById('cPurity').value)||0;
+  const weight=parseFloat(document.getElementById('cWeight').value)||0;
+  const mkType=document.getElementById('cMkType').value;
+  const mkVal=parseFloat(document.getElementById('cMkVal').value)||0;
+  const discType=document.getElementById('cDiscType').value;
+  const discVal=parseFloat(document.getElementById('cDiscVal').value)||0;
+  const purity=CALC_PURITIES[m][pIdx];
+  if(!spot[m]||!weight||!purity){['crMetal','crMaking','crDisc','crSub','crVat','crTotal'].forEach(id=>document.getElementById(id).textContent='-');return;}
+  const ppg=(spot[m]/OZ)*FX*purity.f;
+  const metalVal=ppg*weight;
+  let making=0;
+  if(mkType==='per_gram') making=mkVal*weight;
+  else if(mkType==='total') making=mkVal;
+  else if(mkType==='percent') making=metalVal*(mkVal/100);
+  const beforeDiscount=metalVal+making;
+  let discount=0;
+  if(discType==='flat') discount=discVal;
+  else if(discType==='percent') discount=beforeDiscount*(discVal/100);
+  else if(discType==='per_gram') discount=discVal*weight;
+  if(discount>beforeDiscount) discount=beforeDiscount;
+  const subtotal=beforeDiscount-discount;
+  const isInvestment=purity.inv;
+  const vatRate=isInvestment?0:0.05;
+  const vat=subtotal*vatRate;
+  const total=subtotal+vat;
+  document.getElementById('crMetal').textContent=`${fm(metalVal)} AED`;
+  document.getElementById('crMaking').textContent=`${fm(making)} AED`;
+  const discLabel=document.getElementById('crDiscLabel');
+  const discDisplay=document.getElementById('crDisc');
+  if(discount>0){discLabel.textContent=discType==='percent'?`Discount (${discVal}%)`:'Discount';discDisplay.textContent=`- ${fm(discount)} AED`;}
+  else{discLabel.textContent='Discount';discDisplay.textContent='0.00 AED';}
+  document.getElementById('crSub').textContent=`${fm(subtotal)} AED`;
+  const vatLabel=document.getElementById('crVatLabel');
+  const vatVal=document.getElementById('crVat');
+  if(isInvestment){vatLabel.textContent='VAT 0% (Investment Grade 99%+)';vatLabel.style.color='var(--gn)';vatVal.textContent='0.00 AED';vatVal.style.color='var(--gn)';}
+  else{vatLabel.textContent='VAT 5% (Retail/Jewellery)';vatLabel.style.color='var(--rd)';vatVal.textContent=`${fm(vat)} AED`;vatVal.style.color='var(--rd)';}
+  document.getElementById('crTotal').textContent=`${fm(total)} AED`;
+}
+document.getElementById('cMetal').addEventListener('change',()=>{populatePurity();calcRate();});
+function resetCalc(){
+  document.getElementById('cMetal').value='gold';document.getElementById('cWeight').value='1';
+  document.getElementById('cMkType').value='per_gram';document.getElementById('cMkVal').value='0';
+  document.getElementById('cDiscType').value='flat';document.getElementById('cDiscVal').value='0';
+  populatePurity();document.getElementById('cPurity').value='0';
+  ['crMetal','crMaking','crSub','crTotal'].forEach(id=>document.getElementById(id).textContent='-');
+  document.getElementById('crDisc').textContent='0.00 AED';
+  document.getElementById('crVat').textContent='-';calcRate();
+}
+populatePurity();
+// ═══ AED QUICK STRIP ═══
+function updateQS(){
+  if(!spot.gold)return;
+  const g=(spot.gold/OZ)*FX;
+  document.getElementById('qs24').textContent=fm(g);
+  document.getElementById('qs22').textContent=fm(g*(22/24));
+  document.getElementById('qs21').textContent=fm(g*(21/24));
+  document.getElementById('qs18').textContent=fm(g*(18/24));
+  if(spot.silver) document.getElementById('qs925').textContent=fm((spot.silver/OZ)*FX*0.925);
+}
+function updateIndicators(){
+  if(spot.gold&&spot.silver){const ratio=(spot.gold/spot.silver).toFixed(1);document.getElementById('gsRatio').textContent=ratio;document.getElementById('gsNote').textContent='1 oz gold = '+ratio+' oz silver';}
+  if(metalData.gold.bid)document.getElementById('spGold').textContent='$'+fm(metalData.gold.ask-metalData.gold.bid);
+  if(metalData.silver.bid)document.getElementById('spSilver').textContent='$'+fm(metalData.silver.ask-metalData.silver.bid);
+  if(metalData.platinum.bid)document.getElementById('spPlat').textContent='$'+fm(metalData.platinum.ask-metalData.platinum.bid);
+}
+// ═══ WEIGHT CONVERTER ═══
+const WC_UNITS={g:1,oz:31.1035,tola:11.6638,pavan:8,kg:1000,dwt:1.55517,tael:37.799};
+function convertWeight(){
+  const val=parseFloat(document.getElementById('wcVal').value)||0;
+  const from=document.getElementById('wcFrom').value;
+  const grams=val*WC_UNITS[from];
+  const results=Object.entries(WC_UNITS).filter(([k])=>k!==from).map(([k,v])=>{
+    const names={g:'Grams',oz:'Troy Oz',tola:'Tola',pavan:'Pavan',kg:'Kilogram',dwt:'Pennyweight',tael:'Tael'};
+    return`<div class="wc-item"><span class="wc-unit">${names[k]}</span><span class="wc-val">${(grams/v).toFixed(4)}</span></div>`;
+  }).join('');
+  document.getElementById('wcResults').innerHTML=results;
+}
+convertWeight();
+// ═══ KARAT CONVERSION ═══
+// 24K uses f:1 (not 0.999) to match every other calculator in this app
+// (price grid, Rate Calculator, Scrap Valuation, Melting Loss, Order
+// Estimator) — they all price 24K at the full spot rate. Keeping this
+// table's 24K factor at 0.999 made the Karat Conversion tool disagree
+// with the rest of the dashboard on identical inputs (e.g. converting a
+// 1000g 24K bar showed 1g less pure gold here than in Scrap Valuation).
+const KARAT_DATA={24:{f:1,name:'24K'},22:{f:22/24,name:'22K'},21:{f:21/24,name:'21K'},18:{f:18/24,name:'18K'},14:{f:14/24,name:'14K'},10:{f:10/24,name:'10K'},9:{f:9/24,name:'9K'}};
+const KC_UNITS={g:1,oz:31.1035,tola:11.6638,pavan:8};
+function calcKC(){
+  const wt=parseFloat(document.getElementById('kcWt').value)||0;
+  const unit=document.getElementById('kcUnit').value;
+  const grams=wt*KC_UNITS[unit];
+  const fromK=parseInt(document.getElementById('kcFrom').value);
+  const toK=parseInt(document.getElementById('kcTo').value);
+  if(!grams||fromK===toK){document.getElementById('kcResults').innerHTML=fromK===toK&&grams?'<div style="text-align:center;padding:12px;color:var(--tx3);font-size:11px">Same karat selected.</div>':'';return;}
+  const fromF=KARAT_DATA[fromK].f,toF=KARAT_DATA[toK].f;
+  const pureGold=grams*fromF,fromAlloy=grams-pureGold;
+  const increasing=toK>fromK;
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--a)">`;
+  h+=`<div style="font-size:12px;font-weight:800;color:var(--a);margin-bottom:10px">${increasing?'Increasing':'Decreasing'} Purity (${fromK}K → ${toK}K)</div>`;
+  if(increasing){
+    const pureToAdd=(toF*grams-pureGold)/(1.0-toF);
+    const totalAfter=grams+pureToAdd,totalPureAfter=pureGold+pureToAdd,totalAlloyAfter=totalAfter-totalPureAfter;
+    h+=`<div style="text-align:center;margin:10px 0;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:28px;font-weight:800">${totalAfter.toFixed(2)}g</div><div style="font-size:13px;font-weight:700;color:var(--a)">${toK}K Gold</div><div style="font-size:11px;color:var(--tx3);margin-top:3px">Add ${pureToAdd.toFixed(2)}g pure gold (24K)</div></div>`;
+    h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">Before (${fromK}K)</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${grams.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Au</span><span class="kc-val kc-gold">${pureGold.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Alloy</span><span class="kc-val kc-alloy">${fromAlloy.toFixed(3)}g</span></div></div><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">After (${toK}K)</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${totalAfter.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Au</span><span class="kc-val kc-gold">${totalPureAfter.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Alloy</span><span class="kc-val kc-alloy">${totalAlloyAfter.toFixed(3)}g</span></div></div></div>`;
+  }else{
+    const toWeight=pureGold/toF,alloyToAdd=toWeight-grams,toAlloy=toWeight-pureGold;
+    h+=`<div style="text-align:center;margin:10px 0;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:28px;font-weight:800">${toWeight.toFixed(2)}g</div><div style="font-size:13px;font-weight:700;color:var(--a)">${toK}K Gold</div><div style="font-size:11px;color:var(--tx3);margin-top:3px">Add ${alloyToAdd.toFixed(2)}g alloy</div></div>`;
+    h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">Before (${fromK}K)</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${grams.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Au</span><span class="kc-val kc-gold">${pureGold.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Alloy</span><span class="kc-val kc-alloy">${fromAlloy.toFixed(3)}g</span></div></div><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">After (${toK}K)</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${toWeight.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Au</span><span class="kc-val kc-gold">${pureGold.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Alloy</span><span class="kc-val kc-alloy">${toAlloy.toFixed(3)}g</span></div></div></div>`;
+  }
+  h+=`</div>`;
+  document.getElementById('kcResults').innerHTML=h;
+}
+function resetKC(){document.getElementById('kcWt').value='0';document.getElementById('kcResults').innerHTML='';}
+// ═══ ALLOY MIX ═══
+const ALLOY_DB={
+  red:{name:'Red Gold',cu:1.00,ag:0,ni:0,pd:0,zn:0,color:'Deep Red',hard:'Very Hard',meltS:890,meltL:1064,note:'Very hard. May be brittle for delicate work.'},
+  rose:{name:'Rose Gold',cu:0.75,ag:0.225,ni:0,pd:0,zn:0.025,color:'Rose Pink',hard:'Hard',meltS:900,meltL:1020,note:'Most popular pink-toned gold.'},
+  pink:{name:'Pink Gold',cu:0.50,ag:0.45,ni:0,pd:0,zn:0.05,color:'Soft Pink',hard:'Medium',meltS:910,meltL:1000,note:'Lighter pink tone. Easier to work.'},
+  yellow:{name:'Yellow Gold',cu:0.50,ag:0.50,ni:0,pd:0,zn:0,color:'Rich Yellow',hard:'Medium',meltS:885,meltL:960,note:'Traditional jewellery gold.'},
+  yellow_zn:{name:'Yellow Gold (Zn)',cu:0.40,ag:0.45,ni:0,pd:0,zn:0.15,color:'Bright Yellow',hard:'Medium-Hard',meltS:860,meltL:940,note:'Zinc improves casting.'},
+  white_ni:{name:'White Gold (Ni)',cu:0.10,ag:0,ni:0.85,pd:0,zn:0.05,color:'Bright White',hard:'Very Hard',meltS:900,meltL:1100,note:'Needs rhodium plating. May cause allergies.'},
+  white_pd:{name:'White Gold (Pd)',cu:0,ag:0.10,ni:0,pd:0.90,zn:0,color:'Natural White',hard:'Medium',meltS:1060,meltL:1080,note:'Hypoallergenic. No rhodium needed.'},
+  green:{name:'Green Gold',cu:0,ag:1.00,ni:0,pd:0,zn:0,color:'Green-Yellow',hard:'Soft',meltS:880,meltL:1040,note:'Pure silver alloy. Mainly decorative.'}
+};
+function calcMix(){
+  const targetK=parseInt(document.getElementById('mxTarget').value);
+  const totalWt=parseFloat(document.getElementById('mxTotalWt').value)||0;
+  const alloyKey=document.getElementById('mxAlloy').value;
+  if(!totalWt){document.getElementById('mxResults').innerHTML='';return;}
+  const purity=KARAT_DATA[targetK].f;
+  const pureGold=totalWt*purity,totalAlloy=totalWt-pureGold,at=ALLOY_DB[alloyKey];
+  const cuWt=totalAlloy*at.cu,agWt=totalAlloy*at.ag,niWt=totalAlloy*at.ni,pdWt=totalAlloy*at.pd,znWt=totalAlloy*at.zn;
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--a)">`;
+  h+=`<div style="font-size:11px;font-weight:800;color:var(--a);margin-bottom:6px">Alloy for ${totalWt.toFixed(2)}g of ${targetK}K ${at.name}</div>`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Pure Gold (Au) ${(purity*100).toFixed(2)}%</span><span class="kc-val kc-gold">${pureGold.toFixed(3)}g</span></div>`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Total Alloy ${((1-purity)*100).toFixed(2)}%</span><span class="kc-val kc-alloy">${totalAlloy.toFixed(3)}g</span></div>`;
+  if(cuWt>0.001)h+=`<div class="kc-row"><span class="kc-lbl">Copper (Cu) ${(at.cu*100).toFixed(0)}%</span><span class="kc-val">${cuWt.toFixed(3)}g</span></div>`;
+  if(agWt>0.001)h+=`<div class="kc-row"><span class="kc-lbl">Silver (Ag) ${(at.ag*100).toFixed(1)}%</span><span class="kc-val">${agWt.toFixed(3)}g</span></div>`;
+  if(niWt>0.001)h+=`<div class="kc-row"><span class="kc-lbl">Nickel (Ni) ${(at.ni*100).toFixed(0)}%</span><span class="kc-val">${niWt.toFixed(3)}g</span></div>`;
+  if(pdWt>0.001)h+=`<div class="kc-row"><span class="kc-lbl">Palladium (Pd) ${(at.pd*100).toFixed(0)}%</span><span class="kc-val">${pdWt.toFixed(3)}g</span></div>`;
+  if(znWt>0.001)h+=`<div class="kc-row"><span class="kc-lbl">Zinc (Zn) ${(at.zn*100).toFixed(1)}%</span><span class="kc-val">${znWt.toFixed(3)}g</span></div>`;
+  h+=`<div style="font-size:9px;color:var(--tx3);margin-top:8px;font-style:italic">${at.note} | Melt: ${at.meltS}-${at.meltL}°C | ${at.color} | ${at.hard}</div>`;
+  h+=`</div>`;
+  document.getElementById('mxResults').innerHTML=h;
+}
+function resetMix(){document.getElementById('mxTotalWt').value='0';document.getElementById('mxResults').innerHTML='';}
+// ═══ SILVER PURITY ═══
+const SILVER_DATA={999:{f:0.999,name:'Fine Silver'},990:{f:0.99,name:'990 Silver'},970:{f:0.97,name:'Britannia'},950:{f:0.95,name:'950 Silver'},925:{f:0.925,name:'Sterling'},900:{f:0.9,name:'Coin Silver'},835:{f:0.835,name:'835 Silver'},800:{f:0.8,name:'800 Silver'}};
+function calcSilver(){
+  const wt=parseFloat(document.getElementById('scWt').value)||0;
+  const fromKey=document.getElementById('scFrom').value,toKey=document.getElementById('scTo').value;
+  if(!wt||fromKey===toKey){document.getElementById('scResults').innerHTML='';return;}
+  const fromD=SILVER_DATA[fromKey],toD=SILVER_DATA[toKey];
+  const pureSilver=wt*fromD.f,fromCopper=wt-pureSilver;
+  const toWeight=pureSilver/toD.f,toCopper=toWeight-pureSilver,materialDiff=toWeight-wt;
+  const goingDown=toD.f<fromD.f;
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--sv)">`;
+  h+=`<div style="font-size:11px;font-weight:800;color:var(--sv2);margin-bottom:8px">${fromKey} → ${toKey}</div>`;
+  h+=`<div style="text-align:center;margin:10px 0;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:28px;font-weight:800">${toWeight.toFixed(2)}g</div><div style="font-size:13px;font-weight:700;color:var(--sv2)">${toD.name}</div>`;
+  if(goingDown&&materialDiff>0)h+=`<div style="font-size:10px;color:var(--tx3);margin-top:3px">Add ${materialDiff.toFixed(2)}g copper</div>`;
+  h+=`</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">Before (${fromKey})</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${wt.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Ag</span><span class="kc-val kc-alloy">${pureSilver.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Copper</span><span class="kc-val">${fromCopper.toFixed(3)}g</span></div></div><div style="background:var(--bg3);border-radius:7px;padding:10px"><div style="font-size:8px;font-weight:800;color:var(--tx3);text-transform:uppercase;margin-bottom:5px">After (${toKey})</div><div class="kc-row"><span class="kc-lbl">Total</span><span class="kc-val">${toWeight.toFixed(2)}g</span></div><div class="kc-row"><span class="kc-lbl">Pure Ag</span><span class="kc-val kc-alloy">${pureSilver.toFixed(3)}g</span></div><div class="kc-row"><span class="kc-lbl">Copper</span><span class="kc-val">${toCopper.toFixed(3)}g</span></div></div></div>`;
+  h+=`</div>`;
+  document.getElementById('scResults').innerHTML=h;
+}
+function resetSilver(){document.getElementById('scWt').value='0';document.getElementById('scResults').innerHTML='';}
+// ═══ SCRAP GOLD ═══
+let scrapItems=[];
+function addScrapItem(){
+  const karat=parseInt(document.getElementById('sgKarat').value);
+  const wt=parseFloat(document.getElementById('sgWt').value)||0;
+  if(!wt)return;
+  scrapItems.push({karat,wt});
+  document.getElementById('sgWt').value='';
+  renderScrap();
+}
+function removeScrapItem(i){scrapItems.splice(i,1);renderScrap();}
+function renderScrap(){
+  const el=document.getElementById('sgItems'),tel=document.getElementById('sgTotal');
+  if(!scrapItems.length){el.innerHTML='<div style="text-align:center;font-size:10px;color:var(--tx3);padding:8px">No items added</div>';tel.innerHTML='';return;}
+  let totalPure=0,totalWt=0;
+  let h='';
+  scrapItems.forEach((item,i)=>{
+    const pure=item.wt*(item.karat/24);totalPure+=pure;totalWt+=item.wt;
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border-radius:7px;padding:8px 12px;margin-bottom:4px"><div><span style="font-size:12px;font-weight:700">${item.karat}K</span> <span class="mn" style="font-size:11px">${item.wt.toFixed(2)}g</span> <span style="font-size:10px;color:var(--tx3)">(${pure.toFixed(3)}g pure)</span></div><button onclick="removeScrapItem(${i})" style="background:none;border:1px solid var(--rd);color:var(--rd);border-radius:5px;padding:2px 8px;font-size:9px;font-weight:700;cursor:pointer">X</button></div>`;
+  });
+  el.innerHTML=h;
+  const goldPerGramUSD=spot.gold?spot.gold/OZ:0;
+  const totalValUSD=totalPure*goldPerGramUSD,totalValAED=totalValUSD*FX,avgKarat=(totalPure/totalWt)*24;
+  let th=`<div style="background:var(--bg2);border-radius:9px;padding:12px;margin-top:8px;border-left:3px solid var(--a)">`;
+  th+=`<div class="kc-row"><span class="kc-lbl">Total Weight</span><span class="kc-val">${totalWt.toFixed(2)}g</span></div>`;
+  th+=`<div class="kc-row"><span class="kc-lbl">Total Pure Gold</span><span class="kc-val kc-gold">${totalPure.toFixed(3)}g</span></div>`;
+  th+=`<div class="kc-row"><span class="kc-lbl">Avg Purity</span><span class="kc-val">${avgKarat.toFixed(1)}K (${((totalPure/totalWt)*100).toFixed(1)}%)</span></div>`;
+  if(goldPerGramUSD){th+=`<div class="kc-row"><span class="kc-lbl">Value (AED)</span><span class="kc-val" style="font-size:15px;color:var(--a)">${totalValAED.toFixed(2)} AED</span></div>`;}
+  th+=`</div>`;
+  tel.innerHTML=th;
+}
+function resetScrap(){scrapItems=[];renderScrap();}
+renderScrap();
+// ═══ ASSAY ═══
+const STD_KARATS=[{k:24,f:0.999},{k:22,f:0.9167},{k:21,f:0.875},{k:18,f:0.75},{k:14,f:0.5833},{k:10,f:0.4167},{k:9,f:0.375}];
+function calcAssay(){
+  const auPct=parseFloat(document.getElementById('auPct').value)||0;
+  const barWt=parseFloat(document.getElementById('auWt').value)||0;
+  const el=document.getElementById('auResults');
+  if(!auPct){el.innerHTML='';return;}
+  let purity=auPct>100?auPct/10:auPct;
+  const fineness=purity/100,exactKarat=fineness*24;
+  const pureGold=barWt*fineness,alloyWt=barWt-pureGold;
+  let nearestBelow=STD_KARATS[STD_KARATS.length-1];
+  for(const k of STD_KARATS){if(fineness>=k.f){nearestBelow=k;break;}}
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--a)">`;
+  h+=`<div style="text-align:center;margin-bottom:12px"><div class="mn" style="font-size:32px;font-weight:800;color:var(--a)">${exactKarat.toFixed(3)}K</div><div style="font-size:14px;font-weight:700;color:var(--tx2)">Fineness ${(fineness*1000).toFixed(2)}</div><div style="font-size:11px;color:var(--tx3);margin-top:4px">Nearest standard: <b>${nearestBelow.k}K</b></div></div>`;
+  if(barWt>0){
+    h+=`<div class="kc-row"><span class="kc-lbl">Bar Weight</span><span class="kc-val">${barWt.toFixed(2)}g</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Pure Gold</span><span class="kc-val kc-gold">${pureGold.toFixed(3)}g</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Alloy</span><span class="kc-val kc-alloy">${alloyWt.toFixed(3)}g</span></div>`;
+    if(spot.gold){const valAED=pureGold*(spot.gold/OZ)*FX;h+=`<div class="kc-row"><span class="kc-lbl">Pure Gold Value</span><span class="kc-val" style="color:var(--a)">${valAED.toFixed(2)} AED</span></div>`;}
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+function resetAssay(){document.getElementById('auPct').value='';document.getElementById('auWt').value='';document.getElementById('auResults').innerHTML='';}
+// ═══ MELTING LOSS ═══
+function calcMelt(){
+  const before=parseFloat(document.getElementById('mlBefore').value)||0;
+  const after=parseFloat(document.getElementById('mlAfter').value)||0;
+  const karat=parseInt(document.getElementById('mlKarat').value);
+  const expected=parseFloat(document.getElementById('mlExpected').value);
+  const el=document.getElementById('mlResults');
+  if(!before){el.innerHTML='';return;}
+  const purity=karat/24,pureGoldBefore=before*purity;
+  const expectedAfter=before*(1-expected/100),expectedLoss=before*expected/100;
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--a)">`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Before (${karat}K)</span><span class="kc-val">${before.toFixed(2)}g</span></div>`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Pure Gold</span><span class="kc-val kc-gold">${pureGoldBefore.toFixed(3)}g</span></div>`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Expected Loss (${expected}%)</span><span class="kc-val" style="color:var(--rd)">${expectedLoss.toFixed(3)}g</span></div>`;
+  h+=`<div class="kc-row"><span class="kc-lbl">Expected Recovery</span><span class="kc-val">${expectedAfter.toFixed(2)}g</span></div>`;
+  if(after>0){
+    const actualLoss=before-after,actualPct=(actualLoss/before)*100;
+    const pureGoldAfter=after*purity,goldLost=pureGoldBefore-pureGoldAfter;
+    const lossAED=spot.gold?(goldLost*(spot.gold/OZ)*FX):0;
+    const isNormal=actualPct<=expected*1.5;
+    h+=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--br)">`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Actual After</span><span class="kc-val">${after.toFixed(2)}g</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Actual Loss</span><span class="kc-val" style="color:var(--rd)">${actualLoss.toFixed(3)}g (${actualPct.toFixed(2)}%)</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Recovery Rate</span><span class="kc-val" style="color:var(--gn)">${((after/before)*100).toFixed(2)}%</span></div>`;
+    if(lossAED)h+=`<div class="kc-row"><span class="kc-lbl">Loss Value</span><span class="kc-val" style="color:var(--rd)">${lossAED.toFixed(2)} AED</span></div>`;
+    h+=`<div style="margin-top:6px;padding:6px;border-radius:5px;font-size:10px;font-weight:700;background:${isNormal?'var(--bg3)':'rgba(255,82,82,0.1)'}"><span style="color:${isNormal?'var(--gn)':'var(--rd)'}">${isNormal?'NORMAL':'ABOVE EXPECTED'}</span>${isNormal?' — Loss within expected range':` — Check for stones/enamel. Actual: ${actualPct.toFixed(1)}% vs expected: ${expected}%`}</div>`;
+    h+=`</div>`;
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+function resetMelt(){document.getElementById('mlBefore').value='0';document.getElementById('mlAfter').value='0';document.getElementById('mlResults').innerHTML='';}
+// ═══ JEWELLERY ORDER ═══
+function calcOrder(){
+  const goldWt=parseFloat(document.getElementById('joGoldWt').value)||0;
+  const karat=parseInt(document.getElementById('joKarat').value);
+  const makingPerGram=parseFloat(document.getElementById('joMaking').value)||0;
+  const stoneVal=parseFloat(document.getElementById('joStone').value)||0;
+  const otherVal=parseFloat(document.getElementById('joOther').value)||0;
+  const el=document.getElementById('joResults');
+  if(!goldWt){el.innerHTML='';return;}
+  const purity=karat/24;
+  const goldPricePerGramAED=spot.gold?((spot.gold/OZ)*purity*FX):0;
+  const goldValue=goldPricePerGramAED*goldWt,makingTotal=makingPerGram*goldWt;
+  const subtotal=goldValue+makingTotal+stoneVal+otherVal,vat=subtotal*0.05,total=subtotal+vat;
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:14px;border-left:3px solid var(--a)">`;
+  if(!spot.gold){h+=`<div style="text-align:center;font-size:10px;color:var(--tx3)">Waiting for live rate...</div>`;}
+  else{
+    h+=`<div class="kc-row"><span class="kc-lbl">Gold Value (${goldWt}g × ${karat}K)</span><span class="kc-val">${fm(goldValue)} AED</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl">Making (${makingPerGram} × ${goldWt}g)</span><span class="kc-val">${fm(makingTotal)} AED</span></div>`;
+    if(stoneVal)h+=`<div class="kc-row"><span class="kc-lbl">Stones</span><span class="kc-val">${fm(stoneVal)} AED</span></div>`;
+    if(otherVal)h+=`<div class="kc-row"><span class="kc-lbl">Other</span><span class="kc-val">${fm(otherVal)} AED</span></div>`;
+    h+=`<div class="kc-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--br)"><span class="kc-lbl">Subtotal</span><span class="kc-val">${fm(subtotal)} AED</span></div>`;
+    h+=`<div class="kc-row"><span class="kc-lbl" style="color:var(--rd)">VAT 5%</span><span class="kc-val" style="color:var(--rd)">${fm(vat)} AED</span></div>`;
+    h+=`<div class="kc-row" style="border-top:2px solid var(--a);margin-top:6px;padding-top:6px"><span class="kc-lbl" style="font-size:12px;color:var(--a)">CUSTOMER TOTAL</span><span class="kc-val" style="font-size:18px;color:var(--a)">${fm(total)} AED</span></div>`;
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+function resetOrder(){['joGoldWt','joMaking','joStone','joOther'].forEach(id=>document.getElementById(id).value='0');document.getElementById('joResults').innerHTML='';}
+// ═══ CURRENCY CONVERTER ═══
+const FX_SOURCES=[
+  base=>`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${base}.json`,
+  base=>`https://latest.currency-api.pages.dev/v1/currencies/${base}.json`,
+];
+const FX_CURRENCIES={usd:{name:'US Dollar'},aed:{name:'UAE Dirham'},eur:{name:'Euro'},gbp:{name:'British Pound'},inr:{name:'Indian Rupee'},sar:{name:'Saudi Riyal'},kwd:{name:'Kuwaiti Dinar'},bhd:{name:'Bahraini Dinar'},omr:{name:'Omani Rial'},qar:{name:'Qatari Riyal'},jpy:{name:'Japanese Yen'},cny:{name:'Chinese Yuan'},chf:{name:'Swiss Franc'},aud:{name:'Australian Dollar'},cad:{name:'Canadian Dollar'},sgd:{name:'Singapore Dollar'},myr:{name:'Malaysian Ringgit'},pkr:{name:'Pakistani Rupee'},lkr:{name:'Sri Lankan Rupee'},egp:{name:'Egyptian Pound'},bdt:{name:'Bangladeshi Taka'},php:{name:'Philippine Peso'},npr:{name:'Nepalese Rupee'},jod:{name:'Jordanian Dinar'},try:{name:'Turkish Lira'},zar:{name:'South African Rand'},thb:{name:'Thai Baht'},idr:{name:'Indonesian Rupiah'},vnd:{name:'Vietnamese Dong'},ils:{name:'Israeli Shekel'},kes:{name:'Kenyan Shilling'},mad:{name:'Moroccan Dirham'},hkd:{name:'Hong Kong Dollar'},krw:{name:'South Korean Won'},sek:{name:'Swedish Krona'},nok:{name:'Norwegian Krone'},dkk:{name:'Danish Krone'},mxn:{name:'Mexican Peso'},brl:{name:'Brazilian Real'},rub:{name:'Russian Ruble'},nzd:{name:'New Zealand Dollar'}};
+let fxRates={},fxDate='',fxFailed=false;
+async function loadFXRates(){
+  const base=document.getElementById('fxFrom').value;
+  fxFailed=false;
+  for(const buildUrl of FX_SOURCES){
+    try{
+      const r=await withTimeout(fetch(buildUrl(base),{cache:'no-store'}),7000);
+      if(!r.ok) throw new Error('http '+r.status);
+      const d=await r.json();
+      if(d&&d[base]){fxRates=d[base];fxDate=d.date||'';calcFX();renderFXGrid();return;}
+    }catch(e){/* try next mirror */}
+  }
+  fxFailed=true;
+  document.getElementById('fxResult').innerHTML='<div style="font-size:11px;color:var(--rd);line-height:1.6">Currency rates are temporarily unreachable.</div><button class="ref-b" style="margin-top:8px" onclick="loadFXRates()"><span class="sp">&#8635;</span>Retry</button>';
+  document.getElementById('fxMetalRates').innerHTML='';
+}
+function calcFX(){
+  const amt=parseFloat(document.getElementById('fxAmt').value)||0;
+  const from=document.getElementById('fxFrom').value,to=document.getElementById('fxTo').value;
+  const el=document.getElementById('fxResult');
+  if(!amt||!fxRates[to]){if(!fxFailed)el.innerHTML='';document.getElementById('fxMetalRates').innerHTML='';return;}
+  const rate=fxRates[to],result=amt*rate;
+  const dec=result<1?6:result<100?4:2;
+  const fromInfo=FX_CURRENCIES[from]||{name:from.toUpperCase()};
+  const toInfo=FX_CURRENCIES[to]||{name:to.toUpperCase()};
+  let h=`<div class="mn" style="font-size:28px;font-weight:800;color:var(--a)">${result.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:dec})} <span style="font-size:14px;color:var(--tx2)">${to.toUpperCase()}</span></div>`;
+  h+=`<div style="font-size:12px;color:var(--tx2);margin-top:6px">1 ${from.toUpperCase()} = ${rate.toLocaleString('en',{maximumFractionDigits:6})} ${to.toUpperCase()}</div>`;
+  h+=`<div style="font-size:10px;color:var(--tx3);margin-top:3px">${fromInfo.name} → ${toInfo.name}${fxDate?' | '+fxDate:''}</div>`;
+  el.innerHTML=h;
+  renderFXMetalRates();
+}
+function renderFXMetalRates(){
+  const el=document.getElementById('fxMetalRates');
+  const from=document.getElementById('fxFrom').value,to=document.getElementById('fxTo').value;
+  const toCode=to.toUpperCase();
+  let usdToTarget=0;
+  if(from==='usd') usdToTarget=fxRates[to]||0;
+  else if(to==='usd') usdToTarget=1;
+  else{const fromToUsd=fxRates['usd'],fromToTarget=fxRates[to];if(fromToUsd&&fromToTarget)usdToTarget=fromToTarget/fromToUsd;}
+  if(!usdToTarget||(!spot.gold&&!spot.silver)){el.innerHTML='';return;}
+  let h=`<div style="background:var(--bg2);border-radius:9px;padding:12px;margin-top:2px">`;
+  if(spot.gold){
+    const gpg=spot.gold/OZ;
+    h+=`<div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--a);margin-bottom:6px">Gold per Gram (${toCode})</div>`;
+    h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">`;
+    [{k:'24K',f:1},{k:'22K',f:22/24},{k:'21K',f:21/24},{k:'18K',f:18/24},{k:'14K',f:14/24},{k:'9K',f:9/24}].forEach(g=>{
+      const price=gpg*g.f*usdToTarget;
+      h+=`<div style="background:var(--bg3);border-radius:6px;padding:6px;text-align:center"><div style="font-size:10px;font-weight:800;color:var(--a)">${g.k}</div><div class="mn" style="font-size:12px;font-weight:700">${price.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>`;
+    });
+    h+=`</div>`;
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+function swapFX(){const from=document.getElementById('fxFrom'),to=document.getElementById('fxTo');const tmp=from.value;from.value=to.value;to.value=tmp;loadFXRates();}
+function renderFXGrid(){
+  const from=document.getElementById('fxFrom').value,el=document.getElementById('fxGrid');
+  const top10=['usd','aed','eur','gbp','inr','sar','kwd','jpy','cny','chf'].filter(c=>c!==from);
+  let h='<div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px">Popular Rates (1 '+from.toUpperCase()+')</div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">';
+  top10.forEach(c=>{
+    const rate=fxRates[c];if(!rate)return;
+    const dec=rate<1?6:rate<100?4:2;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--br);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="document.getElementById('fxTo').value='${c}';calcFX()">`;
+    h+=`<span style="font-size:12px;font-weight:800">${c.toUpperCase()}</span>`;
+    h+=`<span class="mn" style="font-size:12px;font-weight:700;color:var(--tx2)">${rate.toLocaleString('en',{maximumFractionDigits:dec})}</span>`;
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+// ═══════════════════════════════════════════════════════════
+// PDF QUOTATION DOWNLOADER  (Rate Calculator + Order Estimator)
+// jsPDF is loaded lazily on first click; if it can't be reached
+// (offline), we fall back to a printable "Save as PDF" window so
+// the feature still works. Nothing loads until the button is used.
+// ═══════════════════════════════════════════════════════════
+const METAL_NAME={gold:'Gold',silver:'Silver',platinum:'Platinum',palladium:'Palladium'};
+function fmt2(v){return (isFinite(v)?v:0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function quoteNo(){const d=new Date(),p=n=>String(n).padStart(2,'0');return 'GB-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+let _toastT;
+function toast(msg){
+  let t=document.getElementById('gbToast');
+  if(!t){t=document.createElement('div');t.id='gbToast';t.className='gb-toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('show'),3400);
+}
+// Gather a clean, self-consistent quote object from the Rate Calculator.
+function buildRateQuote(){
+  const m=document.getElementById('cMetal').value;
+  const pIdx=parseInt(document.getElementById('cPurity').value)||0;
+  const weight=parseFloat(document.getElementById('cWeight').value)||0;
+  const mkType=document.getElementById('cMkType').value;
+  const mkVal=parseFloat(document.getElementById('cMkVal').value)||0;
+  const discType=document.getElementById('cDiscType').value;
+  const discVal=parseFloat(document.getElementById('cDiscVal').value)||0;
+  const purity=CALC_PURITIES[m][pIdx];
+  if(!spot[m]||!weight||!purity){toast('Enter a weight and wait for the live rate before downloading.');return null;}
+  const ppg=(spot[m]/OZ)*FX*purity.f;
+  const metalVal=ppg*weight;
+  let making=0,mkDesc='';
+  if(mkType==='per_gram'){making=mkVal*weight;mkDesc=`${fmt2(mkVal)} AED/g × ${weight}g`;}
+  else if(mkType==='total'){making=mkVal;mkDesc='flat';}
+  else if(mkType==='percent'){making=metalVal*(mkVal/100);mkDesc=`${mkVal}% of metal`;}
+  const beforeDiscount=metalVal+making;
+  let discount=0,discDesc='';
+  if(discType==='flat'){discount=discVal;}
+  else if(discType==='percent'){discount=beforeDiscount*(discVal/100);discDesc=`${discVal}%`;}
+  else if(discType==='per_gram'){discount=discVal*weight;discDesc=`${fmt2(discVal)} AED/g`;}
+  if(discount>beforeDiscount)discount=beforeDiscount;
+  const subtotal=beforeDiscount-discount;
+  const isInv=!!purity.inv,vat=subtotal*(isInv?0:0.05),total=subtotal+vat;
+  const items=[{label:`${METAL_NAME[m]} ${purity.l} — ${weight} g @ ${fmt2(ppg)} AED/g`,amount:metalVal}];
+  if(making>0)items.push({label:`Making Charge (${mkDesc})`,amount:making});
+  return {
+    customerName:document.getElementById('qcRate').value.trim(),
+    shopName:document.getElementById('qsRate').value.trim(),
+    rateLine:`Live ${METAL_NAME[m]} rate: ${fmt2((spot[m]/OZ)*FX)} AED/g (24K basis)  ·  purity ${purity.l}`,
+    items,subtotal,
+    discount,discountLabel:discount>0?('Discount'+(discDesc?' ('+discDesc+')':'')):'',
+    vat,vatLabel:isInv?'VAT 0% (Investment grade 99%+)':'VAT 5% (Retail / Jewellery)',
+    total
+  };
+}
+// Gather a clean quote object from the Jewellery Order Estimator.
+function buildOrderQuote(){
+  const goldWt=parseFloat(document.getElementById('joGoldWt').value)||0;
+  const karat=parseInt(document.getElementById('joKarat').value);
+  const makingPerGram=parseFloat(document.getElementById('joMaking').value)||0;
+  const stoneVal=parseFloat(document.getElementById('joStone').value)||0;
+  const otherVal=parseFloat(document.getElementById('joOther').value)||0;
+  if(!goldWt||!spot.gold){toast('Enter gold weight and wait for the live rate before downloading.');return null;}
+  const purity=karat/24,ppg=(spot.gold/OZ)*purity*FX;
+  const goldValue=ppg*goldWt,makingTotal=makingPerGram*goldWt;
+  const subtotal=goldValue+makingTotal+stoneVal+otherVal,vat=subtotal*0.05,total=subtotal+vat;
+  const items=[{label:`Gold ${karat}K — ${goldWt} g @ ${fmt2(ppg)} AED/g`,amount:goldValue}];
+  if(makingTotal>0)items.push({label:`Making (${fmt2(makingPerGram)} AED/g × ${goldWt}g)`,amount:makingTotal});
+  if(stoneVal>0)items.push({label:'Stones / Diamonds',amount:stoneVal});
+  if(otherVal>0)items.push({label:'Other charges',amount:otherVal});
+  return {
+    customerName:document.getElementById('qcOrder').value.trim(),
+    shopName:document.getElementById('qsOrder').value.trim(),
+    rateLine:`Live gold rate: ${fmt2((spot.gold/OZ)*FX)} AED/g (24K basis)  ·  ${karat}K`,
+    items,subtotal,
+    discount:0,discountLabel:'',
+    vat,vatLabel:'VAT 5% (Retail / Jewellery)',
+    total
+  };
+}
+let _jspdfPromise=null;
+function loadJsPDF(){
+  if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(true);
+  if(_jspdfPromise)return _jspdfPromise;
+  _jspdfPromise=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=()=>res(true);s.onerror=()=>{_jspdfPromise=null;rej(new Error('cdn'));};
+    document.head.appendChild(s);
+  });
+  return _jspdfPromise;
+}
+const DISCLAIMER=[
+  'This is a price quotation, not a tax invoice. Metal value is based on the live spot rate at the time of',
+  'preparation and may change. UAE VAT applied per Federal Decree-Law No. 8 of 2017; investment-grade',
+  'metals (99%+) are zero-rated. Prices are indicative and may differ from final shop rates. Valid day of issue.'
+];
+function renderQuotePDF_jsPDF(data){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=16,today=new Date(),qno=quoteNo();
+  const gold=[201,162,39],dark=[26,22,14],gray=[120,120,120];
+  // top accent bar
+  doc.setFillColor(...gold);doc.rect(0,0,W,6,'F');
+  let y=20;
+  doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(21);
+  doc.text(data.shopName||'GoldBench UAE',M,y);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...gray);
+  doc.text('Precious metals estimate  ·  prepared with GoldBench UAE',M,y+6);
+  doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...gold);
+  doc.text('QUOTATION',W-M,y,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(90,90,90);
+  doc.text('No: '+qno,W-M,y+6,{align:'right'});
+  doc.text('Date: '+today.toLocaleDateString('en-GB'),W-M,y+11,{align:'right'});
+  y+=20;
+  doc.setDrawColor(220,215,205);doc.setLineWidth(0.4);doc.line(M,y,W-M,y);y+=9;
+  if(data.customerName){
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(160,160,160);
+    doc.text('PREPARED FOR',M,y);
+    doc.setFontSize(13);doc.setTextColor(30,30,30);doc.text(data.customerName,M,y+6);y+=13;
+  }
+  if(data.rateLine){doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(...gray);doc.text(data.rateLine,M,y);y+=8;}
+  // table header
+  doc.setFillColor(245,242,235);doc.rect(M,y-4,W-2*M,8,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(120,105,45);
+  doc.text('DESCRIPTION',M+2,y+1.5);doc.text('AMOUNT (AED)',W-M-2,y+1.5,{align:'right'});
+  y+=10;
+  doc.setFont('helvetica','normal');doc.setFontSize(10.5);doc.setTextColor(45,45,45);
+  data.items.forEach(it=>{
+    const lines=doc.splitTextToSize(it.label,W-2*M-42);
+    doc.text(lines,M+2,y);
+    doc.text(fmt2(it.amount),W-M-2,y,{align:'right'});
+    y+=lines.length*5+3;
+    doc.setDrawColor(238,235,228);doc.setLineWidth(0.2);doc.line(M,y-2,W-M,y-2);
+  });
+  y+=4;
+  const lx=W-M-72,rx=W-M-2;
+  const totRow=(label,val,color)=>{doc.setFontSize(10);doc.setFont('helvetica','normal');doc.setTextColor(...(color||[70,70,70]));doc.text(label,lx,y);doc.text(val,rx,y,{align:'right'});y+=6.5;};
+  totRow('Subtotal',fmt2(data.subtotal));
+  if(data.discount>0)totRow(data.discountLabel||'Discount','- '+fmt2(data.discount),[10,120,63]);
+  totRow(data.vatLabel,fmt2(data.vat),data.vat>0?[190,40,50]:[10,120,63]);
+  y+=2;
+  // total bar
+  const bw=90;
+  doc.setFillColor(...dark);doc.roundedRect(W-M-bw,y-3,bw,13,2,2,'F');
+  doc.setTextColor(230,190,90);doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text('TOTAL',W-M-bw+5,y+5);
+  doc.setFontSize(14);doc.text(fmt2(data.total)+' AED',W-M-4,y+5,{align:'right'});
+  y+=22;
+  doc.setDrawColor(220,215,205);doc.setLineWidth(0.3);doc.line(M,y,W-M,y);y+=6;
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(135,135,135);
+  DISCLAIMER.forEach((l,i)=>doc.text(l,M,y+i*4));
+  y+=DISCLAIMER.length*4+5;
+  doc.setFontSize(8);doc.setTextColor(160,160,160);
+  doc.text('Idea & coded by Subash M  ·  generated '+today.toLocaleString('en-GB'),M,y);
+  doc.save('GoldBench-Quotation-'+qno+'.pdf');
+}
+function renderQuotePDF_print(data){
+  const qno=quoteNo(),today=new Date();
+  const rows=data.items.map(it=>`<tr><td>${escapeHtml(it.label)}</td><td class="amt">${fmt2(it.amount)}</td></tr>`).join('');
+  let tot=`<tr class="t"><td>Subtotal</td><td class="amt">${fmt2(data.subtotal)}</td></tr>`;
+  if(data.discount>0)tot+=`<tr class="t disc"><td>${escapeHtml(data.discountLabel||'Discount')}</td><td class="amt">- ${fmt2(data.discount)}</td></tr>`;
+  tot+=`<tr class="t vat"><td>${escapeHtml(data.vatLabel)}</td><td class="amt">${fmt2(data.vat)}</td></tr>`;
+  const cust=data.customerName?`<div class="cust"><span>Prepared for</span><b>${escapeHtml(data.customerName)}</b></div>`:'';
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quotation ${qno}</title><style>
+   *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+   body{color:#222;padding:26px;max-width:820px;margin:0 auto}
+   .bar{height:6px;background:linear-gradient(90deg,#FBE29A,#C9A227,#9A7526);border-radius:3px}
+   .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:18px 0 4px}
+   .shop{font-size:24px;font-weight:800;color:#1a1206}.sub{font-size:11px;color:#8a8a8a;margin-top:3px}
+   .doc{font-size:18px;font-weight:800;color:#B08C2D;text-align:right}
+   .meta{font-size:11px;color:#666;text-align:right;margin-top:4px;line-height:1.6}
+   hr{border:none;border-top:1px solid #e5ded0;margin:14px 0}
+   .cust{margin:6px 0 4px}.cust span{display:block;font-size:9px;letter-spacing:1px;color:#aaa;text-transform:uppercase}.cust b{font-size:15px}
+   .rate{font-size:11px;color:#8a8a8a;margin:8px 0 12px}
+   table{width:100%;border-collapse:collapse}
+   th{background:#f5f2eb;color:#8a7a32;font-size:11px;text-align:left;padding:8px 10px;letter-spacing:.5px}
+   th.amt,td.amt{text-align:right;font-variant-numeric:tabular-nums}
+   td{padding:9px 10px;border-bottom:1px solid #eee;font-size:13px}
+   tr.t td{border:none;padding:5px 10px;color:#555}tr.disc td{color:#0a7a3f}tr.vat td{color:#c42638}
+   .total{display:flex;justify-content:space-between;align-items:center;background:#1a160e;color:#E6BE5A;border-radius:10px;padding:14px 18px;margin-top:12px}
+   .total .l{font-size:13px;font-weight:800;letter-spacing:1px}.total .v{font-size:20px;font-weight:800}
+   .foot{font-size:9px;color:#999;line-height:1.7;margin-top:22px;border-top:1px solid #e5ded0;padding-top:10px}
+   .noprint{margin-top:22px;text-align:center}
+   .noprint button{background:#C9A227;color:#1a1206;border:none;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+   @media print{body{padding:0}.noprint{display:none}}
+  </style></head><body>
+   <div class="bar"></div>
+   <div class="top"><div><div class="shop">${escapeHtml(data.shopName||'GoldBench UAE')}</div><div class="sub">Precious metals estimate · prepared with GoldBench UAE</div></div>
+   <div><div class="doc">QUOTATION</div><div class="meta">No: ${qno}<br>Date: ${today.toLocaleDateString('en-GB')}</div></div></div>
+   <hr>${cust}
+   <div class="rate">${escapeHtml(data.rateLine||'')}</div>
+   <table><thead><tr><th>Description</th><th class="amt">Amount (AED)</th></tr></thead><tbody>${rows}${tot}</tbody></table>
+   <div class="total"><span class="l">TOTAL</span><span class="v">${fmt2(data.total)} AED</span></div>
+   <div class="foot">${DISCLAIMER.join(' ')}<br>Idea &amp; coded by Subash M · generated ${today.toLocaleString('en-GB')}</div>
+   <div class="noprint"><button onclick="window.print()">Save as PDF / Print</button></div>
+  </body></html>`;
+  const w=window.open('','_blank');
+  if(!w){toast('Allow pop-ups to open the printable quotation.');return;}
+  w.document.open();w.document.write(html);w.document.close();w.focus();
+  setTimeout(()=>{try{w.print();}catch(e){}},700);
+}
+async function downloadQuotationPDF(which){
+  const data=which==='rate'?buildRateQuote():buildOrderQuote();
+  if(!data)return;
+  const btn=document.getElementById(which==='rate'?'pdfBtnRate':'pdfBtnOrder');
+  const label=btn.querySelector('.pdf-btn-label'),orig=label.textContent;
+  btn.disabled=true;label.textContent='Preparing…';
+  try{
+    await loadJsPDF();
+    renderQuotePDF_jsPDF(data);
+  }catch(e){
+    renderQuotePDF_print(data);
+    toast('Offline — opened a printable quotation. Choose "Save as PDF".');
+  }finally{
+    btn.disabled=false;label.textContent=orig;
+  }
+}
+// ═══════════════════════════════════════════════════════════
+// LIVE RATE CARD PDF  — today's gold rates for every karat
+// (AED per gram / Pavan / Tola) plus a silver·platinum·palladium
+// strip. Same lazy-jsPDF + offline print fallback as quotations.
+// ═══════════════════════════════════════════════════════════
+const RC_KARATS=[
+  {k:'24K',p:'999 · 99.9%',f:1},{k:'22K',p:'916 · 91.6%',f:22/24},
+  {k:'21K',p:'875 · 87.5%',f:21/24},{k:'18K',p:'750 · 75.0%',f:18/24},
+  {k:'14K',p:'585 · 58.3%',f:14/24},{k:'9K',p:'375 · 37.5%',f:9/24}
+];
+const TOLA=11.6638, PAVAN=8;
+function buildRateCard(){
+  if(!spot.gold){toast('Waiting for the live gold rate — try again in a moment.');return null;}
+  const g24=(spot.gold/OZ)*FX;                 // AED per gram, 24K basis
+  const rows=RC_KARATS.map(x=>{const pg=g24*x.f;return{k:x.k,p:x.p,perG:pg,perPavan:pg*PAVAN,perTola:pg*TOLA};});
+  const others=[];
+  if(spot.silver){const s=(spot.silver/OZ)*FX;others.push({m:'Silver 999',v:s*0.999});others.push({m:'Silver 925',v:s*0.925});}
+  if(spot.platinum)others.push({m:'Platinum 999',v:(spot.platinum/OZ)*FX*0.999});
+  if(spot.palladium)others.push({m:'Palladium 999',v:(spot.palladium/OZ)*FX*0.999});
+  if(copperUsdLb)others.push({m:'Copper (per kg)',v:(copperUsdLb/LB_G)*1000*FX});
+  return {shopName:document.getElementById('rcShop').value.trim(),g24,goldUsdOz:spot.gold,rows,others};
+}
+function renderRateCardPDF_jsPDF(data){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=16,today=new Date();
+  const gold=[201,162,39],dark=[26,22,14],gray=[120,120,120];
+  doc.setFillColor(...gold);doc.rect(0,0,W,6,'F');
+  let y=20;
+  doc.setTextColor(...dark);doc.setFont('helvetica','bold');doc.setFontSize(21);
+  doc.text(data.shopName||'GoldBench UAE',M,y);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...gray);
+  doc.text('Daily precious-metals rate card  ·  GoldBench UAE',M,y+6);
+  doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(...gold);
+  doc.text('GOLD RATE CARD',W-M,y,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(90,90,90);
+  doc.text(today.toLocaleDateString('en-GB'),W-M,y+6,{align:'right'});
+  doc.text(today.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' (local)',W-M,y+11,{align:'right'});
+  y+=20;
+  doc.setDrawColor(220,215,205);doc.setLineWidth(0.4);doc.line(M,y,W-M,y);y+=7;
+  doc.setFontSize(8.5);doc.setTextColor(...gray);
+  doc.text(`Basis: 24K = ${fmt2(data.g24)} AED/g   ·   Gold spot $${fmt2(data.goldUsdOz)}/oz   ·   USD/AED ${FX}`,M,y);
+  y+=8;
+  // column anchors
+  const cK=M+2, cP=M+22, xG=M+96, xPv=M+134, xTl=W-M-2;
+  doc.setFillColor(26,22,14);doc.rect(M,y-4,W-2*M,9,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(230,190,90);
+  doc.text('KARAT',cK,y+1.8);doc.text('PURITY',cP,y+1.8);
+  doc.text('AED / g',xG,y+1.8,{align:'right'});
+  doc.text('AED / Pavan (8g)',xPv,y+1.8,{align:'right'});
+  doc.text('AED / Tola',xTl,y+1.8,{align:'right'});
+  y+=9;
+  data.rows.forEach((r,i)=>{
+    if(i%2===0){doc.setFillColor(247,244,237);doc.rect(M,y-4.5,W-2*M,8,'F');}
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...(r.k==='24K'?[176,140,45]:[40,40,40]));
+    doc.text(r.k,cK,y+1);
+    doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(120,120,120);
+    doc.text(r.p,cP,y+1);
+    doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(35,35,35);
+    doc.text(fmt2(r.perG),xG,y+1,{align:'right'});
+    doc.setFont('helvetica','normal');doc.setTextColor(70,70,70);
+    doc.text(fmt2(r.perPavan),xPv,y+1,{align:'right'});
+    doc.text(fmt2(r.perTola),xTl,y+1,{align:'right'});
+    y+=8;
+  });
+  y+=4;
+  if(data.others.length){
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(120,105,45);
+    doc.text('OTHER METALS  ·  AED / gram',M,y);y+=6;
+    doc.setDrawColor(230,226,216);doc.setLineWidth(0.2);
+    const colW=(W-2*M)/2;
+    data.others.forEach((o,i)=>{
+      const col=i%2, row=Math.floor(i/2);
+      const x=M+col*colW, yy=y+row*8;
+      doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(70,70,70);
+      doc.text(o.m,x+1,yy);
+      doc.setFont('helvetica','bold');doc.setTextColor(35,35,35);
+      doc.text(fmt2(o.v),x+colW-3,yy,{align:'right'});
+    });
+    y+=Math.ceil(data.others.length/2)*8+4;
+  }
+  doc.setDrawColor(220,215,205);doc.setLineWidth(0.3);doc.line(M,y,W-M,y);y+=6;
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(135,135,135);
+  const note=[
+    'Indicative live spot-based rates for information only — not a firm offer or tax invoice. Making charges, wastage and 5% VAT',
+    '(where applicable; investment-grade 99%+ gold is zero-rated) are added separately at point of sale. Rates move continuously.',
+    '1 Pavan = 8 g · 1 Tola = 11.6638 g. Verify against your dealer/shop board before transacting.'
+  ];
+  note.forEach((l,i)=>doc.text(l,M,y+i*4));
+  y+=note.length*4+5;
+  doc.setFontSize(8);doc.setTextColor(160,160,160);
+  doc.text('Prepared with GoldBench UAE · idea & coded by Subash M · generated '+today.toLocaleString('en-GB'),M,y);
+  const d=today,p=n=>String(n).padStart(2,'0');
+  doc.save('GoldBench-Rate-Card-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.pdf');
+}
+function renderRateCardPDF_print(data){
+  const today=new Date();
+  const grows=data.rows.map((r,i)=>`<tr${r.k==='24K'?' class="hl"':''}><td class="k">${r.k}</td><td class="p">${r.p}</td><td class="amt">${fmt2(r.perG)}</td><td class="amt">${fmt2(r.perPavan)}</td><td class="amt">${fmt2(r.perTola)}</td></tr>`).join('');
+  const orows=data.others.map(o=>`<div class="ometal"><span>${escapeHtml(o.m)}</span><b>${fmt2(o.v)}</b></div>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gold Rate Card</title><style>
+   *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+   body{color:#222;padding:26px;max-width:820px;margin:0 auto}
+   .bar{height:6px;background:linear-gradient(90deg,#FBE29A,#C9A227,#9A7526);border-radius:3px}
+   .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:18px 0 4px}
+   .shop{font-size:24px;font-weight:800;color:#1a1206}.sub{font-size:11px;color:#8a8a8a;margin-top:3px}
+   .doc{font-size:16px;font-weight:800;color:#B08C2D;text-align:right}
+   .meta{font-size:11px;color:#666;text-align:right;margin-top:4px;line-height:1.6}
+   hr{border:none;border-top:1px solid #e5ded0;margin:14px 0}
+   .basis{font-size:11px;color:#8a8a8a;margin:6px 0 12px}
+   table{width:100%;border-collapse:collapse}
+   thead th{background:#1a160e;color:#E6BE5A;font-size:11px;padding:8px 10px;text-align:left;letter-spacing:.3px}
+   th.amt,td.amt{text-align:right;font-variant-numeric:tabular-nums}
+   tbody td{padding:9px 10px;border-bottom:1px solid #eee;font-size:13px}
+   tbody tr:nth-child(odd){background:#f7f4ed}
+   td.k{font-weight:800}tr.hl td.k{color:#B08C2D}
+   td.p{color:#999;font-size:11px}
+   .othead{font-size:11px;font-weight:800;color:#8a7a32;letter-spacing:.5px;margin:16px 0 8px}
+   .others{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   .ometal{display:flex;justify-content:space-between;background:#f7f4ed;border:1px solid #eee;border-radius:8px;padding:8px 12px;font-size:13px}
+   .foot{font-size:9px;color:#999;line-height:1.7;margin-top:20px;border-top:1px solid #e5ded0;padding-top:10px}
+   .noprint{margin-top:22px;text-align:center}
+   .noprint button{background:#C9A227;color:#1a1206;border:none;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+   @media print{body{padding:0}.noprint{display:none}}
+  </style></head><body>
+   <div class="bar"></div>
+   <div class="top"><div><div class="shop">${escapeHtml(data.shopName||'GoldBench UAE')}</div><div class="sub">Daily precious-metals rate card · GoldBench UAE</div></div>
+   <div><div class="doc">GOLD RATE CARD</div><div class="meta">${today.toLocaleDateString('en-GB')}<br>${today.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} (local)</div></div></div>
+   <hr>
+   <div class="basis">Basis: 24K = ${fmt2(data.g24)} AED/g &nbsp;·&nbsp; Gold spot $${fmt2(data.goldUsdOz)}/oz &nbsp;·&nbsp; USD/AED ${FX}</div>
+   <table><thead><tr><th>Karat</th><th>Purity</th><th class="amt">AED / g</th><th class="amt">AED / Pavan (8g)</th><th class="amt">AED / Tola</th></tr></thead><tbody>${grows}</tbody></table>
+   ${data.others.length?`<div class="othead">OTHER METALS · AED / gram</div><div class="others">${orows}</div>`:''}
+   <div class="foot">Indicative live spot-based rates for information only — not a firm offer or tax invoice. Making charges, wastage and 5% VAT (where applicable; investment-grade 99%+ gold is zero-rated) are added separately at point of sale. Rates move continuously. 1 Pavan = 8 g · 1 Tola = 11.6638 g. Verify against your shop board before transacting.<br>Prepared with GoldBench UAE · idea &amp; coded by Subash M · generated ${today.toLocaleString('en-GB')}</div>
+   <div class="noprint"><button onclick="window.print()">Save as PDF / Print</button></div>
+  </body></html>`;
+  const w=window.open('','_blank');
+  if(!w){toast('Allow pop-ups to open the printable rate card.');return;}
+  w.document.open();w.document.write(html);w.document.close();w.focus();
+  setTimeout(()=>{try{w.print();}catch(e){}},700);
+}
+async function downloadRateCardPDF(){
+  const data=buildRateCard();
+  if(!data)return;
+  const btn=document.getElementById('pdfBtnRates');
+  const label=btn.querySelector('.pdf-btn-label'),orig=label.textContent;
+  btn.disabled=true;label.textContent='Preparing…';
+  try{await loadJsPDF();renderRateCardPDF_jsPDF(data);}
+  catch(e){renderRateCardPDF_print(data);toast('Offline — opened a printable rate card. Choose "Save as PDF".');}
+  finally{btn.disabled=false;label.textContent=orig;}
+}
+// ═══ INIT ═══
+// fetchAll schedules its own next call (30s on success, faster backoff on
+// failure) — a separate setInterval here would race it and double-fetch.
+render();loadWidgets();fetchAll();loadFXRates();updateMarketStatus();
+</script>
+</body>
+</html>
