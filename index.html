@@ -2697,5 +2697,1266 @@ async function downloadRateCardPDF(){
 render();loadWidgets();fetchAll();loadFXRates();updateMarketStatus();
 hAddRow({date:hToday()});hLoadHistory(false);
 </script>
+
+<!-- ═══ GoldBench multilingual layer ═══ -->
+<style>
+/* ── language button ── */
+#gbLangBtn{cursor:pointer;color:var(--a);border:1px solid var(--a3);background:var(--bg2);font-size:12px;font-weight:800;line-height:1;letter-spacing:0;font-family:'Tajawal','Sora',sans-serif}
+#gbLangBtn:hover{background:var(--a);color:#1a1206}
+
+/* ── Arabic / Hindi / Urdu / Tamil typography ── */
+html[lang="ar"] body,html[lang="ar"] body *{font-family:'Tajawal','Sora',sans-serif}
+html[lang="hi"] body,html[lang="hi"] body *{font-family:'Noto Sans Devanagari','Sora',sans-serif}
+html[lang="ur"] body,html[lang="ur"] body *{font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif;line-height:1.9}
+html[lang="ta"] body,html[lang="ta"] body *{font-family:'Noto Sans Tamil','Sora',sans-serif}
+html[lang="gu"] body,html[lang="gu"] body *{font-family:'Noto Sans Gujarati','Sora',sans-serif}
+html[lang="ml"] body,html[lang="ml"] body *{font-family:'Noto Sans Malayalam','Sora',sans-serif}
+html[lang="ar"] body *,html[lang="hi"] body *,html[lang="ur"] body *,html[lang="ta"] body *,html[lang="gu"] body *,html[lang="ml"] body *{letter-spacing:0!important;text-transform:none!important}
+html[lang="ar"] body .mn,
+html[lang="ar"] body .bd-c .pr,
+html[lang="ar"] body .bd-c .pg,
+html[lang="ar"] body .oz .aed,
+html[lang="ar"] body .oz .usd,
+html[lang="ar"] body .oz .det,
+html[lang="ar"] body .qs-v,
+html[lang="ar"] body .mi-val,
+html[lang="ar"] body .wc-val,
+html[lang="ar"] body .kc-val,
+html[lang="ar"] body .cr-val,
+html[lang="ar"] body .calc-input,
+html[lang="ar"] body .mk-input,
+html[lang="ar"] body .h-in,
+html[lang="ar"] body .h-c,
+html[lang="ar"] body .mkt-countdown,
+html[lang="ar"] body .mkt-clock,
+html[lang="ar"] body #tsUp,
+html[lang="hi"] body .mn,
+html[lang="hi"] body .bd-c .pr,
+html[lang="hi"] body .bd-c .pg,
+html[lang="hi"] body .oz .aed,
+html[lang="hi"] body .oz .usd,
+html[lang="hi"] body .oz .det,
+html[lang="hi"] body .qs-v,
+html[lang="hi"] body .mi-val,
+html[lang="hi"] body .wc-val,
+html[lang="hi"] body .kc-val,
+html[lang="hi"] body .cr-val,
+html[lang="hi"] body .calc-input,
+html[lang="hi"] body .mk-input,
+html[lang="hi"] body .h-in,
+html[lang="hi"] body .h-c,
+html[lang="hi"] body .mkt-countdown,
+html[lang="hi"] body .mkt-clock,
+html[lang="hi"] body #tsUp,
+html[lang="ur"] body .mn,
+html[lang="ur"] body .bd-c .pr,
+html[lang="ur"] body .bd-c .pg,
+html[lang="ur"] body .oz .aed,
+html[lang="ur"] body .oz .usd,
+html[lang="ur"] body .oz .det,
+html[lang="ur"] body .qs-v,
+html[lang="ur"] body .mi-val,
+html[lang="ur"] body .wc-val,
+html[lang="ur"] body .kc-val,
+html[lang="ur"] body .cr-val,
+html[lang="ur"] body .calc-input,
+html[lang="ur"] body .mk-input,
+html[lang="ur"] body .h-in,
+html[lang="ur"] body .h-c,
+html[lang="ur"] body .mkt-countdown,
+html[lang="ur"] body .mkt-clock,
+html[lang="ur"] body #tsUp,
+html[lang="ta"] body .mn,
+html[lang="ta"] body .bd-c .pr,
+html[lang="ta"] body .bd-c .pg,
+html[lang="ta"] body .oz .aed,
+html[lang="ta"] body .oz .usd,
+html[lang="ta"] body .oz .det,
+html[lang="ta"] body .qs-v,
+html[lang="ta"] body .mi-val,
+html[lang="ta"] body .wc-val,
+html[lang="ta"] body .kc-val,
+html[lang="ta"] body .cr-val,
+html[lang="ta"] body .calc-input,
+html[lang="ta"] body .mk-input,
+html[lang="ta"] body .h-in,
+html[lang="ta"] body .h-c,
+html[lang="ta"] body .mkt-countdown,
+html[lang="ta"] body .mkt-clock,
+html[lang="ta"] body #tsUp,
+html[lang="gu"] body .mn,
+html[lang="gu"] body .bd-c .pr,
+html[lang="gu"] body .bd-c .pg,
+html[lang="gu"] body .oz .aed,
+html[lang="gu"] body .oz .usd,
+html[lang="gu"] body .oz .det,
+html[lang="gu"] body .qs-v,
+html[lang="gu"] body .mi-val,
+html[lang="gu"] body .wc-val,
+html[lang="gu"] body .kc-val,
+html[lang="gu"] body .cr-val,
+html[lang="gu"] body .calc-input,
+html[lang="gu"] body .mk-input,
+html[lang="gu"] body .h-in,
+html[lang="gu"] body .h-c,
+html[lang="gu"] body .mkt-countdown,
+html[lang="gu"] body .mkt-clock,
+html[lang="gu"] body #tsUp,
+html[lang="ml"] body .mn,
+html[lang="ml"] body .bd-c .pr,
+html[lang="ml"] body .bd-c .pg,
+html[lang="ml"] body .oz .aed,
+html[lang="ml"] body .oz .usd,
+html[lang="ml"] body .oz .det,
+html[lang="ml"] body .qs-v,
+html[lang="ml"] body .mi-val,
+html[lang="ml"] body .wc-val,
+html[lang="ml"] body .kc-val,
+html[lang="ml"] body .cr-val,
+html[lang="ml"] body .calc-input,
+html[lang="ml"] body .mk-input,
+html[lang="ml"] body .h-in,
+html[lang="ml"] body .h-c,
+html[lang="ml"] body .mkt-countdown,
+html[lang="ml"] body .mkt-clock,
+html[lang="ml"] body #tsUp{font-family:'IBM Plex Mono',monospace!important;line-height:1.3}
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="ar"] .hdr-sub,
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="hi"] .hdr-sub,
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="ur"] .hdr-sub,
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="ta"] .hdr-sub,
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="gu"] .hdr-sub,
+/* tiny Latin-sized text is unreadable in Arabic – bump it */
+html[lang="ml"] .hdr-sub{font-size:10.5px}
+html[lang="ar"] .sel-col label,
+html[lang="ar"] .sel-col-label,
+html[lang="ar"] .mi-lbl,
+html[lang="ar"] .thd-d,
+html[lang="ar"] .bd-c .pu,
+html[lang="hi"] .sel-col label,
+html[lang="hi"] .sel-col-label,
+html[lang="hi"] .mi-lbl,
+html[lang="hi"] .thd-d,
+html[lang="hi"] .bd-c .pu,
+html[lang="ur"] .sel-col label,
+html[lang="ur"] .sel-col-label,
+html[lang="ur"] .mi-lbl,
+html[lang="ur"] .thd-d,
+html[lang="ur"] .bd-c .pu,
+html[lang="ta"] .sel-col label,
+html[lang="ta"] .sel-col-label,
+html[lang="ta"] .mi-lbl,
+html[lang="ta"] .thd-d,
+html[lang="ta"] .bd-c .pu,
+html[lang="gu"] .sel-col label,
+html[lang="gu"] .sel-col-label,
+html[lang="gu"] .mi-lbl,
+html[lang="gu"] .thd-d,
+html[lang="gu"] .bd-c .pu,
+html[lang="ml"] .sel-col label,
+html[lang="ml"] .sel-col-label,
+html[lang="ml"] .mi-lbl,
+html[lang="ml"] .thd-d,
+html[lang="ml"] .bd-c .pu{font-size:11px}
+html[lang="ar"] .mi-sub,
+html[lang="ar"] .q-hint,
+html[lang="ar"] .mkt-note,
+html[lang="ar"] .h-note,
+html[lang="ar"] .h-hint,
+html[lang="ar"] .ref .at,
+html[lang="ar"] .thd-h,
+html[lang="ar"] .oz .lbl .src-tag,
+html[lang="ar"] .ft,
+html[lang="hi"] .mi-sub,
+html[lang="hi"] .q-hint,
+html[lang="hi"] .mkt-note,
+html[lang="hi"] .h-note,
+html[lang="hi"] .h-hint,
+html[lang="hi"] .ref .at,
+html[lang="hi"] .thd-h,
+html[lang="hi"] .oz .lbl .src-tag,
+html[lang="hi"] .ft,
+html[lang="ur"] .mi-sub,
+html[lang="ur"] .q-hint,
+html[lang="ur"] .mkt-note,
+html[lang="ur"] .h-note,
+html[lang="ur"] .h-hint,
+html[lang="ur"] .ref .at,
+html[lang="ur"] .thd-h,
+html[lang="ur"] .oz .lbl .src-tag,
+html[lang="ur"] .ft,
+html[lang="ta"] .mi-sub,
+html[lang="ta"] .q-hint,
+html[lang="ta"] .mkt-note,
+html[lang="ta"] .h-note,
+html[lang="ta"] .h-hint,
+html[lang="ta"] .ref .at,
+html[lang="ta"] .thd-h,
+html[lang="ta"] .oz .lbl .src-tag,
+html[lang="ta"] .ft,
+html[lang="gu"] .mi-sub,
+html[lang="gu"] .q-hint,
+html[lang="gu"] .mkt-note,
+html[lang="gu"] .h-note,
+html[lang="gu"] .h-hint,
+html[lang="gu"] .ref .at,
+html[lang="gu"] .thd-h,
+html[lang="gu"] .oz .lbl .src-tag,
+html[lang="gu"] .ft,
+html[lang="ml"] .mi-sub,
+html[lang="ml"] .q-hint,
+html[lang="ml"] .mkt-note,
+html[lang="ml"] .h-note,
+html[lang="ml"] .h-hint,
+html[lang="ml"] .ref .at,
+html[lang="ml"] .thd-h,
+html[lang="ml"] .oz .lbl .src-tag,
+html[lang="ml"] .ft{font-size:11px}
+html[lang="ar"] .oz .age-tag,
+html[lang="hi"] .oz .age-tag,
+html[lang="ur"] .oz .age-tag,
+html[lang="ta"] .oz .age-tag,
+html[lang="gu"] .oz .age-tag,
+html[lang="ml"] .oz .age-tag{font-size:10px}
+html[lang="ar"] [style*="font-size:8px"],
+html[lang="ar"] [style*="font-size:8.5px"],
+html[lang="hi"] [style*="font-size:8px"],
+html[lang="hi"] [style*="font-size:8.5px"],
+html[lang="ur"] [style*="font-size:8px"],
+html[lang="ur"] [style*="font-size:8.5px"],
+html[lang="ta"] [style*="font-size:8px"],
+html[lang="ta"] [style*="font-size:8.5px"],
+html[lang="gu"] [style*="font-size:8px"],
+html[lang="gu"] [style*="font-size:8.5px"],
+html[lang="ml"] [style*="font-size:8px"],
+html[lang="ml"] [style*="font-size:8.5px"]{font-size:10.5px!important}
+html[lang="ar"] [style*="font-size:9px"],
+html[lang="ar"] [style*="font-size:9.5px"],
+html[lang="ar"] [style*="font-size:10px"],
+html[lang="hi"] [style*="font-size:9px"],
+html[lang="hi"] [style*="font-size:9.5px"],
+html[lang="hi"] [style*="font-size:10px"],
+html[lang="ur"] [style*="font-size:9px"],
+html[lang="ur"] [style*="font-size:9.5px"],
+html[lang="ur"] [style*="font-size:10px"],
+html[lang="ta"] [style*="font-size:9px"],
+html[lang="ta"] [style*="font-size:9.5px"],
+html[lang="ta"] [style*="font-size:10px"],
+html[lang="gu"] [style*="font-size:9px"],
+html[lang="gu"] [style*="font-size:9.5px"],
+html[lang="gu"] [style*="font-size:10px"],
+html[lang="ml"] [style*="font-size:9px"],
+html[lang="ml"] [style*="font-size:9.5px"],
+html[lang="ml"] [style*="font-size:10px"]{font-size:11.5px!important}
+html[lang="ar"] .qnav a,
+html[lang="hi"] .qnav a,
+html[lang="ur"] .qnav a,
+html[lang="ta"] .qnav a,
+html[lang="gu"] .qnav a,
+html[lang="ml"] .qnav a{font-size:12px}
+html[lang="ar"] .hdr-t,
+html[lang="hi"] .hdr-t,
+html[lang="ur"] .hdr-t,
+html[lang="ta"] .hdr-t,
+html[lang="gu"] .hdr-t,
+html[lang="ml"] .hdr-t{direction:ltr}
+/* Urdu (Nastaliq) needs more vertical room; keep compact controls readable */
+html[lang="ur"] button,html[lang="ur"] select,html[lang="ur"] input,html[lang="ur"] .pill{line-height:1.6}
+html[lang="ur"] .hdr-sub,html[lang="ur"] .mi-sub,html[lang="ur"] .q-hint,html[lang="ur"] .mkt-note,html[lang="ur"] .h-note,html[lang="ur"] .ft{line-height:2}
+#gbLangBtn{appearance:none;-webkit-appearance:none;padding:6px 10px;border-radius:8px;min-width:78px;text-align:center}
+#gbLangBtn option{font-family:'Tajawal','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Gujarati','Noto Sans Malayalam','Sora',sans-serif;color:#222;background:#fff}
+/* ── RTL layout fixes ── */
+html[dir="rtl"] .tkr,html[dir="rtl"] #chartsGrid,html[dir="rtl"] #advChart,html[dir="rtl"] #ecoCalWrap{direction:ltr}
+html[dir="rtl"] .sel-col select{background-position:left 12px center;padding:11px 13px 11px 34px}
+html[dir="rtl"] .mk-sel{background-position:left 10px center;padding:11px 11px 11px 30px}
+html[dir="rtl"] #fxFrom,html[dir="rtl"] #fxTo,html[dir="rtl"] #mxAlloy{background-position:left 10px center!important;padding-right:12px!important;padding-left:32px!important}
+html[dir="rtl"] .oz{padding:16px 20px 16px 18px}
+html[dir="rtl"] .oz::after{left:auto;right:0}
+html[dir="rtl"] .oz .lbl{padding-left:0;padding-right:2px}
+html[dir="rtl"] .oz .aed .c,html[dir="rtl"] .oz .aed .u2,html[dir="rtl"] .bd-c .pr .u{margin-left:0;margin-right:4px}
+html[dir="rtl"] .back-top{right:auto;left:16px}
+html[dir="rtl"] input[type="number"],html[dir="rtl"] input[type="date"],html[dir="rtl"] input[type="text"]{direction:ltr;text-align:right}
+html[dir="rtl"] input[type="text"]::placeholder{direction:rtl}
+html[dir="rtl"] .h-tbl th,html[dir="rtl"] .h-tbl td{text-align:left}
+html[dir="rtl"] .h-tbl th:nth-child(1),html[dir="rtl"] .h-tbl td:nth-child(1),
+html[dir="rtl"] .h-tbl th:nth-child(2),html[dir="rtl"] .h-tbl td:nth-child(2){text-align:right}
+html[dir="rtl"] .h-hint{text-align:left}
+html[dir="rtl"] .h-tbl td.h-rm{right:auto;left:2px}
+html[dir="rtl"] .gb-toast{direction:rtl}
+@media(max-width:700px){
+  html[dir="rtl"] .h-tbl td,html[dir="rtl"] .h-hint,html[dir="rtl"] .h-in{text-align:right!important}
+}
+</style><script>
+(function(){
+'use strict';
+/* ═══════════ 1. STATE ═══════════ */
+const LS_KEY='gb_lang';
+const LANGS=['en','ar','hi','gu','ta','ml','ur'];
+const RTL={ar:1,ur:1};
+const LABEL={en:'English',ar:'العربية',hi:'हिन्दी',ur:'اردو',ta:'தமிழ்',gu:'ગુજરાતી',ml:'മലയാളം'};
+const TITLES={
+  en:document.title,
+  ar:'GoldBench UAE - لوحة أسعار المعادن الثمينة المباشرة',
+  hi:'GoldBench UAE - कीमती धातुओं के लाइव भाव डैशबोर्ड',
+  ur:'GoldBench UAE - قیمتی دھاتوں کے لائیو ریٹس ڈیش بورڈ',
+  ta:'GoldBench UAE - விலைமதிப்பு உலோகங்களின் நேரலை விலை டாஷ்போர்டு',
+  gu:'GoldBench UAE - કિંમતી ધાતુઓના લાઇવ ભાવ ડેશબોર્ડ'
+  ,ml:'GoldBench UAE - വിലയേറിയ ലോഹങ്ങളുടെ തത്സമയ വില ഡാഷ്ബോർഡ്'
+};
+let LANG='en';
+try{
+  const sv=localStorage.getItem(LS_KEY);
+  if(LANGS.indexOf(sv)>-1)LANG=sv;   /* default = English unless the visitor chose another language */
+}catch(e){}
+
+/* ═══════════ 2. DICTIONARIES ═══════════
+   DA = English → Arabic (original). Hindi / Urdu are added from the table X.
+   Used (a) for exact whole-string match, (b) as phrase replacement inside live strings. */
+const DA={
+/* header / nav / banner */
+'by Subash M | live rates':'بواسطة Subash M | أسعار مباشرة',
+'LIVE':'مباشر','OFF':'متوقف','STALE':'متأخر',
+'Rates':'الأسعار','Market Status':'حالة السوق','Calculator':'الحاسبة','History Calc':'حاسبة تاريخية','Karat Tools':'أدوات العيار','Currency':'العملات',
+'Live feed unavailable. Showing last known prices.':'المصدر المباشر غير متاح. يتم عرض آخر الأسعار المعروفة.',
+'Dismiss':'إخفاء',
+'Live price feed unreachable (network blocked or all sources down)':'تعذّر الوصول إلى مصدر الأسعار المباشرة (الشبكة محجوبة أو جميع المصادر متوقفة)',
+'Showing last known prices':'يتم عرض آخر الأسعار المعروفة',
+'Will keep retrying automatically':'وسيستمر النظام بإعادة المحاولة تلقائيًا',
+'Last updated':'آخر تحديث','refresh failed':'فشل التحديث',
+'Back to top':'العودة للأعلى','Quick navigation':'التنقل السريع',
+/* metals / units */
+'Metal':'المعدن','Weight':'الوزن',
+'Gold':'ذهب','Silver':'فضة','Platinum':'بلاتين','Palladium':'بالاديوم','Copper':'نحاس',
+'Gram':'غرام','Grams':'غرامات','Troy Ounce':'أونصة تروي','Troy Oz':'أونصة تروي','Tola':'تولة',
+'Pavan / Sovereign':'بافان / سوفرين','Pavan':'بافان','10 Grams':'10 غرامات','Kilogram':'كيلوغرام','Pennyweight':'بنيويت','Tael':'تايل',
+'Loading...':'جارٍ التحميل...','waiting for price...':'بانتظار السعر...',
+/* purity labels in breakdown cards */
+'99.9% Pure':'نقاء 99.9%','Sterling Silver':'فضة ستيرلنغ','Fine Silver':'فضة نقية','Coin Silver':'فضة عملات',
+'Jewellery':'مجوهرات','Fine':'نقي','Sterling':'ستيرلنغ','Britannia':'بريتانيا','Coin':'عملات',
+/* live rates cards */
+'Live Rates':'الأسعار المباشرة',
+'fetching...':'جارٍ الجلب...','No data yet':'لا توجد بيانات بعد','Waiting for first successful fetch...':'بانتظار أول تحديث ناجح...',
+'fallback':'احتياطي','troy oz':'أونصة تروي','lb':'رطل','/g':'/غ','/kg':'/كغ','bid':'شراء','ask':'بيع','source:':'المصدر:',
+'Copper is a base metal reference (COMEX, priced per pound) shown for alloy/scrap costing — it isn\'t a troy-ounce jewellery metal like the four above.':'النحاس معدن أساسي يُعرض كمرجع لتكلفة الخلطات والكسر (بورصة كومكس، السعر للرطل) — وليس معدنًا للمجوهرات يُسعَّر بالأونصة مثل المعادن الأربعة أعلاه.',
+'Refresh':'تحديث',
+'Shop / entity for rate card (optional)':'اسم المحل / الجهة لبطاقة الأسعار (اختياري)',
+'Rate Card PDF · all karats':'بطاقة الأسعار PDF · جميع العيارات',
+/* market indicators */
+'Market Indicators':'مؤشرات السوق','Gold / Silver Ratio':'نسبة الذهب إلى الفضة',
+'oz gold = ? oz silver':'أونصة ذهب = ؟ أونصة فضة','oz gold':'أونصة ذهب','oz silver':'أونصة فضة',
+'Gold Spread':'فرق سعر الذهب','Silver Spread':'فرق سعر الفضة','Platinum Spread':'فرق سعر البلاتين',
+'bid-ask USD':'فرق الشراء والبيع (دولار)',
+/* market status */
+'Market Open':'السوق مفتوح','Daily Break':'استراحة يومية','Market Closed':'السوق مغلق',
+'Opens in':'يفتح بعد','Resumes in':'يُستأنف بعد','Break in':'الاستراحة بعد','Closes in':'يُغلق بعد',
+'Timezone':'المنطقة الزمنية',
+'Indicative Trading Hours by Day':'ساعات التداول الإرشادية حسب اليوم',
+'Trading Sessions':'جلسات التداول',
+'Daily break':'استراحة يومية',
+'— most brokers pause dealing briefly for rollover':'— يوقف معظم الوسطاء التداول مؤقتًا لإجراء التسوية اليومية',
+'happening now':'جارية الآن','Active now':'نشطة الآن','local time':'بالتوقيت المحلي',
+'Mon':'الإثنين','Tue':'الثلاثاء','Wed':'الأربعاء','Thu':'الخميس','Fri':'الجمعة','Sat':'السبت','Sun':'الأحد',
+'Sydney / Asia':'سيدني / آسيا','London':'لندن','New York':'نيويورك','Peak Liquidity':'ذروة السيولة',
+'Dubai, UAE (GST)':'دبي، الإمارات (GST)','UTC':'التوقيت العالمي (UTC)','India (IST)':'الهند (IST)','Pakistan (PKT)':'باكستان (PKT)',
+'Bangladesh':'بنغلاديش','Sri Lanka':'سريلانكا','Nepal':'نيبال','Philippines':'الفلبين','Saudi Arabia':'السعودية','Egypt':'مصر',
+'London, UK':'لندن، المملكة المتحدة','New York, US':'نيويورك، الولايات المتحدة','Singapore':'سنغافورة','Hong Kong':'هونغ كونغ','Sydney, Australia':'سيدني، أستراليا',
+'Closed Saturday & Sunday (also the UAE weekend). Spot gold trades alongside global FX markets, roughly Sunday evening to Friday evening UTC, with a short daily settlement break. Exact minute-level hours vary by broker/platform and shift slightly around US/UK daylight-saving changes — treat this as a general guide, not your dealing platform\'s official calendar.':'السوق مغلق يومي السبت والأحد (وهما أيضًا عطلة نهاية الأسبوع في الإمارات). يُتداول الذهب الفوري مع أسواق العملات العالمية تقريبًا من مساء الأحد حتى مساء الجمعة بالتوقيت العالمي، مع استراحة تسوية يومية قصيرة. تختلف الساعات الدقيقة حسب الوسيط والمنصة وقد تتغير قليلًا مع تغيير التوقيت الصيفي في أمريكا وبريطانيا — اعتبر هذا دليلًا عامًا وليس التقويم الرسمي لمنصة التداول لديك.',
+/* quotes / charts */
+'Live Quotes':'الأسعار الحية','Charts':'الرسوم البيانية','Advanced Chart':'الرسم البياني المتقدم','Economic Calendar':'التقويم الاقتصادي',
+'⚠ MQL5 widget unavailable — showing GoldBench live feed':'⚠ أداة MQL5 غير متاحة — يتم عرض البث المباشر من GoldBench',
+'waiting…':'بانتظار البيانات…','Retry MQL5 widget':'إعادة تحميل أداة MQL5',
+/* rate calculator */
+'Rate Calculator':'حاسبة الأسعار','UAE VAT':'ضريبة القيمة المضافة (الإمارات)',
+'Reset':'إعادة ضبط','Purity / Karat':'النقاء / العيار','Weight (grams)':'الوزن (غرام)',
+'Making Charge':'المصنعية','Per Gram':'للغرام','Whole / Flat':'مبلغ إجمالي ثابت','% of Metal':'% من قيمة المعدن',
+'Discount':'الخصم','Flat (AED)':'مبلغ ثابت (د.إ)','% off':'% خصم',
+'Metal Value':'قيمة المعدن','Subtotal':'المجموع الفرعي','VAT':'ضريبة القيمة المضافة','TOTAL':'الإجمالي',
+'Retail/Jewellery':'تجزئة / مجوهرات','Investment Grade 99%+':'استثماري 99%+','[0% VAT]':'[ضريبة 0%]',
+'Customer (optional)':'العميل (اختياري)','Shop / Entity (optional)':'المحل / الجهة (اختياري)',
+'Customer name':'اسم العميل','Shop / entity name':'اسم المحل / الجهة',
+'Download PDF Quotation':'تنزيل عرض السعر PDF',
+'Uses the live rate at the moment you download':'يعتمد السعر المباشر لحظة التنزيل',
+'Uses the live gold rate at the moment you download':'يعتمد سعر الذهب المباشر لحظة التنزيل',
+'Preparing…':'جارٍ التحضير…',
+/* historical calculator */
+'Historical Gold Calculator':'حاسبة الذهب التاريخية',
+'Pick any date — the gold price per oz fills in automatically (today = live GoldBench spot, recent dates = daily close, older = monthly average back to 1833). Then: oz price → per gram → tag grams → making charges → 5% VAT → grand total. Great for re-pricing old invoices.':'اختر أي تاريخ — يُعبَّأ سعر الأونصة تلقائيًا (اليوم = السعر المباشر من GoldBench، التواريخ القريبة = سعر الإغلاق اليومي، والأقدم = المتوسط الشهري حتى عام 1833). ثم: سعر الأونصة ← سعر الغرام ← وزن البطاقة ← المصنعية ← ضريبة 5% ← الإجمالي النهائي. مناسبة لإعادة تسعير الفواتير القديمة.',
+'Date':'التاريخ','Description':'الوصف','Gold / oz (USD)':'الذهب / الأونصة (دولار)','Tag gms':'وزن البطاقة (غ)','Karat':'العيار',
+'Per gram (AED)':'سعر الغرام (د.إ)','Gold value':'قيمة الذهب','MC / gm':'المصنعية / غ','MC total':'إجمالي المصنعية',
+'Before VAT':'قبل الضريبة','Grand total':'الإجمالي النهائي','Total':'الإجمالي','Item':'الصنف',
+'+ Add row':'+ إضافة صف','Refresh history':'تحديث السجل التاريخي','Remove row':'حذف الصف',
+'Total tag grams':'إجمالي وزن البطاقة','Making charges':'المصنعية','Total before VAT':'الإجمالي قبل الضريبة','GRAND TOTAL':'الإجمالي النهائي',
+'Per gram = (oz price × 3.6725 ÷ 31.1035) × karat ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%). Gold value = tag gms × per gram. MC is AED per gram. VAT is charged on gold value + MC. You can overwrite any oz price by hand — it then stays as "manual price" until you change the date.':'سعر الغرام = (سعر الأونصة × 3.6725 ÷ 31.1035) × العيار ÷ 24 (عيار 24 = 100%، عيار 22 = 91.67%، عيار 21 = 87.5%، عيار 18 = 75%). قيمة الذهب = وزن البطاقة × سعر الغرام. المصنعية بالدرهم لكل غرام. تُحتسب الضريبة على قيمة الذهب + المصنعية. يمكنك تعديل سعر الأونصة يدويًا — ويبقى "سعرًا يدويًا" حتى تغيّر التاريخ.',
+'live spot':'السعر المباشر','manual price':'سعر يدوي','daily':'إغلاق يومي','monthly avg':'متوسط شهري','latest available':'آخر متاح',
+'Daily history loaded (cached)':'تم تحميل السجل اليومي (من الذاكرة المؤقتة)','Daily history updated':'تم تحديث السجل اليومي',
+'Loading daily history…':'جارٍ تحميل السجل اليومي…',
+'Older daily history unavailable — using built-in 2025+ daily closes and monthly averages':'السجل اليومي الأقدم غير متاح — يتم استخدام الإغلاقات اليومية المضمنة (2025 فما بعد) والمتوسطات الشهرية',
+/* weight converter */
+'Weight Converter':'محوّل الأوزان','Enter Weight':'أدخل الوزن',
+/* karat conversion */
+'Gold Karat Conversion':'تحويل عيار الذهب','Convert gold from one karat to another with alloy details':'حوّل الذهب من عيار إلى آخر مع تفاصيل الخليط',
+'Gold Weight':'وزن الذهب','From Karat':'من عيار','To Karat':'إلى عيار','Calculate Conversion':'احسب التحويل',
+'Same karat selected.':'تم اختيار نفس العيار.','Increasing Purity':'رفع العيار','Decreasing Purity':'خفض العيار',
+'Before':'قبل','After':'بعد','Pure Au':'ذهب خالص','Alloy':'الخليط',
+/* alloy mix */
+'Alloy Mix Calculator':'حاسبة خلطة السبائك','Calculate exact alloy composition for making specific gold karat':'احسب تركيبة الخليط بدقة لتصنيع عيار ذهب محدد',
+'Target Karat':'العيار المطلوب','Total Weight (g)':'الوزن الإجمالي (غ)','Alloy Type':'نوع الخليط','Calculate Alloy Mix':'احسب خلطة السبيكة',
+'Red Gold (100% Copper)':'ذهب أحمر (100% نحاس)',
+'Rose Gold (75% Cu + 22.5% Ag + 2.5% Zn)':'ذهب روز (75% نحاس + 22.5% فضة + 2.5% زنك)',
+'Pink Gold (50% Cu + 45% Ag + 5% Zn)':'ذهب وردي (50% نحاس + 45% فضة + 5% زنك)',
+'Yellow Gold (50% Cu + 50% Ag)':'ذهب أصفر (50% نحاس + 50% فضة)',
+'Yellow Gold + Zinc (40% Cu + 45% Ag + 15% Zn)':'ذهب أصفر + زنك (40% نحاس + 45% فضة + 15% زنك)',
+'White Gold - Nickel (85% Ni + 10% Cu + 5% Zn)':'ذهب أبيض - نيكل (85% نيكل + 10% نحاس + 5% زنك)',
+'White Gold - Palladium (90% Pd + 10% Ag)':'ذهب أبيض - بالاديوم (90% بالاديوم + 10% فضة)',
+'Green Gold (100% Silver)':'ذهب أخضر (100% فضة)',
+'Red Gold':'ذهب أحمر','Rose Gold':'ذهب روز','Pink Gold':'ذهب وردي','Yellow Gold (Zn)':'ذهب أصفر (زنك)','Yellow Gold':'ذهب أصفر',
+'White Gold (Ni)':'ذهب أبيض (نيكل)','White Gold (Pd)':'ذهب أبيض (بالاديوم)','Green Gold':'ذهب أخضر',
+'Pure Gold (Au)':'الذهب الخالص (Au)','Total Alloy':'إجمالي الخليط','Copper (Cu)':'نحاس (Cu)','Silver (Ag)':'فضة (Ag)',
+'Nickel (Ni)':'نيكل (Ni)','Palladium (Pd)':'بالاديوم (Pd)','Zinc (Zn)':'زنك (Zn)',
+'Very hard. May be brittle for delicate work.':'شديد الصلابة وقد يكون هشًا في الأعمال الدقيقة.',
+'Most popular pink-toned gold.':'أكثر أنواع الذهب الوردي شيوعًا.',
+'Lighter pink tone. Easier to work.':'درجة وردية أفتح وأسهل في التشغيل.',
+'Traditional jewellery gold.':'الذهب التقليدي للمجوهرات.',
+'Zinc improves casting.':'الزنك يحسّن عملية الصب.',
+'Needs rhodium plating. May cause allergies.':'يحتاج إلى طلاء الروديوم وقد يسبب حساسية.',
+'Hypoallergenic. No rhodium needed.':'مضاد للحساسية ولا يحتاج إلى روديوم.',
+'Pure silver alloy. Mainly decorative.':'خليط فضة خالصة، للأغراض الزخرفية غالبًا.',
+'Melt:':'الانصهار:',
+'Deep Red':'أحمر داكن','Rose Pink':'وردي روز','Soft Pink':'وردي ناعم','Rich Yellow':'أصفر غني','Bright Yellow':'أصفر ساطع',
+'Bright White':'أبيض ساطع','Natural White':'أبيض طبيعي','Green-Yellow':'أخضر مصفر',
+'Very Hard':'شديد الصلابة','Medium-Hard':'متوسط إلى صلب','Hard':'صلب','Medium':'متوسط','Soft':'ليّن',
+/* silver */
+'Silver Purity Converter':'محوّل نقاء الفضة','Convert silver between purity levels':'حوّل الفضة بين درجات النقاء',
+'Silver Weight (grams)':'وزن الفضة (غرام)','From Purity':'من نقاء','To Purity':'إلى نقاء','Calculate Silver Conversion':'احسب تحويل الفضة',
+'Pure Ag':'فضة خالصة',
+/* scrap */
+'Scrap Gold Valuation':'تقييم الذهب الكسر','Add multiple items of different karats to get total pure gold + value':'أضف عدة قطع بعيارات مختلفة لمعرفة إجمالي الذهب الخالص وقيمته',
+'Weight (g)':'الوزن (غ)','+ Add Item':'+ إضافة قطعة','No items added':'لم تتم إضافة قطع',
+'Total Weight':'الوزن الإجمالي','Total Pure Gold':'إجمالي الذهب الخالص','Avg Purity':'متوسط النقاء','Value (AED)':'القيمة (د.إ)',
+/* assay */
+'Assay Report / AU% Converter':'تقرير الفحص / محوّل نسبة AU%','Enter Gold AU% from lab assay report':'أدخل نسبة الذهب AU% من تقرير فحص المختبر',
+'Gold AU%':'نسبة الذهب AU%','Bar Weight (g)':'وزن السبيكة (غ)','e.g. 879.72':'مثال: 879.72','e.g. 1857.81':'مثال: 1857.81',
+'Fineness':'درجة النقاء','Nearest standard:':'أقرب عيار قياسي:','Bar Weight':'وزن السبيكة','Pure Gold Value':'قيمة الذهب الخالص','Pure Gold':'الذهب الخالص',
+/* melting */
+'Melting Loss Calculator':'حاسبة فاقد الصهر','Calculate gold recovery after melting':'احسب كمية الذهب المستردة بعد الصهر',
+'Before Melting (g)':'قبل الصهر (غ)','After Melting (g)':'بعد الصهر (غ)','Expected Loss %':'نسبة الفاقد المتوقعة %',
+'0.5% (Bars/Ingots)':'0.5% (سبائك)','1% (Clean Jewellery)':'1% (مجوهرات نظيفة)','2% (Mixed/Stones)':'2% (مختلطة / بها أحجار)',
+'3% (Heavy Enamel)':'3% (مينا كثيفة)','5% (Low Grade Scrap)':'5% (كسر منخفض الجودة)',
+'Expected Loss':'الفاقد المتوقع','Expected Recovery':'الاسترداد المتوقع','Actual After':'الوزن الفعلي بعد الصهر','Actual Loss':'الفاقد الفعلي',
+'Recovery Rate':'نسبة الاسترداد','Loss Value':'قيمة الفاقد','NORMAL':'طبيعي','ABOVE EXPECTED':'أعلى من المتوقع',
+'Loss within expected range':'الفاقد ضمن النطاق المتوقع','Check for stones/enamel.':'تحقق من وجود أحجار أو مينا.',
+/* order estimator */
+'Jewellery Order Estimator':'مقدّر طلبات المجوهرات','Estimate customer order with gold + stones + making + VAT':'قدّر طلب العميل: الذهب + الأحجار + المصنعية + الضريبة',
+'Gold Weight (g)':'وزن الذهب (غ)','Making Charge (AED/gram)':'المصنعية (درهم/غرام)','Stone / Diamond Value (AED)':'قيمة الأحجار / الألماس (د.إ)','Other Charges (AED)':'رسوم أخرى (د.إ)',
+'Gold Value':'قيمة الذهب','Making':'المصنعية','Stones':'الأحجار','Other':'أخرى','CUSTOMER TOTAL':'إجمالي العميل','Waiting for live rate...':'بانتظار السعر المباشر...',
+/* currency */
+'Currency Converter':'محوّل العملات','Live daily rates | 40+ currencies':'أسعار يومية مباشرة | أكثر من 40 عملة',
+'Amount':'المبلغ','From':'من','To':'إلى','Swap currencies':'تبديل العملتين',
+'Currency rates are temporarily unreachable.':'أسعار العملات غير متاحة مؤقتًا.','Retry':'إعادة المحاولة',
+'Gold per Gram':'سعر غرام الذهب','Popular Rates':'أسعار شائعة',
+'Rates updated daily via fawazahmed0 Exchange API':'تُحدَّث الأسعار يوميًا عبر واجهة fawazahmed0 لأسعار الصرف',
+/* footer */
+'Disclaimer:':'إخلاء مسؤولية:',
+'Information provided is for general informational and educational purposes only. Does not constitute financial, investment, or trading advice. Prices are indicative and may differ from actual dealer rates. UAE VAT calculations follow Federal Decree-Law No. 8 of 2017 and Cabinet Decision No. 127 of 2024. Consult a qualified financial advisor or FTA-registered tax agent before making investment or tax decisions. Use at your own risk.':'المعلومات المقدمة لأغراض إعلامية وتعليمية عامة فقط، ولا تشكل نصيحة مالية أو استثمارية أو تداولية. الأسعار استرشادية وقد تختلف عن أسعار التجار الفعلية. تتبع حسابات ضريبة القيمة المضافة في الإمارات المرسوم بقانون اتحادي رقم 8 لسنة 2017 وقرار مجلس الوزراء رقم 127 لسنة 2024. يُرجى استشارة مستشار مالي مؤهل أو وكيل ضريبي مسجّل لدى الهيئة الاتحادية للضرائب قبل اتخاذ قرارات استثمارية أو ضريبية. الاستخدام على مسؤوليتك الخاصة.',
+'Idea and Coded by':'الفكرة والبرمجة:',
+'Copyright 2025-2026 Subash M. All rights reserved.':'حقوق النشر 2025-2026 Subash M. جميع الحقوق محفوظة.',
+'Live data: Swissquote / Gold-API.com (fallback) | History: Alpha Vantage | Charts: TradingView | Calendar: Tradays (MQL5)':'البيانات المباشرة: Swissquote / Gold-API.com (احتياطي) | السجل التاريخي: Alpha Vantage | الرسوم: TradingView | التقويم: Tradays (MQL5)',
+/* toasts */
+'Enter a weight and wait for the live rate before downloading.':'أدخل الوزن وانتظر ظهور السعر المباشر قبل التنزيل.',
+'Enter gold weight and wait for the live rate before downloading.':'أدخل وزن الذهب وانتظر ظهور السعر المباشر قبل التنزيل.',
+'Waiting for the live gold rate — try again in a moment.':'بانتظار سعر الذهب المباشر — حاول مرة أخرى بعد قليل.',
+'Offline — opened a printable quotation. Choose "Save as PDF".':'لا يوجد اتصال — تم فتح نسخة قابلة للطباعة من عرض السعر. اختر "حفظ كـ PDF".',
+'Offline — opened a printable rate card. Choose "Save as PDF".':'لا يوجد اتصال — تم فتح نسخة قابلة للطباعة من بطاقة الأسعار. اختر "حفظ كـ PDF".',
+'Allow pop-ups to open the printable quotation.':'اسمح بالنوافذ المنبثقة لفتح عرض السعر القابل للطباعة.',
+'Allow pop-ups to open the printable rate card.':'اسمح بالنوافذ المنبثقة لفتح بطاقة الأسعار القابلة للطباعة.',
+'AED':'د.إ'
+};
+/* currency names (select options "USD - US Dollar", result lines) */
+[['usd','US Dollar','دولار أمريكي'],['aed','UAE Dirham','درهم إماراتي'],['eur','Euro','يورو'],['gbp','British Pound','جنيه إسترليني'],
+['inr','Indian Rupee','روبية هندية'],['sar','Saudi Riyal','ريال سعودي'],['kwd','Kuwaiti Dinar','دينار كويتي'],['bhd','Bahraini Dinar','دينار بحريني'],
+['omr','Omani Rial','ريال عماني'],['qar','Qatari Riyal','ريال قطري'],['jpy','Japanese Yen','ين ياباني'],['cny','Chinese Yuan','يوان صيني'],
+['chf','Swiss Franc','فرنك سويسري'],['aud','Australian Dollar','دولار أسترالي'],['cad','Canadian Dollar','دولار كندي'],['sgd','Singapore Dollar','دولار سنغافوري'],
+['myr','Malaysian Ringgit','رينغيت ماليزي'],['pkr','Pakistani Rupee','روبية باكستانية'],['lkr','Sri Lankan Rupee','روبية سريلانكية'],['egp','Egyptian Pound','جنيه مصري'],
+['bdt','Bangladeshi Taka','تاكا بنغلاديشي'],['php','Philippine Peso','بيزو فلبيني'],['npr','Nepalese Rupee','روبية نيبالية'],['jod','Jordanian Dinar','دينار أردني'],
+['try','Turkish Lira','ليرة تركية'],['zar','South African Rand','راند جنوب أفريقي'],['thb','Thai Baht','بات تايلندي'],['idr','Indonesian Rupiah','روبية إندونيسية'],
+['vnd','Vietnamese Dong','دونغ فيتنامي'],['ils','Israeli Shekel','شيكل إسرائيلي'],['kes','Kenyan Shilling','شلن كيني'],['mad','Moroccan Dirham','درهم مغربي'],
+['hkd','Hong Kong Dollar','دولار هونغ كونغ'],['krw','South Korean Won','وون كوري جنوبي'],['sek','Swedish Krona','كرونة سويدية'],['nok','Norwegian Krone','كرونة نرويجية'],
+['dkk','Danish Krone','كرونة دنماركية'],['mxn','Mexican Peso','بيزو مكسيكي'],['brl','Brazilian Real','ريال برازيلي'],['rub','Russian Ruble','روبل روسي'],
+['nzd','New Zealand Dollar','دولار نيوزيلندي']
+].forEach(c=>{const code=c[0].toUpperCase();DA[code+' - '+c[1]]=code+' - '+c[2];DA[c[1]]=c[2];});
+
+
+/* ═══════════ HINDI / URDU DICTIONARY  [English key, Hindi, Urdu] ═══════════ */
+const X=[
+['by Subash M | live rates','Subash M द्वारा | लाइव दरें','Subash M کی طرف سے | لائیو ریٹس'],
+['LIVE','लाइव','لائیو'],['OFF','बंद','بند'],['STALE','पुराना','پرانا'],
+['Rates','दरें','ریٹس'],['Market Status','बाज़ार की स्थिति','مارکیٹ کی صورتحال'],['Calculator','कैलकुलेटर','کیلکولیٹر'],
+['History Calc','पुराना भाव कैलकुलेटर','پرانا ریٹ کیلکولیٹر'],['Karat Tools','कैरेट टूल्स','کیرٹ ٹولز'],['Currency','मुद्रा','کرنسی'],
+['Live feed unavailable. Showing last known prices.','लाइव फ़ीड उपलब्ध नहीं है। आख़िरी ज्ञात भाव दिखाए जा रहे हैं।','لائیو فیڈ دستیاب نہیں۔ آخری معلوم ریٹ دکھائے جا رہے ہیں۔'],
+['Dismiss','बंद करें','بند کریں'],
+['Live price feed unreachable (network blocked or all sources down)','लाइव भाव फ़ीड तक पहुँच नहीं हो पा रही (नेटवर्क ब्लॉक है या सभी स्रोत बंद हैं)','لائیو ریٹ فیڈ تک رسائی نہیں ہو رہی (نیٹ ورک بلاک ہے یا تمام ذرائع بند ہیں)'],
+['Showing last known prices','आख़िरी ज्ञात भाव दिखाए जा रहे हैं','آخری معلوم ریٹ دکھائے جا رہے ہیں'],
+['Will keep retrying automatically','अपने-आप दोबारा कोशिश जारी रहेगी','خود بخود دوبارہ کوشش جاری رہے گی'],
+['Last updated','आख़िरी अपडेट','آخری اپ ڈیٹ'],['refresh failed','रिफ़्रेश विफल','ریفریش ناکام'],
+['Back to top','ऊपर जाएँ','اوپر جائیں'],['Quick navigation','त्वरित नेविगेशन','فوری نیویگیشن'],
+['Metal','धातु','دھات'],['Weight','वज़न','وزن'],
+['Gold','सोना','سونا'],['Silver','चाँदी','چاندی'],['Platinum','प्लैटिनम','پلاٹینم'],['Palladium','पैलेडियम','پیلیڈیم'],['Copper','तांबा','تانبا'],
+['Gram','ग्राम','گرام'],['Grams','ग्राम','گرام'],['Troy Ounce','ट्रॉय औंस','ٹرائے اونس'],['Troy Oz','ट्रॉय औंस','ٹرائے اونس'],['Tola','तोला','تولہ'],
+['Pavan / Sovereign','पावन / सॉवरेन','پاون / سورین'],['Pavan','पावन','پاون'],['10 Grams','10 ग्राम','10 گرام'],['Kilogram','किलोग्राम','کلوگرام'],
+['Pennyweight','पेनीवेट','پینی ویٹ'],['Tael','ताएल','تائل'],
+['Loading...','लोड हो रहा है...','لوڈ ہو رہا ہے...'],['waiting for price...','भाव का इंतज़ार...','ریٹ کا انتظار...'],
+['99.9% Pure','99.9% शुद्ध','99.9% خالص'],['Sterling Silver','स्टर्लिंग चाँदी','سٹرلنگ چاندی'],['Fine Silver','शुद्ध चाँदी','خالص چاندی'],
+['Coin Silver','सिक्का चाँदी','سکہ چاندی'],['Jewellery','ज्वेलरी','جیولری'],['Fine','शुद्ध','خالص'],['Sterling','स्टर्लिंग','سٹرلنگ'],
+['Britannia','ब्रिटानिया','برٹانیہ'],['Coin','सिक्का','سکہ'],
+['Live Rates','लाइव दरें','لائیو ریٹس'],
+['fetching...','लाया जा रहा है...','حاصل ہو رہا ہے...'],['No data yet','अभी कोई डेटा नहीं','ابھی کوئی ڈیٹا نہیں'],
+['Waiting for first successful fetch...','पहले सफल अपडेट का इंतज़ार...','پہلی کامیاب اپ ڈیٹ کا انتظار...'],
+['fallback','वैकल्पिक','متبادل'],['troy oz','ट्रॉय औंस','ٹرائے اونس'],['lb','पाउंड','پاؤنڈ'],['/g','/ग्रा','/گرام'],['/kg','/किग्रा','/کلو'],
+['bid','खरीद','خرید'],['ask','बिक्री','فروخت'],['source:','स्रोत:','ذریعہ:'],
+[`Copper is a base metal reference (COMEX, priced per pound) shown for alloy/scrap costing — it isn't a troy-ounce jewellery metal like the four above.`,
+ 'तांबा एक आधार धातु है, जो खोट/स्क्रैप की लागत के संदर्भ के लिए दिखाया गया है (COMEX, भाव प्रति पाउंड) — यह ऊपर की चार धातुओं की तरह ट्रॉय औंस में बिकने वाली ज्वेलरी धातु नहीं है।',
+ 'تانبا ایک بنیادی دھات ہے جو کھوٹ/اسکریپ کی لاگت کے حوالے کے لیے دکھائی گئی ہے (COMEX، ریٹ فی پاؤنڈ) — یہ اوپر کی چار دھاتوں کی طرح ٹرائے اونس میں بکنے والی جیولری دھات نہیں ہے۔'],
+['Refresh','रिफ़्रेश','ریفریش'],
+['Shop / entity for rate card (optional)','रेट कार्ड के लिए दुकान / कंपनी का नाम (वैकल्पिक)','ریٹ کارڈ کے لیے دکان / ادارے کا نام (اختیاری)'],
+['Rate Card PDF · all karats','रेट कार्ड PDF · सभी कैरेट','ریٹ کارڈ PDF · تمام کیرٹ'],
+['Market Indicators','मार्केट संकेतक','مارکیٹ اشاریے'],['Gold / Silver Ratio','सोना / चाँदी अनुपात','سونا / چاندی تناسب'],
+['oz gold = ? oz silver','औंस सोना = ? औंस चाँदी','اونس سونا = ؟ اونس چاندی'],['oz gold','औंस सोना','اونس سونا'],['oz silver','औंस चाँदी','اونس چاندی'],
+['Gold Spread','सोने का स्प्रेड','سونے کا اسپریڈ'],['Silver Spread','चाँदी का स्प्रेड','چاندی کا اسپریڈ'],['Platinum Spread','प्लैटिनम का स्प्रेड','پلاٹینم کا اسپریڈ'],
+['bid-ask USD','खरीद-बिक्री अंतर (USD)','خرید و فروخت کا فرق (USD)'],
+['Market Open','बाज़ार खुला है','مارکیٹ کھلی ہے'],['Daily Break','दैनिक विराम','روزانہ وقفہ'],['Market Closed','बाज़ार बंद है','مارکیٹ بند ہے'],
+['Opens in','खुलने में','کھلنے میں'],['Resumes in','दोबारा शुरू होने में','دوبارہ شروع ہونے میں'],['Break in','विराम में','وقفے میں'],['Closes in','बंद होने में','بند ہونے میں'],
+['Timezone','समय क्षेत्र','ٹائم زون'],
+['Indicative Trading Hours by Day','दिन के अनुसार संकेतात्मक ट्रेडिंग समय','دن کے لحاظ سے اشاریاتی ٹریڈنگ اوقات'],
+['Trading Sessions','ट्रेडिंग सत्र','ٹریڈنگ سیشنز'],['Daily break','दैनिक विराम','روزانہ وقفہ'],
+['— most brokers pause dealing briefly for rollover','— ज़्यादातर ब्रोकर रोलओवर के लिए कुछ देर ट्रेडिंग रोकते हैं','— زیادہ تر بروکرز رول اوور کے لیے کچھ دیر ٹریڈنگ روک دیتے ہیں'],
+['happening now','अभी जारी','ابھی جاری'],['Active now','अभी सक्रिय','ابھی فعال'],['local time','स्थानीय समय','مقامی وقت'],
+['Mon','सोम','پیر'],['Tue','मंगल','منگل'],['Wed','बुध','بدھ'],['Thu','गुरु','جمعرات'],['Fri','शुक्र','جمعہ'],['Sat','शनि','ہفتہ'],['Sun','रवि','اتوار'],
+['Sydney / Asia','सिडनी / एशिया','سڈنی / ایشیا'],['London','लंदन','لندن'],['New York','न्यूयॉर्क','نیویارک'],['Peak Liquidity','अधिकतम तरलता','زیادہ سے زیادہ لیکویڈیٹی'],
+['Dubai, UAE (GST)','दुबई, यूएई (GST)','دبئی، یو اے ای (GST)'],['India (IST)','भारत (IST)','بھارت (IST)'],['Pakistan (PKT)','पाकिस्तान (PKT)','پاکستان (PKT)'],
+['Bangladesh','बांग्लादेश','بنگلہ دیش'],['Sri Lanka','श्रीलंका','سری لنکا'],['Nepal','नेपाल','نیپال'],['Philippines','फ़िलीपींस','فلپائن'],
+['Saudi Arabia','सऊदी अरब','سعودی عرب'],['Egypt','मिस्र','مصر'],['London, UK','लंदन, यूके','لندن، یو کے'],['New York, US','न्यूयॉर्क, यूएस','نیویارک، یو ایس'],
+['Singapore','सिंगापुर','سنگاپور'],['Hong Kong','हांगकांग','ہانگ کانگ'],['Sydney, Australia','सिडनी, ऑस्ट्रेलिया','سڈنی، آسٹریلیا'],
+[`Closed Saturday & Sunday (also the UAE weekend). Spot gold trades alongside global FX markets, roughly Sunday evening to Friday evening UTC, with a short daily settlement break. Exact minute-level hours vary by broker/platform and shift slightly around US/UK daylight-saving changes — treat this as a general guide, not your dealing platform's official calendar.`,
+ 'शनिवार और रविवार को बाज़ार बंद रहता है (यही यूएई का वीकेंड भी है)। स्पॉट गोल्ड वैश्विक फॉरेक्स बाज़ारों के साथ लगभग रविवार शाम से शुक्रवार शाम (UTC) तक ट्रेड होता है, बीच में रोज़ एक छोटा सेटलमेंट ब्रेक होता है। मिनट-स्तर का सटीक समय ब्रोकर/प्लेटफ़ॉर्म के अनुसार बदलता है और अमेरिका/ब्रिटेन में डेलाइट-सेविंग बदलने पर थोड़ा खिसक सकता है — इसे सामान्य मार्गदर्शन मानें, अपने ट्रेडिंग प्लेटफ़ॉर्म का आधिकारिक कैलेंडर नहीं।',
+ 'ہفتہ اور اتوار کو مارکیٹ بند رہتی ہے (یہی یو اے ای کا ویک اینڈ بھی ہے)۔ اسپاٹ گولڈ عالمی فاریکس مارکیٹوں کے ساتھ تقریباً اتوار کی شام سے جمعے کی شام (UTC) تک ٹریڈ ہوتا ہے، درمیان میں روزانہ ایک مختصر سیٹلمنٹ وقفہ ہوتا ہے۔ منٹ کی سطح کے درست اوقات بروکر/پلیٹ فارم کے مطابق مختلف ہوتے ہیں اور امریکہ/برطانیہ میں ڈے لائٹ سیونگ بدلنے پر تھوڑے سرک سکتے ہیں — اسے عمومی رہنمائی سمجھیں، اپنے ٹریڈنگ پلیٹ فارم کا سرکاری کیلنڈر نہیں۔'],
+['Live Quotes','लाइव कोट्स','لائیو کوٹس'],['Charts','चार्ट','چارٹس'],['Advanced Chart','एडवांस्ड चार्ट','ایڈوانسڈ چارٹ'],['Economic Calendar','आर्थिक कैलेंडर','اقتصادی کیلنڈر'],
+['⚠ MQL5 widget unavailable — showing GoldBench live feed','⚠ MQL5 विजेट उपलब्ध नहीं — GoldBench की लाइव फ़ीड दिखाई जा रही है','⚠ MQL5 ویجیٹ دستیاب نہیں — GoldBench کی لائیو فیڈ دکھائی جا رہی ہے'],
+['waiting…','इंतज़ार…','انتظار…'],['Retry MQL5 widget','MQL5 विजेट फिर लोड करें','MQL5 ویجیٹ دوبارہ لوڈ کریں'],
+['Rate Calculator','रेट कैलकुलेटर','ریٹ کیلکولیٹر'],['UAE VAT','यूएई वैट','یو اے ای ویٹ'],
+['Reset','रीसेट','ری سیٹ'],['Purity / Karat','शुद्धता / कैरेट','خالصیت / کیرٹ'],['Weight (grams)','वज़न (ग्राम)','وزن (گرام)'],
+['Making Charge','मेकिंग चार्ज','میکنگ چارج'],['Per Gram','प्रति ग्राम','فی گرام'],['Whole / Flat','कुल / एकमुश्त','کل / یکمشت'],
+['% of Metal','धातु मूल्य का %','دھات کی قیمت کا %'],['Discount','छूट','رعایت'],['Flat (AED)','एकमुश्त (AED)','یکمشت (AED)'],['% off','% छूट','% رعایت'],
+['Metal Value','धातु मूल्य','دھات کی قیمت'],['Subtotal','उप-योग','ذیلی میزان'],['VAT','वैट','ویٹ'],['TOTAL','कुल','کل'],
+['Retail/Jewellery','खुदरा / ज्वेलरी','ریٹیل / جیولری'],['Investment Grade 99%+','इन्वेस्टमेंट ग्रेड 99%+','انویسٹمنٹ گریڈ 99%+'],['[0% VAT]','[0% वैट]','[0% ویٹ]'],
+['Customer (optional)','ग्राहक (वैकल्पिक)','کسٹمر (اختیاری)'],['Shop / Entity (optional)','दुकान / कंपनी (वैकल्पिक)','دکان / ادارہ (اختیاری)'],
+['Customer name','ग्राहक का नाम','کسٹمر کا نام'],['Shop / entity name','दुकान / कंपनी का नाम','دکان / ادارے کا نام'],
+['Download PDF Quotation','PDF कोटेशन डाउनलोड करें','PDF کوٹیشن ڈاؤن لوڈ کریں'],
+['Uses the live rate at the moment you download','डाउनलोड के समय का लाइव भाव इस्तेमाल होता है','ڈاؤن لوڈ کے وقت کا لائیو ریٹ استعمال ہوتا ہے'],
+['Uses the live gold rate at the moment you download','डाउनलोड के समय का लाइव सोने का भाव इस्तेमाल होता है','ڈاؤن لوڈ کے وقت کا لائیو سونے کا ریٹ استعمال ہوتا ہے'],
+['Preparing…','तैयार हो रहा है…','تیار ہو رہا ہے…'],
+['Historical Gold Calculator','पुराना सोना भाव कैलकुलेटर','پرانا سونا ریٹ کیلکولیٹر'],
+['Pick any date — the gold price per oz fills in automatically (today = live GoldBench spot, recent dates = daily close, older = monthly average back to 1833). Then: oz price → per gram → tag grams → making charges → 5% VAT → grand total. Great for re-pricing old invoices.',
+ 'कोई भी तारीख़ चुनें — उस दिन का सोने का भाव प्रति औंस अपने-आप भर जाता है (आज = GoldBench का लाइव स्पॉट, हाल की तारीख़ें = दैनिक क्लोज़, पुरानी = 1833 तक मासिक औसत)। फिर: औंस भाव → प्रति ग्राम → टैग ग्राम → मेकिंग चार्ज → 5% वैट → कुल योग। पुराने बिलों का भाव दोबारा निकालने के लिए उपयोगी।',
+ 'کوئی بھی تاریخ منتخب کریں — اس دن کا سونے کا ریٹ فی اونس خود بخود بھر جاتا ہے (آج = GoldBench کا لائیو اسپاٹ، حالیہ تاریخیں = یومیہ کلوز، پرانی = 1833 تک ماہانہ اوسط)۔ پھر: اونس ریٹ ← فی گرام ← ٹیگ گرام ← میکنگ چارج ← 5% ویٹ ← کل میزان۔ پرانے بلوں کا ریٹ دوبارہ نکالنے کے لیے مفید۔'],
+['Date','तारीख़','تاریخ'],['Description','विवरण','تفصیل'],['Gold / oz (USD)','सोना / औंस (USD)','سونا / اونس (USD)'],
+['Tag gms','टैग ग्राम','ٹیگ گرام'],['Karat','कैरेट','کیرٹ'],['Per gram (AED)','प्रति ग्राम (AED)','فی گرام (AED)'],
+['Gold value','सोने का मूल्य','سونے کی قیمت'],['MC / gm','मेकिंग / ग्रा','میکنگ / گرام'],['MC total','मेकिंग कुल','میکنگ کل'],
+['Before VAT','वैट से पहले','ویٹ سے پہلے'],['Grand total','कुल योग','کل میزان'],['Total','कुल','کل'],['Item','वस्तु','آئٹم'],
+['+ Add row','+ पंक्ति जोड़ें','+ قطار شامل کریں'],['Refresh history','इतिहास रिफ़्रेश करें','ہسٹری ریفریش کریں'],['Remove row','पंक्ति हटाएँ','قطار ہٹائیں'],
+['Total tag grams','कुल टैग ग्राम','کل ٹیگ گرام'],['Making charges','मेकिंग चार्ज','میکنگ چارجز'],['Total before VAT','वैट से पहले कुल','ویٹ سے پہلے کل'],['GRAND TOTAL','कुल योग','کل میزان'],
+[`Per gram = (oz price × 3.6725 ÷ 31.1035) × karat ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%). Gold value = tag gms × per gram. MC is AED per gram. VAT is charged on gold value + MC. You can overwrite any oz price by hand — it then stays as "manual price" until you change the date.`,
+ 'प्रति ग्राम = (औंस भाव × 3.6725 ÷ 31.1035) × कैरेट ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%)। सोने का मूल्य = टैग ग्राम × प्रति ग्राम भाव। MC यानी मेकिंग चार्ज, AED प्रति ग्राम। वैट सोने के मूल्य + MC पर लगता है। आप औंस भाव हाथ से बदल सकते हैं — तब वह तारीख़ बदलने तक "मैनुअल भाव" रहता है।',
+ 'فی گرام = (اونس ریٹ × 3.6725 ÷ 31.1035) × کیرٹ ÷ 24 (24K = 100%، 22K = 91.67%، 21K = 87.5%، 18K = 75%)۔ سونے کی قیمت = ٹیگ گرام × فی گرام ریٹ۔ MC یعنی میکنگ چارج، AED فی گرام۔ ویٹ سونے کی قیمت + MC پر لگتا ہے۔ آپ اونس ریٹ ہاتھ سے بدل سکتے ہیں — پھر وہ تاریخ بدلنے تک "مینوئل ریٹ" رہتا ہے۔'],
+['live spot','लाइव स्पॉट','لائیو اسپاٹ'],['manual price','मैनुअल भाव','مینوئل ریٹ'],['daily','दैनिक क्लोज़','یومیہ کلوز'],['monthly avg','मासिक औसत','ماہانہ اوسط'],
+['latest available','नवीनतम उपलब्ध','تازہ ترین دستیاب'],
+['Daily history loaded (cached)','दैनिक इतिहास लोड हुआ (कैश से)','یومیہ ہسٹری لوڈ ہوئی (کیش سے)'],['Daily history updated','दैनिक इतिहास अपडेट हुआ','یومیہ ہسٹری اپ ڈیٹ ہوئی'],
+['Loading daily history…','दैनिक इतिहास लोड हो रहा है…','یومیہ ہسٹری لوڈ ہو رہی ہے…'],
+['Older daily history unavailable — using built-in 2025+ daily closes and monthly averages','पुराना दैनिक इतिहास उपलब्ध नहीं — बिल्ट-इन 2025+ दैनिक क्लोज़ और मासिक औसत इस्तेमाल हो रहे हैं','پرانی یومیہ ہسٹری دستیاب نہیں — بلٹ اِن 2025+ یومیہ کلوز اور ماہانہ اوسط استعمال ہو رہے ہیں'],
+['Weight Converter','वज़न कन्वर्टर','وزن کنورٹر'],['Enter Weight','वज़न दर्ज करें','وزن درج کریں'],
+['Gold Karat Conversion','सोने का कैरेट कन्वर्ज़न','سونے کا کیرٹ کنورژن'],
+['Convert gold from one karat to another with alloy details','सोने को एक कैरेट से दूसरे में बदलें, खोट के विवरण सहित','سونے کو ایک کیرٹ سے دوسرے میں بدلیں، کھوٹ کی تفصیل کے ساتھ'],
+['Gold Weight','सोने का वज़न','سونے کا وزن'],['From Karat','कैरेट से','کیرٹ سے'],['To Karat','कैरेट में','کیرٹ میں'],
+['Calculate Conversion','कन्वर्ज़न निकालें','کنورژن حساب کریں'],['Same karat selected.','वही कैरेट चुना गया है।','وہی کیرٹ منتخب ہے۔'],
+['Increasing Purity','शुद्धता बढ़ाना','خالصیت بڑھانا'],['Decreasing Purity','शुद्धता घटाना','خالصیت گھٹانا'],
+['Before','पहले','پہلے'],['After','बाद','بعد'],['Pure Au','शुद्ध सोना (Au)','خالص سونا (Au)'],['Alloy','खोट','کھوٹ'],
+['Alloy Mix Calculator','खोट मिश्रण कैलकुलेटर','کھوٹ مکسچر کیلکولیٹر'],
+['Calculate exact alloy composition for making specific gold karat','किसी विशेष कैरेट का सोना बनाने के लिए खोट की सटीक मात्रा निकालें','کسی خاص کیرٹ کا سونا بنانے کے لیے کھوٹ کی درست مقدار نکالیں'],
+['Target Karat','लक्ष्य कैरेट','مطلوبہ کیرٹ'],['Total Weight (g)','कुल वज़न (ग्रा)','کل وزن (گرام)'],['Alloy Type','खोट का प्रकार','کھوٹ کی قسم'],
+['Calculate Alloy Mix','खोट मिश्रण निकालें','کھوٹ مکسچر حساب کریں'],
+['Red Gold (100% Copper)','रेड गोल्ड (100% तांबा)','ریڈ گولڈ (100% تانبا)'],
+['Rose Gold (75% Cu + 22.5% Ag + 2.5% Zn)','रोज़ गोल्ड (75% तांबा + 22.5% चाँदी + 2.5% जस्ता)','روز گولڈ (75% تانبا + 22.5% چاندی + 2.5% جست)'],
+['Pink Gold (50% Cu + 45% Ag + 5% Zn)','पिंक गोल्ड (50% तांबा + 45% चाँदी + 5% जस्ता)','پنک گولڈ (50% تانبا + 45% چاندی + 5% جست)'],
+['Yellow Gold (50% Cu + 50% Ag)','येलो गोल्ड (50% तांबा + 50% चाँदी)','ییلو گولڈ (50% تانبا + 50% چاندی)'],
+['Yellow Gold + Zinc (40% Cu + 45% Ag + 15% Zn)','येलो गोल्ड + जस्ता (40% तांबा + 45% चाँदी + 15% जस्ता)','ییلو گولڈ + جست (40% تانبا + 45% چاندی + 15% جست)'],
+['White Gold - Nickel (85% Ni + 10% Cu + 5% Zn)','व्हाइट गोल्ड - निकल (85% निकल + 10% तांबा + 5% जस्ता)','وائٹ گولڈ - نکل (85% نکل + 10% تانبا + 5% جست)'],
+['White Gold - Palladium (90% Pd + 10% Ag)','व्हाइट गोल्ड - पैलेडियम (90% पैलेडियम + 10% चाँदी)','وائٹ گولڈ - پیلیڈیم (90% پیلیڈیم + 10% چاندی)'],
+['Green Gold (100% Silver)','ग्रीन गोल्ड (100% चाँदी)','گرین گولڈ (100% چاندی)'],
+['Red Gold','रेड गोल्ड','ریڈ گولڈ'],['Rose Gold','रोज़ गोल्ड','روز گولڈ'],['Pink Gold','पिंक गोल्ड','پنک گولڈ'],
+['Yellow Gold (Zn)','येलो गोल्ड (जस्ता)','ییلو گولڈ (جست)'],['Yellow Gold','येलो गोल्ड','ییلو گولڈ'],
+['White Gold (Ni)','व्हाइट गोल्ड (निकल)','وائٹ گولڈ (نکل)'],['White Gold (Pd)','व्हाइट गोल्ड (पैलेडियम)','وائٹ گولڈ (پیلیڈیم)'],['Green Gold','ग्रीन गोल्ड','گرین گولڈ'],
+['Pure Gold (Au)','शुद्ध सोना (Au)','خالص سونا (Au)'],['Total Alloy','कुल खोट','کل کھوٹ'],['Copper (Cu)','तांबा (Cu)','تانبا (Cu)'],['Silver (Ag)','चाँदी (Ag)','چاندی (Ag)'],
+['Nickel (Ni)','निकल (Ni)','نکل (Ni)'],['Palladium (Pd)','पैलेडियम (Pd)','پیلیڈیم (Pd)'],['Zinc (Zn)','जस्ता (Zn)','جست (Zn)'],
+['Very hard. May be brittle for delicate work.','बहुत सख़्त। नाज़ुक काम के लिए भंगुर हो सकता है।','بہت سخت۔ نازک کام کے لیے بھربھرا ہو سکتا ہے۔'],
+['Most popular pink-toned gold.','सबसे लोकप्रिय गुलाबी रंगत वाला सोना।','سب سے مقبول گلابی رنگت والا سونا۔'],
+['Lighter pink tone. Easier to work.','हल्की गुलाबी रंगत। काम में आसान।','ہلکی گلابی رنگت۔ کام میں آسان۔'],
+['Traditional jewellery gold.','पारंपरिक ज्वेलरी का सोना।','روایتی جیولری کا سونا۔'],
+['Zinc improves casting.','जस्ता ढलाई बेहतर करता है।','جست ڈھلائی بہتر کرتا ہے۔'],
+['Needs rhodium plating. May cause allergies.','रोडियम प्लेटिंग चाहिए। एलर्जी हो सकती है।','روڈیم پلیٹنگ درکار۔ الرجی ہو سکتی ہے۔'],
+['Hypoallergenic. No rhodium needed.','एलर्जी-रहित। रोडियम की ज़रूरत नहीं।','الرجی سے پاک۔ روڈیم کی ضرورت نہیں۔'],
+['Pure silver alloy. Mainly decorative.','शुद्ध चाँदी का मिश्रण। मुख्यतः सजावटी।','خالص چاندی کا مرکب۔ بنیادی طور پر آرائشی۔'],
+['Melt:','गलन:','پگھلاؤ:'],
+['Deep Red','गहरा लाल','گہرا سرخ'],['Rose Pink','गुलाबी','گلابی'],['Soft Pink','हल्का गुलाबी','ہلکا گلابی'],['Rich Yellow','गहरा पीला','گہرا پیلا'],
+['Bright Yellow','चमकीला पीला','چمکدار پیلا'],['Bright White','चमकीला सफ़ेद','چمکدار سفید'],['Natural White','प्राकृतिक सफ़ेद','قدرتی سفید'],['Green-Yellow','हरा-पीला','سبز-پیلا'],
+['Very Hard','बहुत सख़्त','بہت سخت'],['Medium-Hard','मध्यम-सख़्त','درمیانہ-سخت'],['Hard','सख़्त','سخت'],['Medium','मध्यम','درمیانہ'],['Soft','नरम','نرم'],
+['Silver Purity Converter','चाँदी शुद्धता कन्वर्टर','چاندی خالصیت کنورٹر'],
+['Convert silver between purity levels','चाँदी को एक शुद्धता स्तर से दूसरे में बदलें','چاندی کو ایک خالصیت سے دوسری میں بدلیں'],
+['Silver Weight (grams)','चाँदी का वज़न (ग्राम)','چاندی کا وزن (گرام)'],['From Purity','शुद्धता से','خالصیت سے'],['To Purity','शुद्धता में','خالصیت میں'],
+['Calculate Silver Conversion','चाँदी कन्वर्ज़न निकालें','چاندی کنورژن حساب کریں'],['Pure Ag','शुद्ध चाँदी (Ag)','خالص چاندی (Ag)'],
+['Scrap Gold Valuation','पुराना/स्क्रैप सोना मूल्यांकन','اسکریپ سونا ویلیو ایشن'],
+['Add multiple items of different karats to get total pure gold + value','अलग-अलग कैरेट की कई वस्तुएँ जोड़ें और कुल शुद्ध सोना व मूल्य पाएँ','مختلف کیرٹ کی کئی اشیا شامل کریں اور کل خالص سونا اور قیمت حاصل کریں'],
+['Weight (g)','वज़न (ग्रा)','وزن (گرام)'],['+ Add Item','+ वस्तु जोड़ें','+ آئٹم شامل کریں'],['No items added','कोई वस्तु नहीं जोड़ी गई','کوئی آئٹم شامل نہیں'],
+['Total Weight','कुल वज़न','کل وزن'],['Total Pure Gold','कुल शुद्ध सोना','کل خالص سونا'],['Avg Purity','औसत शुद्धता','اوسط خالصیت'],['Value (AED)','मूल्य (AED)','قیمت (AED)'],
+['Assay Report / AU% Converter','असे रिपोर्ट / AU% कन्वर्टर','اسے رپورٹ / AU% کنورٹر'],
+['Enter Gold AU% from lab assay report','लैब असे रिपोर्ट से सोने का AU% दर्ज करें','لیب اسے رپورٹ سے سونے کا AU% درج کریں'],
+['Gold AU%','सोना AU%','سونا AU%'],['Bar Weight (g)','बार का वज़न (ग्रा)','بار کا وزن (گرام)'],['e.g. 879.72','जैसे 879.72','مثلاً 879.72'],['e.g. 1857.81','जैसे 1857.81','مثلاً 1857.81'],
+['Fineness','फ़ाइननेस','فائن نس'],['Nearest standard:','निकटतम मानक:','قریب ترین معیار:'],['Bar Weight','बार का वज़न','بار کا وزن'],
+['Pure Gold Value','शुद्ध सोने का मूल्य','خالص سونے کی قیمت'],['Pure Gold','शुद्ध सोना','خالص سونا'],
+['Melting Loss Calculator','गलाई में नुकसान कैलकुलेटर','پگھلائی کا نقصان کیلکولیٹر'],
+['Calculate gold recovery after melting','गलाने के बाद सोने की वापसी निकालें','پگھلانے کے بعد سونے کی واپسی حساب کریں'],
+['Before Melting (g)','गलाने से पहले (ग्रा)','پگھلانے سے پہلے (گرام)'],['After Melting (g)','गलाने के बाद (ग्रा)','پگھلانے کے بعد (گرام)'],
+['Expected Loss %','अपेक्षित नुकसान %','متوقع نقصان %'],
+['0.5% (Bars/Ingots)','0.5% (बार / सिल्लियाँ)','0.5% (بارز / ڈلیاں)'],['1% (Clean Jewellery)','1% (साफ़ ज्वेलरी)','1% (صاف جیولری)'],
+['2% (Mixed/Stones)','2% (मिश्रित / नग वाली)','2% (ملی جلی / نگ والی)'],['3% (Heavy Enamel)','3% (भारी मीना)','3% (بھاری میناکاری)'],
+['5% (Low Grade Scrap)','5% (निम्न श्रेणी का स्क्रैप)','5% (کم درجے کا اسکریپ)'],
+['Expected Loss','अपेक्षित नुकसान','متوقع نقصان'],['Expected Recovery','अपेक्षित वापसी','متوقع واپسی'],['Actual After','वास्तविक वज़न (बाद में)','اصل وزن (بعد میں)'],
+['Actual Loss','वास्तविक नुकसान','اصل نقصان'],['Recovery Rate','वापसी दर','واپسی کی شرح'],['Loss Value','नुकसान का मूल्य','نقصان کی قیمت'],
+['NORMAL','सामान्य','نارمل'],['ABOVE EXPECTED','अपेक्षा से ज़्यादा','توقع سے زیادہ'],
+['Loss within expected range','नुकसान अपेक्षित सीमा में है','نقصان متوقع حد میں ہے'],['Check for stones/enamel.','नग/मीना की जाँच करें।','نگ / میناکاری چیک کریں۔'],
+['Jewellery Order Estimator','ज्वेलरी ऑर्डर एस्टिमेटर','جیولری آرڈر ایسٹیمیٹر'],
+['Estimate customer order with gold + stones + making + VAT','सोना + नग + मेकिंग + वैट के साथ ग्राहक के ऑर्डर का अनुमान लगाएँ','سونا + نگ + میکنگ + ویٹ کے ساتھ کسٹمر آرڈر کا اندازہ لگائیں'],
+['Gold Weight (g)','सोने का वज़न (ग्रा)','سونے کا وزن (گرام)'],['Making Charge (AED/gram)','मेकिंग चार्ज (AED/ग्राम)','میکنگ چارج (AED/گرام)'],
+['Stone / Diamond Value (AED)','नग / हीरे का मूल्य (AED)','نگ / ہیرے کی قیمت (AED)'],['Other Charges (AED)','अन्य शुल्क (AED)','دیگر چارجز (AED)'],
+['Gold Value','सोने का मूल्य','سونے کی قیمت'],['Making','मेकिंग','میکنگ'],['Stones','नग','نگ'],['Other','अन्य','دیگر'],
+['CUSTOMER TOTAL','ग्राहक का कुल','کسٹمر کا کل'],['Waiting for live rate...','लाइव भाव का इंतज़ार...','لائیو ریٹ کا انتظار...'],
+['Currency Converter','करेंसी कन्वर्टर','کرنسی کنورٹر'],['Live daily rates | 40+ currencies','लाइव दैनिक दरें | 40+ मुद्राएँ','لائیو یومیہ ریٹس | 40+ کرنسیاں'],
+['Amount','राशि','رقم'],['From','से','سے'],['To','में','میں'],['Swap currencies','मुद्राएँ अदल-बदल करें','کرنسیاں بدلیں'],
+['Currency rates are temporarily unreachable.','मुद्रा दरें अभी उपलब्ध नहीं हैं।','کرنسی ریٹس ابھی دستیاب نہیں۔'],['Retry','फिर कोशिश करें','دوبارہ کوشش کریں'],
+['Gold per Gram','सोना प्रति ग्राम','سونا فی گرام'],['Popular Rates','लोकप्रिय दरें','مقبول ریٹس'],
+['Rates updated daily via fawazahmed0 Exchange API','दरें fawazahmed0 एक्सचेंज API से रोज़ अपडेट होती हैं','ریٹس fawazahmed0 ایکسچینج API سے روزانہ اپ ڈیٹ ہوتے ہیں'],
+['Disclaimer:','अस्वीकरण:','دستبرداری:'],
+['Information provided is for general informational and educational purposes only. Does not constitute financial, investment, or trading advice. Prices are indicative and may differ from actual dealer rates. UAE VAT calculations follow Federal Decree-Law No. 8 of 2017 and Cabinet Decision No. 127 of 2024. Consult a qualified financial advisor or FTA-registered tax agent before making investment or tax decisions. Use at your own risk.',
+ 'दी गई जानकारी केवल सामान्य सूचना और शैक्षिक उद्देश्यों के लिए है। यह वित्तीय, निवेश या ट्रेडिंग सलाह नहीं है। भाव सांकेतिक हैं और डीलरों के असली भाव से अलग हो सकते हैं। यूएई वैट की गणना 2017 के संघीय फ़रमान-कानून संख्या 8 और 2024 के मंत्रिमंडल निर्णय संख्या 127 के अनुसार है। निवेश या कर संबंधी निर्णय लेने से पहले किसी योग्य वित्तीय सलाहकार या FTA-पंजीकृत कर एजेंट से सलाह लें। उपयोग आपकी अपनी ज़िम्मेदारी पर है।',
+ 'فراہم کردہ معلومات صرف عمومی اطلاع اور تعلیمی مقاصد کے لیے ہیں۔ یہ مالی، سرمایہ کاری یا ٹریڈنگ مشورہ نہیں ہے۔ ریٹس اشاریاتی ہیں اور ڈیلرز کے اصل ریٹ سے مختلف ہو سکتے ہیں۔ یو اے ای ویٹ کا حساب 2017 کے وفاقی فرمان-قانون نمبر 8 اور 2024 کے کابینہ فیصلہ نمبر 127 کے مطابق ہے۔ سرمایہ کاری یا ٹیکس کے فیصلے سے پہلے کسی اہل مالی مشیر یا FTA میں رجسٹرڈ ٹیکس ایجنٹ سے مشورہ کریں۔ استعمال آپ کی اپنی ذمہ داری پر ہے۔'],
+['Idea and Coded by','विचार और कोडिंग:','آئیڈیا اور کوڈنگ:'],
+['Copyright 2025-2026 Subash M. All rights reserved.','कॉपीराइट 2025-2026 Subash M. सर्वाधिकार सुरक्षित।','کاپی رائٹ 2025-2026 Subash M. جملہ حقوق محفوظ ہیں۔'],
+['Live data: Swissquote / Gold-API.com (fallback) | History: Alpha Vantage | Charts: TradingView | Calendar: Tradays (MQL5)','लाइव डेटा: Swissquote / Gold-API.com (वैकल्पिक) | इतिहास: Alpha Vantage | चार्ट: TradingView | कैलेंडर: Tradays (MQL5)','لائیو ڈیٹا: Swissquote / Gold-API.com (متبادل) | ہسٹری: Alpha Vantage | چارٹس: TradingView | کیلنڈر: Tradays (MQL5)'],
+['Enter a weight and wait for the live rate before downloading.','डाउनलोड से पहले वज़न दर्ज करें और लाइव भाव आने का इंतज़ार करें।','ڈاؤن لوڈ سے پہلے وزن درج کریں اور لائیو ریٹ آنے کا انتظار کریں۔'],
+['Enter gold weight and wait for the live rate before downloading.','डाउनलोड से पहले सोने का वज़न दर्ज करें और लाइव भाव आने का इंतज़ार करें।','ڈاؤن لوڈ سے پہلے سونے کا وزن درج کریں اور لائیو ریٹ آنے کا انتظار کریں۔'],
+['Waiting for the live gold rate — try again in a moment.','लाइव सोने के भाव का इंतज़ार है — थोड़ी देर बाद फिर कोशिश करें।','لائیو سونے کے ریٹ کا انتظار ہے — تھوڑی دیر بعد دوبارہ کوشش کریں۔'],
+['Offline — opened a printable quotation. Choose "Save as PDF".','ऑफ़लाइन — प्रिंट करने योग्य कोटेशन खोला गया। "Save as PDF" चुनें।','آف لائن — پرنٹ کے قابل کوٹیشن کھولی گئی۔ "Save as PDF" منتخب کریں۔'],
+['Offline — opened a printable rate card. Choose "Save as PDF".','ऑफ़लाइन — प्रिंट करने योग्य रेट कार्ड खोला गया। "Save as PDF" चुनें।','آف لائن — پرنٹ کے قابل ریٹ کارڈ کھولا گیا۔ "Save as PDF" منتخب کریں۔'],
+['Allow pop-ups to open the printable quotation.','प्रिंट योग्य कोटेशन खोलने के लिए पॉप-अप की अनुमति दें।','پرنٹ کے قابل کوٹیشن کھولنے کے لیے پاپ اپس کی اجازت دیں۔'],
+['Allow pop-ups to open the printable rate card.','प्रिंट योग्य रेट कार्ड खोलने के लिए पॉप-अप की अनुमति दें।','پرنٹ کے قابل ریٹ کارڈ کھولنے کے لیے پاپ اپس کی اجازت دیں۔'],
+['AED','दिरहम','درہم']
+];
+/* currency names  code → "Hindi|Urdu" */
+const CH={usd:'अमेरिकी डॉलर|امریکی ڈالر',aed:'यूएई दिरहम|یو اے ای درہم',eur:'यूरो|یورو',gbp:'ब्रिटिश पाउंड|برطانوی پاؤنڈ',inr:'भारतीय रुपया|بھارتی روپیہ',
+sar:'सऊदी रियाल|سعودی ریال',kwd:'कुवैती दीनार|کویتی دینار',bhd:'बहरीनी दीनार|بحرینی دینار',omr:'ओमानी रियाल|عمانی ریال',qar:'क़तरी रियाल|قطری ریال',
+jpy:'जापानी येन|جاپانی ین',cny:'चीनी युआन|چینی یوان',chf:'स्विस फ़्रैंक|سوئس فرانک',aud:'ऑस्ट्रेलियाई डॉलर|آسٹریلوی ڈالر',cad:'कनाडाई डॉलर|کینیڈین ڈالر',
+sgd:'सिंगापुर डॉलर|سنگاپوری ڈالر',myr:'मलेशियाई रिंगिट|ملائیشین رنگٹ',pkr:'पाकिस्तानी रुपया|پاکستانی روپیہ',lkr:'श्रीलंकाई रुपया|سری لنکن روپیہ',
+egp:'मिस्री पाउंड|مصری پاؤنڈ',bdt:'बांग्लादेशी टका|بنگلہ دیشی ٹکا',php:'फ़िलीपीनी पेसो|فلپائنی پیسو',npr:'नेपाली रुपया|نیپالی روپیہ',
+jod:'जॉर्डनी दीनार|اردنی دینار',try:'तुर्की लीरा|ترک لیرا',zar:'दक्षिण अफ़्रीकी रैंड|جنوبی افریقی رینڈ',thb:'थाई बाट|تھائی بات',
+idr:'इंडोनेशियाई रुपिया|انڈونیشین روپیہ',vnd:'वियतनामी डोंग|ویتنامی ڈونگ',ils:'इज़राइली शेकेल|اسرائیلی شیکل',kes:'केन्याई शिलिंग|کینیائی شلنگ',
+mad:'मोरक्कन दिरहम|مراکشی درہم',hkd:'हांगकांग डॉलर|ہانگ کانگ ڈالر',krw:'दक्षिण कोरियाई वॉन|جنوبی کوریائی وون',sek:'स्वीडिश क्रोना|سویڈش کرونا',
+nok:'नॉर्वेजियन क्रोन|ناروے کرونے',dkk:'डैनिश क्रोन|ڈینش کرونے',mxn:'मैक्सिकन पेसो|میکسیکن پیسو',brl:'ब्राज़ीलियाई रियाल|برازیلی ریال',
+rub:'रूसी रूबल|روسی روبل',nzd:'न्यूज़ीलैंड डॉलर|نیوزی لینڈ ڈالر'};
+
+const TA=[
+['by Subash M','Subash M வழங்கும் | நேரடி விலைகள்'],['LIVE','நேரலை'],['OFF','நிறுத்தம்'],['STALE','பழையது'],
+['Rates','விலைகள்'],['Market Status','சந்தை நிலை'],['Calculator','கணிப்பான்'],['History Calc','பழைய விலை கணிப்பான்'],['Karat Tools','காரட் கருவிகள்'],['Currency','நாணயம்'],
+['Live feed unav','நேரலை தரவு கிடைக்கவில்லை. கடைசியாக அறியப்பட்ட விலைகள் காட்டப்படுகின்றன.'],['Dismiss','மூடு'],
+['Live price fee','நேரலை விலை தரவை அணுக முடியவில்லை (நெட்வொர்க் தடுக்கப்பட்டுள்ளது அல்லது அனைத்து மூலங்களும் செயலிழந்துள்ளன)'],
+['Showing last k','கடைசியாக அறியப்பட்ட விலைகள் காட்டப்படுகின்றன'],['Will keep retr','தானாக மீண்டும் முயற்சி தொடரும்'],
+['Last updated','கடைசி புதுப்பிப்பு'],['refresh failed','புதுப்பிப்பு தோல்வி'],['Back to top','மேலே செல்'],['Quick navigati','விரைவு வழிசெலுத்தல்'],
+['Metal','உலோகம்'],['Weight','எடை'],['Gold','தங்கம்'],['Silver','வெள்ளி'],['Platinum','பிளாட்டினம்'],['Palladium','பலேடியம்'],['Copper','செம்பு'],
+['Gram','கிராம்'],['Grams','கிராம்'],['Troy Ounce','டிராய் அவுன்ஸ்'],['Troy Oz','டிராய் அவுன்ஸ்'],['Tola','தோலா'],
+['Pavan / Sovere','பவுன் / சவரன்'],['Pavan','பவுன்'],['10 Grams','10 கிராம்'],['Kilogram','கிலோகிராம்'],['Pennyweight','பென்னிவெயிட்'],['Tael','டேல்'],
+['Loading...','ஏற்றப்படுகிறது...'],['waiting for pr','விலைக்காக காத்திருக்கிறது...'],
+['99.9% Pure','99.9% தூய்மை'],['Sterling Silve','ஸ்டெர்லிங் வெள்ளி'],['Fine Silver','தூய வெள்ளி'],['Coin Silver','நாணய வெள்ளி'],
+['Jewellery','நகைகள்'],['Fine','தூய'],['Sterling','ஸ்டெர்லிங்'],['Britannia','பிரிட்டானியா'],['Coin','நாணயம்'],
+['Live Rates','நேரலை விலைகள்'],['fetching...','பெறப்படுகிறது...'],['No data yet','இன்னும் தரவு இல்லை'],['Waiting for fi','முதல் வெற்றிகரமான புதுப்பிப்புக்காக காத்திருக்கிறது...'],
+['fallback','மாற்று'],['troy oz','டிராய் அவுன்ஸ்'],['lb','பவுண்டு'],['/g','/கி'],['/kg','/கிலோ'],['bid','வாங்கும் விலை'],['ask','விற்கும் விலை'],['source:','மூலம்:'],
+['Copper is a ba','செம்பு ஒரு அடிப்படை உலோகம்; கலப்படம்/பழைய உலோக செலவு கணக்கீட்டிற்கான குறிப்பாகக் காட்டப்படுகிறது (COMEX, ஒரு பவுண்டு விலை) — மேலே உள்ள நான்கு உலோகங்களைப் போல டிராய் அவுன்ஸ் நகை உலோகம் அல்ல.'],
+['Refresh','புதுப்பி'],['Shop / entity ','விலை அட்டைக்கான கடை / நிறுவன பெயர் (விருப்பம்)'],['Rate Card PDF ','விலை அட்டை PDF · அனைத்து காரட்'],
+['Market Indicat','சந்தை குறிகாட்டிகள்'],['Gold / Silver ','தங்கம் / வெள்ளி விகிதம்'],['oz gold = ? oz','அவுன்ஸ் தங்கம் = ? அவுன்ஸ் வெள்ளி'],['oz gold','அவுன்ஸ் தங்கம்'],['oz silver','அவுன்ஸ் வெள்ளி'],
+['Gold Spread','தங்க விலை இடைவெளி'],['Silver Spread','வெள்ளி விலை இடைவெளி'],['Platinum Sprea','பிளாட்டினம் விலை இடைவெளி'],['bid-ask USD','வாங்கும்-விற்கும் வேறுபாடு (USD)'],
+['Market Open','சந்தை திறந்துள்ளது'],['Daily Break','தினசரி இடைவேளை'],['Market Closed','சந்தை மூடப்பட்டுள்ளது'],
+['Opens in','திறக்க இன்னும்'],['Resumes in','மீண்டும் தொடங்க இன்னும்'],['Break in','இடைவேளைக்கு இன்னும்'],['Closes in','மூட இன்னும்'],
+['Timezone','நேர மண்டலம்'],['Indicative Tra','நாளுக்கேற்ற குறிப்பு வர்த்தக நேரங்கள்'],['Trading Sessio','வர்த்தக அமர்வுகள்'],['Daily break','தினசரி இடைவேளை'],
+['— most brokers','— பெரும்பாலான தரகர்கள் ரோல்ஓவருக்காக சிறிது நேரம் வர்த்தகத்தை நிறுத்துவார்கள்'],
+['happening now','இப்போது நடைபெறுகிறது'],['Active now','இப்போது செயலில்'],['local time','உள்ளூர் நேரம்'],
+['Mon','திங்'],['Tue','செவ்'],['Wed','புத'],['Thu','வியா'],['Fri','வெள்'],['Sat','சனி'],['Sun','ஞாயி'],
+['Sydney / Asia','சிட்னி / ஆசியா'],['London','லண்டன்'],['New York','நியூயார்க்'],['Peak Liquidity','உச்ச பணப்புழக்கம்'],
+['Dubai, UAE (GS','துபாய், யுஏஇ (GST)'],['India (IST)','இந்தியா (IST)'],['Pakistan (PKT','பாகிஸ்தான் (PKT)'],['Bangladesh','வங்காளதேசம்'],['Sri Lanka','இலங்கை'],['Nepal','நேபாளம்'],['Philippines','பிலிப்பைன்ஸ்'],
+['Saudi Arabia','சவுதி அரேபியா'],['Egypt','எகிப்து'],['London, UK','லண்டன், இங்கிலாந்து'],['New York, US','நியூயார்க், அமெரிக்கா'],['Singapore','சிங்கப்பூர்'],['Hong Kong','ஹாங்காங்'],['Sydney, Austra','சிட்னி, ஆஸ்திரேலியா'],
+['Closed Saturda','சனி, ஞாயிறு சந்தை மூடப்பட்டிருக்கும் (இது யுஏஇ வார விடுமுறையும் ஆகும்). ஸ்பாட் தங்கம் உலகளாவிய அந்நியச் செலாவணி சந்தைகளுடன், தோராயமாக ஞாயிறு மாலை முதல் வெள்ளி மாலை (UTC) வரை வர்த்தகமாகிறது; தினமும் ஒரு குறுகிய தீர்வு இடைவேளை உண்டு. நிமிடம் வரையிலான சரியான நேரங்கள் தரகர்/தளத்தைப் பொறுத்து மாறும்; அமெரிக்க/இங்கிலாந்து பகல்நேர சேமிப்பு மாற்றங்களின் போது சிறிது மாறலாம் — இதை பொது வழிகாட்டியாக மட்டும் கருதவும், உங்கள் வர்த்தக தளத்தின் அதிகாரப்பூர்வ நாட்காட்டியாக அல்ல.'],
+['Live Quotes','நேரலை மேற்கோள்கள்'],['Charts','விளக்கப்படங்கள்'],['Advanced Chart','மேம்பட்ட விளக்கப்படம்'],['Economic Calen','பொருளாதார நாட்காட்டி'],
+['⚠ MQL5 widget','⚠ MQL5 விட்ஜெட் கிடைக்கவில்லை — GoldBench நேரலை தரவு காட்டப்படுகிறது'],['waiting…','காத்திருக்கிறது…'],['Retry MQL5 wid','MQL5 விட்ஜெட்டை மீண்டும் ஏற்று'],
+['Rate Calculato','விலை கணிப்பான்'],['UAE VAT','யுஏஇ வாட்'],['Reset','மீட்டமை'],['Purity / Karat','தூய்மை / காரட்'],['Weight (grams)','எடை (கிராம்)'],
+['Making Charge','செய்கூலி'],['Per Gram','ஒரு கிராமுக்கு'],['Whole / Flat','மொத்தம் / நிலையானது'],['% of Metal','உலோக மதிப்பில் %'],['Discount','தள்ளுபடி'],['Flat (AED)','நிலையான (AED)'],['% off','% தள்ளுபடி'],
+['Metal Value','உலோக மதிப்பு'],['Subtotal','துணைத் தொகை'],['VAT','வாட்'],['TOTAL','மொத்தம்'],
+['Retail/Jewelle','சில்லறை / நகை'],['Investment Gra','முதலீட்டு தரம் 99%+'],['[0% VAT]','[0% வாட்]'],
+['Customer (opti','வாடிக்கையாளர் (விருப்பம்)'],['Shop / Entity ','கடை / நிறுவனம் (விருப்பம்)'],['Customer name','வாடிக்கையாளர் பெயர்'],['Shop / entity ','கடை / நிறுவன பெயர்'],
+['Download PDF Q','PDF விலைப்புள்ளி பதிவிறக்கு'],['Uses the live ','பதிவிறக்கும் நேரத்தின் நேரலை விலை பயன்படுத்தப்படும்'],['Uses the live ','பதிவிறக்கும் நேரத்தின் நேரலை தங்க விலை பயன்படுத்தப்படும்'],['Preparing…','தயாராகிறது…'],
+['Historical Gol','பழைய தங்க விலை கணிப்பான்'],
+['Pick any date','ஏதேனும் தேதியைத் தேர்ந்தெடுக்கவும் — அந்த நாளின் ஒரு அவுன்ஸ் தங்க விலை தானாக நிரம்பும் (இன்று = GoldBench நேரலை ஸ்பாட், சமீபத்திய தேதிகள் = தினசரி முடிவு, பழையவை = 1833 வரை மாத சராசரி). பிறகு: அவுன்ஸ் விலை → கிராம் விலை → டேக் கிராம் → செய்கூலி → 5% வாட் → மொத்தத் தொகை. பழைய பில்களுக்கு விலையை மீண்டும் கணக்கிட உதவும்.'],
+['Date','தேதி'],['Description','விவரம்'],['Gold / oz (USD','தங்கம் / அவுன்ஸ் (USD)'],['Tag gms','டேக் கிராம்'],['Karat','காரட்'],['Per gram (AED)','ஒரு கிராம் (AED)'],['Gold value','தங்க மதிப்பு'],
+['MC / gm','செய்கூலி / கிராம்'],['MC total','செய்கூலி மொத்தம்'],['Before VAT','வாட்டுக்கு முன்'],['Grand total','மொத்தத் தொகை'],['Total','மொத்தம்'],['Item','பொருள்'],
+['+ Add row','+ வரிசை சேர்'],['Refresh histor','வரலாற்றைப் புதுப்பி'],['Remove row','வரிசையை நீக்கு'],['Total tag gram','மொத்த டேக் கிராம்'],['Making charges','செய்கூலி'],['Total before V','வாட்டுக்கு முன் மொத்தம்'],['GRAND TOTAL','மொத்தத் தொகை'],
+['Per gram = (oz','ஒரு கிராம் = (அவுன்ஸ் விலை × 3.6725 ÷ 31.1035) × காரட் ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%). தங்க மதிப்பு = டேக் கிராம் × ஒரு கிராம் விலை. MC என்பது செய்கூலி, ஒரு கிராமுக்கு AED. வாட் தங்க மதிப்பு + MC மீது விதிக்கப்படும். அவுன்ஸ் விலையை கையால் மாற்றலாம் — அப்போது தேதியை மாற்றும் வரை அது "கைமுறை விலை" ஆக இருக்கும்.'],
+['live spot','நேரலை ஸ்பாட்'],['manual price','கைமுறை விலை'],['daily','தினசரி முடிவு'],['monthly avg','மாத சராசரி'],['latest availab','சமீபத்திய கிடைப்பது'],
+['Daily history ','தினசரி வரலாறு ஏற்றப்பட்டது (கேஷ்)'],['Daily history ','தினசரி வரலாறு புதுப்பிக்கப்பட்டது'],['Loading daily ','தினசரி வரலாறு ஏற்றப்படுகிறது…'],
+['Older daily hi','பழைய தினசரி வரலாறு கிடைக்கவில்லை — உள்ளமைந்த 2025+ தினசரி முடிவுகள் மற்றும் மாத சராசரிகள் பயன்படுத்தப்படுகின்றன'],
+['Weight Convert','எடை மாற்றி'],['Enter Weight','எடையை உள்ளிடவும்'],['Gold Karat Con','தங்க காரட் மாற்றம்'],
+['Convert gold f','தங்கத்தை ஒரு காரட்டிலிருந்து மற்றொன்றுக்கு மாற்றவும், கலப்பு விவரங்களுடன்'],
+['Gold Weight','தங்க எடை'],['From Karat','இந்த காரட்டிலிருந்து'],['To Karat','இந்த காரட்டுக்கு'],['Calculate Conv','மாற்றத்தைக் கணக்கிடு'],['Same karat sel','அதே காரட் தேர்ந்தெடுக்கப்பட்டுள்ளது.'],
+['Increasing Pur','தூய்மையை அதிகரித்தல்'],['Decreasing Pur','தூய்மையைக் குறைத்தல்'],['Before','முன்'],['After','பின்'],['Pure Au','தூய தங்கம் (Au)'],['Alloy','கலப்பு'],
+['Alloy Mix Calc','கலப்பு கலவை கணிப்பான்'],['Calculate exac','குறிப்பிட்ட காரட் தங்கம் தயாரிக்க தேவையான கலப்பின் சரியான அளவைக் கணக்கிடவும்'],
+['Target Karat','இலக்கு காரட்'],['Total Weight (','மொத்த எடை (கிராம்)'],['Alloy Type','கலப்பு வகை'],['Calculate Allo','கலப்பு கலவையைக் கணக்கிடு'],
+['Red Gold (100%','சிவப்பு தங்கம் (100% செம்பு)'],['Rose Gold (75%','ரோஸ் தங்கம் (75% செம்பு + 22.5% வெள்ளி + 2.5% துத்தநாகம்)'],['Pink Gold (50%','பிங்க் தங்கம் (50% செம்பு + 45% வெள்ளி + 5% துத்தநாகம்)'],
+['Yellow Gold (5','மஞ்சள் தங்கம் (50% செம்பு + 50% வெள்ளி)'],['Yellow Gold + ','மஞ்சள் தங்கம் + துத்தநாகம் (40% செம்பு + 45% வெள்ளி + 15% துத்தநாகம்)'],
+['White Gold - N','வெள்ளை தங்கம் - நிக்கல் (85% நிக்கல் + 10% செம்பு + 5% துத்தநாகம்)'],['White Gold - P','வெள்ளை தங்கம் - பலேடியம் (90% பலேடியம் + 10% வெள்ளி)'],['Green Gold (10','பச்சை தங்கம் (100% வெள்ளி)'],
+['Red Gold','சிவப்பு தங்கம்'],['Rose Gold','ரோஸ் தங்கம்'],['Pink Gold','பிங்க் தங்கம்'],['Yellow Gold (Z','மஞ்சள் தங்கம் (துத்தநாகம்)'],['Yellow Gold','மஞ்சள் தங்கம்'],
+['White Gold (Ni','வெள்ளை தங்கம் (நிக்கல்)'],['White Gold (Pd','வெள்ளை தங்கம் (பலேடியம்)'],['Green Gold','பச்சை தங்கம்'],
+['Pure Gold (Au)','தூய தங்கம் (Au)'],['Total Alloy','மொத்த கலப்பு'],['Copper (Cu)','செம்பு (Cu)'],['Silver (Ag)','வெள்ளி (Ag)'],['Nickel (Ni)','நிக்கல் (Ni)'],['Palladium (Pd)','பலேடியம் (Pd)'],['Zinc (Zn)','துத்தநாகம் (Zn)'],
+['Very hard. May','மிகவும் கடினம். நுட்பமான வேலைக்கு உடையக்கூடும்.'],['Most popular p','மிகவும் பிரபலமான இளஞ்சிவப்பு நிற தங்கம்.'],['Lighter pink t','மெல்லிய இளஞ்சிவப்பு நிறம். வேலை செய்ய எளிது.'],
+['Traditional je','பாரம்பரிய நகை தங்கம்.'],['Zinc improves ','துத்தநாகம் வார்ப்பை மேம்படுத்தும்.'],['Needs rhodium ','ரோடியம் பூச்சு தேவை. ஒவ்வாமை ஏற்படலாம்.'],
+['Hypoallergenic','ஒவ்வாமை இல்லாதது. ரோடியம் தேவையில்லை.'],['Pure silver al','தூய வெள்ளி கலவை. பெரும்பாலும் அலங்காரத்திற்கு.'],
+['Melt:','உருகுநிலை:'],['Deep Red','அடர் சிவப்பு'],['Rose Pink','ரோஸ் பிங்க்'],['Soft Pink','மென் இளஞ்சிவப்பு'],['Rich Yellow','அடர் மஞ்சள்'],['Bright Yellow','பிரகாசமான மஞ்சள்'],
+['Bright White','பிரகாசமான வெள்ளை'],['Natural White','இயற்கை வெள்ளை'],['Green-Yellow','பச்சை-மஞ்சள்'],['Very Hard','மிகவும் கடினம்'],['Medium-Hard','நடுத்தர-கடினம்'],['Hard','கடினம்'],['Medium','நடுத்தரம்'],['Soft','மென்மை'],
+['Silver Purity ','வெள்ளி தூய்மை மாற்றி'],['Convert silver','வெள்ளியை ஒரு தூய்மை நிலையிலிருந்து மற்றொன்றுக்கு மாற்றவும்'],['Silver Weight ','வெள்ளி எடை (கிராம்)'],
+['From Purity','இந்த தூய்மையிலிருந்து'],['To Purity','இந்த தூய்மைக்கு'],['Calculate Silv','வெள்ளி மாற்றத்தைக் கணக்கிடு'],['Pure Ag','தூய வெள்ளி (Ag)'],
+['Scrap Gold Val','பழைய தங்க மதிப்பீடு'],['Add multiple i','வெவ்வேறு காரட் பொருட்களைச் சேர்த்து மொத்த தூய தங்கம் மற்றும் மதிப்பைப் பெறுங்கள்'],
+['Weight (g)','எடை (கி)'],['+ Add Item','+ பொருள் சேர்'],['No items added','பொருட்கள் எதுவும் சேர்க்கப்படவில்லை'],['Total Weight','மொத்த எடை'],['Total Pure Gol','மொத்த தூய தங்கம்'],['Avg Purity','சராசரி தூய்மை'],['Value (AED)','மதிப்பு (AED)'],
+['Assay Report ','அசே அறிக்கை / AU% மாற்றி'],['Enter Gold AU%','ஆய்வக அசே அறிக்கையிலிருந்து தங்க AU% ஐ உள்ளிடவும்'],['Gold AU%','தங்கம் AU%'],['Bar Weight (g)','கட்டி எடை (கி)'],
+['e.g. 879.72','எ.கா. 879.72'],['e.g. 1857.81','எ.கா. 1857.81'],['Fineness','தூய்மை எண்'],['Nearest standa','அருகிலுள்ள தரநிலை:'],['Bar Weight','கட்டி எடை'],['Pure Gold Valu','தூய தங்க மதிப்பு'],['Pure Gold','தூய தங்கம்'],
+['Melting Loss C','உருக்கு இழப்பு கணிப்பான்'],['Calculate gold','உருக்கிய பின் தங்க மீட்பைக் கணக்கிடு'],['Before Melting','உருக்குவதற்கு முன் (கி)'],['After Melting ','உருக்கிய பின் (கி)'],['Expected Loss ','எதிர்பார்க்கும் இழப்பு %'],
+['0.5% (Bars/Ing','0.5% (கட்டிகள்)'],['1% (Clean Jewe','1% (சுத்தமான நகை)'],['2% (Mixed/Ston','2% (கலப்பு / கற்கள்)'],['3% (Heavy Enam','3% (அதிக மீனாக்காரி)'],['5% (Low Grade','5% (தரம் குறைந்த பழைய உலோகம்)'],
+['Expected Loss','எதிர்பார்க்கும் இழப்பு'],['Expected Recov','எதிர்பார்க்கும் மீட்பு'],['Actual After','உண்மையான எடை (பின்)'],['Actual Loss','உண்மையான இழப்பு'],['Recovery Rate','மீட்பு விகிதம்'],['Loss Value','இழப்பு மதிப்பு'],
+['NORMAL','இயல்பு'],['ABOVE EXPECTED','எதிர்பார்ப்பை விட அதிகம்'],['Loss within ex','இழப்பு எதிர்பார்க்கும் வரம்புக்குள் உள்ளது'],['Check for ston','கற்கள்/மீனாக்காரியை சரிபார்க்கவும்.'],
+['Jewellery Orde','நகை ஆர்டர் மதிப்பீட்டாளர்'],['Estimate custo','தங்கம் + கற்கள் + செய்கூலி + வாட் உடன் வாடிக்கையாளர் ஆர்டரை மதிப்பிடவும்'],['Gold Weight (g','தங்க எடை (கி)'],
+['Making Charge ','செய்கூலி (AED/கிராம்)'],['Stone / Diamon','கல் / வைர மதிப்பு (AED)'],['Other Charges ','பிற கட்டணங்கள் (AED)'],['Gold Value','தங்க மதிப்பு'],['Making','செய்கூலி'],['Stones','கற்கள்'],['Other','பிற'],
+['CUSTOMER TOTAL','வாடிக்கையாளர் மொத்தம்'],['Waiting for li','நேரலை விலைக்காக காத்திருக்கிறது...'],
+['Currency Conve','நாணய மாற்றி'],['Live daily rat','நேரலை தினசரி விலைகள் | 40+ நாணயங்கள்'],['Amount','தொகை'],['From','இருந்து'],['To','க்கு'],['Swap currencie','நாணயங்களை மாற்று'],
+['Currency rates','நாணய விலைகள் தற்போது கிடைக்கவில்லை.'],['Retry','மீண்டும் முயற்சி'],['Gold per Gram','ஒரு கிராம் தங்கம்'],['Popular Rates','பிரபலமான விலைகள்'],
+['Rates updated ','விலைகள் fawazahmed0 பரிமாற்ற API மூலம் தினமும் புதுப்பிக்கப்படுகின்றன'],['Disclaimer:','பொறுப்புத்துறப்பு:'],
+['Information pr','வழங்கப்பட்ட தகவல் பொதுவான தகவல் மற்றும் கல்வி நோக்கங்களுக்காக மட்டுமே. இது நிதி, முதலீடு அல்லது வர்த்தக ஆலோசனை அல்ல. விலைகள் குறிப்பிற்கானவை; உண்மையான வியாபாரி விலையிலிருந்து வேறுபடலாம். யுஏஇ வாட் கணக்கீடுகள் 2017 ஆம் ஆண்டின் கூட்டாட்சி ஆணைச் சட்டம் எண் 8 மற்றும் 2024 ஆம் ஆண்டின் அமைச்சரவை முடிவு எண் 127 ஐ பின்பற்றுகின்றன. முதலீடு அல்லது வரி முடிவுகளுக்கு முன் தகுதியான நிதி ஆலோசகர் அல்லது FTA பதிவு பெற்ற வரி முகவரை அணுகவும். பயன்பாடு உங்கள் சொந்த பொறுப்பில்.'],
+['Idea and Code','யோசனை & குறியீடு:'],['Copyright 2025','பதிப்புரிமை 2025-2026 Subash M. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.'],
+['Live data: Swi','நேரலை தரவு: Swissquote / Gold-API.com (மாற்று) | வரலாறு: Alpha Vantage | விளக்கப்படங்கள்: TradingView | நாட்காட்டி: Tradays (MQL5)'],
+['Enter a weight','பதிவிறக்கும் முன் எடையை உள்ளிட்டு நேரலை விலைக்காக காத்திருக்கவும்.'],['Enter gold wei','பதிவிறக்கும் முன் தங்க எடையை உள்ளிட்டு நேரலை விலைக்காக காத்திருக்கவும்.'],
+['Waiting for th','நேரலை தங்க விலைக்காக காத்திருக்கிறது — சிறிது நேரம் கழித்து மீண்டும் முயலவும்.'],
+['Offline — open','ஆஃப்லைன் — அச்சிடக்கூடிய விலைப்புள்ளி திறக்கப்பட்டது. "Save as PDF" தேர்ந்தெடுக்கவும்.'],['Offline — open','ஆஃப்லைன் — அச்சிடக்கூடிய விலை அட்டை திறக்கப்பட்டது. "Save as PDF" தேர்ந்தெடுக்கவும்.'],
+['Allow pop-ups','அச்சிடக்கூடிய விலைப்புள்ளியைத் திறக்க பாப்-அப்களை அனுமதிக்கவும்.'],['Allow pop-ups','அச்சிடக்கூடிய விலை அட்டையைத் திறக்க பாப்-அப்களை அனுமதிக்கவும்.'],
+['AED','AED']
+];
+const CT={usd:'அமெரிக்க டாலர்',aed:'யுஏஇ திர்ஹாம்',eur:'யூரோ',gbp:'பிரிட்டிஷ் பவுண்டு',inr:'இந்திய ரூபாய்',sar:'சவுதி ரியால்',kwd:'குவைத் தினார்',bhd:'பஹ்ரைன் தினார்',omr:'ஓமன் ரியால்',qar:'கத்தார் ரியால்',
+jpy:'ஜப்பானிய யென்',cny:'சீன யுவான்',chf:'சுவிஸ் பிராங்க்',aud:'ஆஸ்திரேலிய டாலர்',cad:'கனடிய டாலர்',sgd:'சிங்கப்பூர் டாலர்',myr:'மலேசிய ரிங்கிட்',pkr:'பாகிஸ்தான் ரூபாய்',lkr:'இலங்கை ரூபாய்',
+egp:'எகிப்திய பவுண்டு',bdt:'வங்கதேச டாக்கா',php:'பிலிப்பைன்ஸ் பெசோ',npr:'நேபாள ரூபாய்',jod:'ஜோர்டான் தினார்',try:'துருக்கிய லிரா',zar:'தென்னாப்பிரிக்க ராண்ட்',thb:'தாய் பாட்',
+idr:'இந்தோனேசிய ரூபியா',vnd:'வியட்நாம் டாங்',ils:'இஸ்ரேலிய ஷெக்கல்',kes:'கென்ய ஷில்லிங்',mad:'மொராக்கோ திர்ஹாம்',hkd:'ஹாங்காங் டாலர்',krw:'தென்கொரிய வொன்',sek:'ஸ்வீடிஷ் குரோனா',
+nok:'நார்வே குரோன்',dkk:'டேனிஷ் குரோன்',mxn:'மெக்சிகன் பெசோ',brl:'பிரேசிலிய ரியால்',rub:'ரஷ்ய ரூபிள்',nzd:'நியூசிலாந்து டாலர்'};
+
+
+const GU=[
+['by Subash M','Subash M દ્વારા | લાઇવ ભાવ'],['LIVE','લાઇવ'],['OFF','બંધ'],['STALE','જૂનું'],
+['Rates','ભાવ'],['Market Status','બજારની સ્થિતિ'],['Calculator','કેલ્ક્યુલેટર'],['History Calc','જૂના ભાવનું કેલ્ક્યુલેટર'],['Karat Tools','કેરેટ ટૂલ્સ'],['Currency','ચલણ'],
+['Live feed unav','લાઇવ ફીડ ઉપલબ્ધ નથી. છેલ્લા જાણીતા ભાવ બતાવાઈ રહ્યા છે.'],['Dismiss','બંધ કરો'],
+['Live price fee','લાઇવ ભાવ ફીડ સુધી પહોંચી શકાતું નથી (નેટવર્ક બ્લૉક છે અથવા બધા સ્રોત બંધ છે)'],
+['Showing last k','છેલ્લા જાણીતા ભાવ બતાવાઈ રહ્યા છે'],['Will keep retr','આપમેળે ફરી પ્રયાસ ચાલુ રહેશે'],
+['Last updated','છેલ્લું અપડેટ'],['refresh failed','રિફ્રેશ નિષ્ફળ'],['Back to top','ઉપર જાઓ'],['Quick navigati','ઝડપી નેવિગેશન'],
+['Metal','ધાતુ'],['Weight','વજન'],['Gold','સોનું'],['Silver','ચાંદી'],['Platinum','પ્લેટિનમ'],['Palladium','પેલેડિયમ'],['Copper','તાંબું'],
+['Gram','ગ્રામ'],['Grams','ગ્રામ'],['Troy Ounce','ટ્રોય ઔંસ'],['Troy Oz','ટ્રોય ઔંસ'],['Tola','તોલા'],
+['Pavan / Sovere','પાવન / સોવરિન'],['Pavan','પાવન'],['10 Grams','10 ગ્રામ'],['Kilogram','કિલોગ્રામ'],['Pennyweight','પેનીવેઇટ'],['Tael','તાએલ'],
+['Loading...','લોડ થઈ રહ્યું છે...'],['waiting for pr','ભાવની રાહ જોવાઈ રહી છે...'],
+['99.9% Pure','99.9% શુદ્ધ'],['Sterling Silve','સ્ટર્લિંગ ચાંદી'],['Fine Silver','શુદ્ધ ચાંદી'],['Coin Silver','સિક્કા ચાંદી'],
+['Jewellery','ઘરેણાં'],['Fine','શુદ્ધ'],['Sterling','સ્ટર્લિંગ'],['Britannia','બ્રિટાનિયા'],['Coin','સિક્કો'],
+['Live Rates','લાઇવ ભાવ'],['fetching...','મેળવી રહ્યું છે...'],['No data yet','હજુ કોઈ ડેટા નથી'],['Waiting for fi','પ્રથમ સફળ અપડેટની રાહ...'],
+['fallback','વૈકલ્પિક'],['troy oz','ટ્રોય ઔંસ'],['lb','પાઉન્ડ'],['/g','/ગ્રા'],['/kg','/કિગ્રા'],['bid','ખરીદ'],['ask','વેચાણ'],['source:','સ્રોત:'],
+['Copper is a ba','તાંબું એક આધાર ધાતુ છે, જે મિશ્રધાતુ/ભંગારના ખર્ચની ગણતરી માટે સંદર્ભરૂપે બતાવાય છે (COMEX, ભાવ પ્રતિ પાઉન્ડ) — તે ઉપરની ચાર ધાતુઓની જેમ ટ્રોય ઔંસમાં વેચાતી ઘરેણાંની ધાતુ નથી.'],
+['Refresh','રિફ્રેશ'],['Shop / entity ','રેટ કાર્ડ માટે દુકાન / કંપનીનું નામ (વૈકલ્પિક)'],['Rate Card PDF ','રેટ કાર્ડ PDF · બધા કેરેટ'],
+['Market Indicat','બજાર સૂચકાંકો'],['Gold / Silver ','સોનું / ચાંદી ગુણોત્તર'],['oz gold = ? oz','ઔંસ સોનું = ? ઔંસ ચાંદી'],['oz gold','ઔંસ સોનું'],['oz silver','ઔંસ ચાંદી'],
+['Gold Spread','સોનાનો સ્પ્રેડ'],['Silver Spread','ચાંદીનો સ્પ્રેડ'],['Platinum Sprea','પ્લેટિનમનો સ્પ્રેડ'],['bid-ask USD','ખરીદ-વેચાણ તફાવત (USD)'],
+['Market Open','બજાર ખુલ્લું છે'],['Daily Break','દૈનિક વિરામ'],['Market Closed','બજાર બંધ છે'],
+['Opens in','ખુલવામાં'],['Resumes in','ફરી શરૂ થવામાં'],['Break in','વિરામમાં'],['Closes in','બંધ થવામાં'],
+['Timezone','સમય ઝોન'],['Indicative Tra','દિવસ મુજબ સૂચક ટ્રેડિંગ સમય'],['Trading Sessio','ટ્રેડિંગ સત્રો'],['Daily break','દૈનિક વિરામ'],
+['— most brokers','— મોટાભાગના બ્રોકર રોલઓવર માટે થોડી વાર ટ્રેડિંગ અટકાવે છે'],
+['happening now','હમણાં ચાલુ'],['Active now','હમણાં સક્રિય'],['local time','સ્થાનિક સમય'],
+['Mon','સોમ'],['Tue','મંગળ'],['Wed','બુધ'],['Thu','ગુરુ'],['Fri','શુક્ર'],['Sat','શનિ'],['Sun','રવિ'],
+['Sydney / Asia','સિડની / એશિયા'],['London','લંડન'],['New York','ન્યૂ યોર્ક'],['Peak Liquidity','મહત્તમ તરલતા'],
+['Dubai, UAE (GS','દુબઈ, યુએઈ (GST)'],['India (IST)','ભારત (IST)'],['Pakistan (PKT','પાકિસ્તાન (PKT)'],['Bangladesh','બાંગ્લાદેશ'],['Sri Lanka','શ્રીલંકા'],['Nepal','નેપાળ'],['Philippines','ફિલિપાઇન્સ'],
+['Saudi Arabia','સાઉદી અરેબિયા'],['Egypt','ઇજિપ્ત'],['London, UK','લંડન, યુકે'],['New York, US','ન્યૂ યોર્ક, યુએસ'],['Singapore','સિંગાપોર'],['Hong Kong','હોંગકોંગ'],['Sydney, Austra','સિડની, ઑસ્ટ્રેલિયા'],
+['Closed Saturda','શનિવાર અને રવિવારે બજાર બંધ રહે છે (આ યુએઈનો વીકએન્ડ પણ છે). સ્પૉટ ગોલ્ડ વૈશ્વિક ફૉરેક્સ બજારો સાથે લગભગ રવિવાર સાંજથી શુક્રવાર સાંજ (UTC) સુધી ટ્રેડ થાય છે, વચ્ચે રોજ એક ટૂંકો સેટલમેન્ટ વિરામ હોય છે. મિનિટ સુધીનો ચોક્કસ સમય બ્રોકર/પ્લૅટફૉર્મ પ્રમાણે બદલાય છે અને અમેરિકા/બ્રિટનમાં ડેલાઇટ-સેવિંગ બદલાય ત્યારે થોડો ખસી શકે છે — તેને સામાન્ય માર્ગદર્શન ગણો, તમારા ટ્રેડિંગ પ્લૅટફૉર્મનું સત્તાવાર કેલેન્ડર નહીં.'],
+['Live Quotes','લાઇવ ક્વોટ્સ'],['Charts','ચાર્ટ'],['Advanced Chart','એડવાન્સ્ડ ચાર્ટ'],['Economic Calen','આર્થિક કેલેન્ડર'],
+['⚠ MQL5 widget','⚠ MQL5 વિજેટ ઉપલબ્ધ નથી — GoldBench લાઇવ ફીડ બતાવાઈ રહી છે'],['waiting…','રાહ જોઈ રહ્યું છે…'],['Retry MQL5 wid','MQL5 વિજેટ ફરી લોડ કરો'],
+['Rate Calculato','રેટ કેલ્ક્યુલેટર'],['UAE VAT','યુએઈ વેટ'],['Reset','રીસેટ'],['Purity / Karat','શુદ્ધતા / કેરેટ'],['Weight (grams)','વજન (ગ્રામ)'],
+['Making Charge','મેકિંગ ચાર્જ'],['Per Gram','પ્રતિ ગ્રામ'],['Whole / Flat','કુલ / એકસામટો'],['% of Metal','ધાતુ મૂલ્યના %'],['Discount','છૂટ'],['Flat (AED)','એકસામટો (AED)'],['% off','% છૂટ'],
+['Metal Value','ધાતુ મૂલ્ય'],['Subtotal','પેટા-સરવાળો'],['VAT','વેટ'],['TOTAL','કુલ'],
+['Retail/Jewelle','છૂટક / ઘરેણાં'],['Investment Gra','ઇન્વેસ્ટમેન્ટ ગ્રેડ 99%+'],['[0% VAT]','[0% વેટ]'],
+['Customer (opti','ગ્રાહક (વૈકલ્પિક)'],['Shop / Entity ','દુકાન / કંપની (વૈકલ્પિક)'],['Customer name','ગ્રાહકનું નામ'],['Shop / entity ','દુકાન / કંપનીનું નામ'],
+['Download PDF Q','PDF ક્વોટેશન ડાઉનલોડ કરો'],['Uses the live ','ડાઉનલોડ સમયનો લાઇવ ભાવ વપરાય છે'],['Uses the live ','ડાઉનલોડ સમયનો લાઇવ સોનાનો ભાવ વપરાય છે'],['Preparing…','તૈયાર થઈ રહ્યું છે…'],
+['Historical Gol','જૂના સોનાના ભાવનું કેલ્ક્યુલેટર'],
+['Pick any date','કોઈપણ તારીખ પસંદ કરો — તે દિવસનો સોનાનો પ્રતિ ઔંસ ભાવ આપમેળે ભરાઈ જશે (આજે = GoldBench લાઇવ સ્પૉટ, તાજેતરની તારીખો = દૈનિક ક્લોઝ, જૂની = 1833 સુધી માસિક સરેરાશ). પછી: ઔંસ ભાવ → પ્રતિ ગ્રામ → ટૅગ ગ્રામ → મેકિંગ ચાર્જ → 5% વેટ → કુલ રકમ. જૂના બિલોના ભાવ ફરીથી કાઢવા માટે ઉપયોગી.'],
+['Date','તારીખ'],['Description','વિગત'],['Gold / oz (USD','સોનું / ઔંસ (USD)'],['Tag gms','ટૅગ ગ્રામ'],['Karat','કેરેટ'],['Per gram (AED)','પ્રતિ ગ્રામ (AED)'],['Gold value','સોનાનું મૂલ્ય'],
+['MC / gm','મેકિંગ / ગ્રા'],['MC total','મેકિંગ કુલ'],['Before VAT','વેટ પહેલાં'],['Grand total','કુલ રકમ'],['Total','કુલ'],['Item','વસ્તુ'],
+['+ Add row','+ પંક્તિ ઉમેરો'],['Refresh histor','ઇતિહાસ રિફ્રેશ કરો'],['Remove row','પંક્તિ દૂર કરો'],['Total tag gram','કુલ ટૅગ ગ્રામ'],['Making charges','મેકિંગ ચાર્જ'],['Total before V','વેટ પહેલાં કુલ'],['GRAND TOTAL','કુલ રકમ'],
+['Per gram = (oz','પ્રતિ ગ્રામ = (ઔંસ ભાવ × 3.6725 ÷ 31.1035) × કેરેટ ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%). સોનાનું મૂલ્ય = ટૅગ ગ્રામ × પ્રતિ ગ્રામ ભાવ. MC એટલે મેકિંગ ચાર્જ, AED પ્રતિ ગ્રામ. વેટ સોનાના મૂલ્ય + MC પર લાગે છે. તમે ઔંસ ભાવ હાથે બદલી શકો છો — ત્યારે તારીખ બદલો ત્યાં સુધી તે "મેન્યુઅલ ભાવ" રહેશે.'],
+['live spot','લાઇવ સ્પૉટ'],['manual price','મેન્યુઅલ ભાવ'],['daily','દૈનિક ક્લોઝ'],['monthly avg','માસિક સરેરાશ'],['latest availab','તાજેતરનું ઉપલબ્ધ'],
+['Daily history ','દૈનિક ઇતિહાસ લોડ થયો (કેશમાંથી)'],['Daily history ','દૈનિક ઇતિહાસ અપડેટ થયો'],['Loading daily ','દૈનિક ઇતિહાસ લોડ થઈ રહ્યો છે…'],
+['Older daily hi','જૂનો દૈનિક ઇતિહાસ ઉપલબ્ધ નથી — બિલ્ટ-ઇન 2025+ દૈનિક ક્લોઝ અને માસિક સરેરાશ વપરાય છે'],
+['Weight Convert','વજન કન્વર્ટર'],['Enter Weight','વજન દાખલ કરો'],['Gold Karat Con','સોનાના કેરેટનું રૂપાંતર'],
+['Convert gold f','સોનાને એક કેરેટથી બીજામાં બદલો, મિશ્રધાતુની વિગત સાથે'],
+['Gold Weight','સોનાનું વજન'],['From Karat','કેરેટથી'],['To Karat','કેરેટમાં'],['Calculate Conv','રૂપાંતર ગણો'],['Same karat sel','સમાન કેરેટ પસંદ કરેલ છે.'],
+['Increasing Pur','શુદ્ધતા વધારવી'],['Decreasing Pur','શુદ્ધતા ઘટાડવી'],['Before','પહેલાં'],['After','પછી'],['Pure Au','શુદ્ધ સોનું (Au)'],['Alloy','મિશ્રધાતુ'],
+['Alloy Mix Calc','મિશ્રધાતુ મિશ્રણ કેલ્ક્યુલેટર'],['Calculate exac','ચોક્કસ કેરેટનું સોનું બનાવવા મિશ્રધાતુની ચોક્કસ માત્રા ગણો'],
+['Target Karat','લક્ષ્ય કેરેટ'],['Total Weight (','કુલ વજન (ગ્રામ)'],['Alloy Type','મિશ્રધાતુનો પ્રકાર'],['Calculate Allo','મિશ્રધાતુ મિશ્રણ ગણો'],
+['Red Gold (100%','રેડ ગોલ્ડ (100% તાંબું)'],['Rose Gold (75%','રોઝ ગોલ્ડ (75% તાંબું + 22.5% ચાંદી + 2.5% જસત)'],['Pink Gold (50%','પિંક ગોલ્ડ (50% તાંબું + 45% ચાંદી + 5% જસત)'],
+['Yellow Gold (5','યલો ગોલ્ડ (50% તાંબું + 50% ચાંદી)'],['Yellow Gold + ','યલો ગોલ્ડ + જસત (40% તાંબું + 45% ચાંદી + 15% જસત)'],
+['White Gold - N','વ્હાઇટ ગોલ્ડ - નિકલ (85% નિકલ + 10% તાંબું + 5% જસત)'],['White Gold - P','વ્હાઇટ ગોલ્ડ - પેલેડિયમ (90% પેલેડિયમ + 10% ચાંદી)'],['Green Gold (10','ગ્રીન ગોલ્ડ (100% ચાંદી)'],
+['Red Gold','રેડ ગોલ્ડ'],['Rose Gold','રોઝ ગોલ્ડ'],['Pink Gold','પિંક ગોલ્ડ'],['Yellow Gold (Z','યલો ગોલ્ડ (જસત)'],['Yellow Gold','યલો ગોલ્ડ'],
+['White Gold (Ni','વ્હાઇટ ગોલ્ડ (નિકલ)'],['White Gold (Pd','વ્હાઇટ ગોલ્ડ (પેલેડિયમ)'],['Green Gold','ગ્રીન ગોલ્ડ'],
+['Pure Gold (Au)','શુદ્ધ સોનું (Au)'],['Total Alloy','કુલ મિશ્રધાતુ'],['Copper (Cu)','તાંબું (Cu)'],['Silver (Ag)','ચાંદી (Ag)'],['Nickel (Ni)','નિકલ (Ni)'],['Palladium (Pd)','પેલેડિયમ (Pd)'],['Zinc (Zn)','જસત (Zn)'],
+['Very hard. May','ખૂબ કઠણ. નાજુક કામ માટે બરડ હોઈ શકે.'],['Most popular p','સૌથી લોકપ્રિય ગુલાબી રંગનું સોનું.'],['Lighter pink t','હળવો ગુલાબી રંગ. કામ કરવું સરળ.'],
+['Traditional je','પરંપરાગત ઘરેણાંનું સોનું.'],['Zinc improves ','જસત ઢાળણી સુધારે છે.'],['Needs rhodium ','રોડિયમ પ્લેટિંગ જરૂરી. એલર્જી થઈ શકે.'],
+['Hypoallergenic','એલર્જી-મુક્ત. રોડિયમની જરૂર નથી.'],['Pure silver al','શુદ્ધ ચાંદીની મિશ્રધાતુ. મુખ્યત્વે સુશોભન માટે.'],
+['Melt:','ગલન:'],['Deep Red','ઘેરો લાલ'],['Rose Pink','ગુલાબી'],['Soft Pink','હળવો ગુલાબી'],['Rich Yellow','ઘેરો પીળો'],['Bright Yellow','ચળકતો પીળો'],
+['Bright White','ચળકતો સફેદ'],['Natural White','કુદરતી સફેદ'],['Green-Yellow','લીલો-પીળો'],['Very Hard','ખૂબ કઠણ'],['Medium-Hard','મધ્યમ-કઠણ'],['Hard','કઠણ'],['Medium','મધ્યમ'],['Soft','નરમ'],
+['Silver Purity ','ચાંદી શુદ્ધતા કન્વર્ટર'],['Convert silver','ચાંદીને એક શુદ્ધતા સ્તરથી બીજામાં બદલો'],['Silver Weight ','ચાંદીનું વજન (ગ્રામ)'],
+['From Purity','શુદ્ધતાથી'],['To Purity','શુદ્ધતામાં'],['Calculate Silv','ચાંદીનું રૂપાંતર ગણો'],['Pure Ag','શુદ્ધ ચાંદી (Ag)'],
+['Scrap Gold Val','જૂના/ભંગાર સોનાનું મૂલ્યાંકન'],['Add multiple i','અલગ અલગ કેરેટની ઘણી વસ્તુઓ ઉમેરો અને કુલ શુદ્ધ સોનું તથા મૂલ્ય મેળવો'],
+['Weight (g)','વજન (ગ્રા)'],['+ Add Item','+ વસ્તુ ઉમેરો'],['No items added','કોઈ વસ્તુ ઉમેરી નથી'],['Total Weight','કુલ વજન'],['Total Pure Gol','કુલ શુદ્ધ સોનું'],['Avg Purity','સરેરાશ શુદ્ધતા'],['Value (AED)','મૂલ્ય (AED)'],
+['Assay Report ','એસે રિપોર્ટ / AU% કન્વર્ટર'],['Enter Gold AU%','લૅબ એસે રિપોર્ટમાંથી સોનાનો AU% દાખલ કરો'],['Gold AU%','સોનું AU%'],['Bar Weight (g)','બારનું વજન (ગ્રા)'],
+['e.g. 879.72','દા.ત. 879.72'],['e.g. 1857.81','દા.ત. 1857.81'],['Fineness','ફાઇનનેસ'],['Nearest standa','નજીકનું ધોરણ:'],['Bar Weight','બારનું વજન'],['Pure Gold Valu','શુદ્ધ સોનાનું મૂલ્ય'],['Pure Gold','શુદ્ધ સોનું'],
+['Melting Loss C','ગળતરમાં નુકસાનનું કેલ્ક્યુલેટર'],['Calculate gold','ગાળ્યા પછી સોનાની પુનઃપ્રાપ્તિ ગણો'],['Before Melting','ગાળતા પહેલાં (ગ્રા)'],['After Melting ','ગાળ્યા પછી (ગ્રા)'],['Expected Loss ','અપેક્ષિત નુકસાન %'],
+['0.5% (Bars/Ing','0.5% (બાર / પાટ)'],['1% (Clean Jewe','1% (સ્વચ્છ ઘરેણાં)'],['2% (Mixed/Ston','2% (મિશ્ર / નંગવાળા)'],['3% (Heavy Enam','3% (ભારે મીનાકારી)'],['5% (Low Grade','5% (નીચી ગુણવત્તાનો ભંગાર)'],
+['Expected Loss','અપેક્ષિત નુકસાન'],['Expected Recov','અપેક્ષિત પુનઃપ્રાપ્તિ'],['Actual After','વાસ્તવિક વજન (પછી)'],['Actual Loss','વાસ્તવિક નુકસાન'],['Recovery Rate','પુનઃપ્રાપ્તિ દર'],['Loss Value','નુકસાનનું મૂલ્ય'],
+['NORMAL','સામાન્ય'],['ABOVE EXPECTED','અપેક્ષા કરતાં વધુ'],['Loss within ex','નુકસાન અપેક્ષિત મર્યાદામાં છે'],['Check for ston','નંગ/મીનાકારી તપાસો.'],
+['Jewellery Orde','ઘરેણાં ઓર્ડર એસ્ટિમેટર'],['Estimate custo','સોનું + નંગ + મેકિંગ + વેટ સાથે ગ્રાહકના ઓર્ડરનો અંદાજ કાઢો'],['Gold Weight (g','સોનાનું વજન (ગ્રા)'],
+['Making Charge ','મેકિંગ ચાર્જ (AED/ગ્રામ)'],['Stone / Diamon','નંગ / હીરાનું મૂલ્ય (AED)'],['Other Charges ','અન્ય ચાર્જ (AED)'],['Gold Value','સોનાનું મૂલ્ય'],['Making','મેકિંગ'],['Stones','નંગ'],['Other','અન્ય'],
+['CUSTOMER TOTAL','ગ્રાહકનો કુલ'],['Waiting for li','લાઇવ ભાવની રાહ જોવાઈ રહી છે...'],
+['Currency Conve','કરન્સી કન્વર્ટર'],['Live daily rat','લાઇવ દૈનિક ભાવ | 40+ ચલણ'],['Amount','રકમ'],['From','થી'],['To','માં'],['Swap currencie','ચલણ અદલાબદલી'],
+['Currency rates','ચલણના ભાવ હાલ ઉપલબ્ધ નથી.'],['Retry','ફરી પ્રયાસ'],['Gold per Gram','સોનું પ્રતિ ગ્રામ'],['Popular Rates','લોકપ્રિય ભાવ'],
+['Rates updated ','ભાવ fawazahmed0 એક્સચેન્જ API દ્વારા રોજ અપડેટ થાય છે'],['Disclaimer:','અસ્વીકરણ:'],
+['Information pr','આપેલી માહિતી ફક્ત સામાન્ય જાણકારી અને શૈક્ષણિક હેતુ માટે છે. તે નાણાકીય, રોકાણ કે ટ્રેડિંગ સલાહ નથી. ભાવ સૂચક છે અને ડીલરના વાસ્તવિક ભાવથી અલગ હોઈ શકે છે. યુએઈ વેટની ગણતરી 2017ના ફેડરલ ડિક્રી-કાયદા નં. 8 અને 2024ના કેબિનેટ નિર્ણય નં. 127 મુજબ છે. રોકાણ કે કરના નિર્ણય પહેલાં લાયક નાણાકીય સલાહકાર અથવા FTA-નોંધાયેલ ટેક્સ એજન્ટની સલાહ લો. ઉપયોગ તમારી પોતાની જવાબદારી પર.'],
+['Idea and Code','વિચાર અને કોડિંગ:'],['Copyright 2025','કૉપિરાઇટ 2025-2026 Subash M. સર્વાધિકાર સુરક્ષિત.'],
+['Live data: Swi','લાઇવ ડેટા: Swissquote / Gold-API.com (વૈકલ્પિક) | ઇતિહાસ: Alpha Vantage | ચાર્ટ: TradingView | કેલેન્ડર: Tradays (MQL5)'],
+['Enter a weight','ડાઉનલોડ પહેલાં વજન દાખલ કરો અને લાઇવ ભાવની રાહ જુઓ.'],['Enter gold wei','ડાઉનલોડ પહેલાં સોનાનું વજન દાખલ કરો અને લાઇવ ભાવની રાહ જુઓ.'],
+['Waiting for th','લાઇવ સોનાના ભાવની રાહ છે — થોડીવાર પછી ફરી પ્રયાસ કરો.'],
+['Offline — open','ઑફલાઇન — છાપી શકાય તેવું ક્વોટેશન ખોલ્યું. "Save as PDF" પસંદ કરો.'],['Offline — open','ઑફલાઇન — છાપી શકાય તેવું રેટ કાર્ડ ખોલ્યું. "Save as PDF" પસંદ કરો.'],
+['Allow pop-ups','છાપી શકાય તેવું ક્વોટેશન ખોલવા પૉપ-અપની મંજૂરી આપો.'],['Allow pop-ups','છાપી શકાય તેવું રેટ કાર્ડ ખોલવા પૉપ-અપની મંજૂરી આપો.'],
+['AED','AED']
+];
+const CG={usd:'યુએસ ડૉલર',aed:'યુએઈ દિરહમ',eur:'યુરો',gbp:'બ્રિટિશ પાઉન્ડ',inr:'ભારતીય રૂપિયો',sar:'સાઉદી રિયાલ',kwd:'કુવૈતી દિનાર',bhd:'બહેરીની દિનાર',omr:'ઓમાની રિયાલ',qar:'કતારી રિયાલ',
+jpy:'જાપાનીઝ યેન',cny:'ચીની યુઆન',chf:'સ્વિસ ફ્રેંક',aud:'ઑસ્ટ્રેલિયન ડૉલર',cad:'કેનેડિયન ડૉલર',sgd:'સિંગાપોર ડૉલર',myr:'મલેશિયન રિંગિટ',pkr:'પાકિસ્તાની રૂપિયો',lkr:'શ્રીલંકન રૂપિયો',
+egp:'ઇજિપ્તિયન પાઉન્ડ',bdt:'બાંગ્લાદેશી ટાકા',php:'ફિલિપાઇન્સ પેસો',npr:'નેપાળી રૂપિયો',jod:'જોર્ડનિયન દિનાર',try:'ટર્કિશ લિરા',zar:'દક્ષિણ આફ્રિકન રૅન્ડ',thb:'થાઈ બાટ',
+idr:'ઇન્ડોનેશિયન રૂપિયા',vnd:'વિયેતનામી ડોંગ',ils:'ઇઝરાયલી શેકેલ',kes:'કેન્યન શિલિંગ',mad:'મોરોક્કન દિરહમ',hkd:'હોંગકોંગ ડૉલર',krw:'દક્ષિણ કોરિયન વોન',sek:'સ્વીડિશ ક્રોના',
+nok:'નૉર્વેજિયન ક્રોન',dkk:'ડેનિશ ક્રોન',mxn:'મેક્સિકન પેસો',brl:'બ્રાઝિલિયન રિયાલ',rub:'રશિયન રૂબલ',nzd:'ન્યૂઝીલૅન્ડ ડૉલર'};
+
+const ML=[
+['by Subash M','Subash M അവതരിപ്പിക്കുന്നത് | തത്സമയ നിരക്കുകൾ'],['LIVE','തത്സമയം'],['OFF','ഓഫ്'],['STALE','പഴയത്'],
+['Rates','നിരക്കുകൾ'],['Market Status','വിപണി നില'],['Calculator','കാൽക്കുലേറ്റർ'],['History Calc','പഴയ വില കാൽക്കുലേറ്റർ'],['Karat Tools','കാരറ്റ് ടൂളുകൾ'],['Currency','കറൻസി'],
+['Live feed unav','തത്സമയ ഫീഡ് ലഭ്യമല്ല. അവസാനമായി അറിഞ്ഞ വിലകൾ കാണിക്കുന്നു.'],['Dismiss','അടയ്ക്കുക'],
+['Live price fee','തത്സമയ വില ഫീഡിൽ എത്താൻ കഴിയുന്നില്ല (നെറ്റ്‌വർക്ക് തടഞ്ഞിരിക്കുന്നു അല്ലെങ്കിൽ എല്ലാ ഉറവിടങ്ങളും പ്രവർത്തനരഹിതം)'],
+['Showing last k','അവസാനമായി അറിഞ്ഞ വിലകൾ കാണിക്കുന്നു'],['Will keep retr','സ്വയമേവ വീണ്ടും ശ്രമിച്ചുകൊണ്ടിരിക്കും'],
+['Last updated','അവസാന അപ്ഡേറ്റ്'],['refresh failed','റിഫ്രഷ് പരാജയപ്പെട്ടു'],['Back to top','മുകളിലേക്ക്'],['Quick navigati','വേഗത്തിലുള്ള നാവിഗേഷൻ'],
+['Metal','ലോഹം'],['Weight','തൂക്കം'],['Gold','സ്വർണം'],['Silver','വെള്ളി'],['Platinum','പ്ലാറ്റിനം'],['Palladium','പലേഡിയം'],['Copper','ചെമ്പ്'],
+['Gram','ഗ്രാം'],['Grams','ഗ്രാം'],['Troy Ounce','ട്രോയ് ഔൺസ്'],['Troy Oz','ട്രോയ് ഔൺസ്'],['Tola','തോല'],
+['Pavan / Sovere','പവൻ / സോവറിൻ'],['Pavan','പവൻ'],['10 Grams','10 ഗ്രാം'],['Kilogram','കിലോഗ്രാം'],['Pennyweight','പെന്നിവെയ്റ്റ്'],['Tael','ടെയ്ൽ'],
+['Loading...','ലോഡ് ചെയ്യുന്നു...'],['waiting for pr','വിലയ്ക്കായി കാത്തിരിക്കുന്നു...'],
+['99.9% Pure','99.9% ശുദ്ധം'],['Sterling Silve','സ്റ്റെർലിംഗ് വെള്ളി'],['Fine Silver','ശുദ്ധ വെള്ളി'],['Coin Silver','നാണയ വെള്ളി'],
+['Jewellery','ആഭരണം'],['Fine','ശുദ്ധം'],['Sterling','സ്റ്റെർലിംഗ്'],['Britannia','ബ്രിട്ടാനിയ'],['Coin','നാണയം'],
+['Live Rates','തത്സമയ നിരക്കുകൾ'],['fetching...','ലഭ്യമാക്കുന്നു...'],['No data yet','ഇതുവരെ ഡാറ്റ ഇല്ല'],['Waiting for fi','ആദ്യ വിജയകരമായ അപ്ഡേറ്റിനായി കാത്തിരിക്കുന്നു...'],
+['fallback','ബദൽ'],['troy oz','ട്രോയ് ഔൺസ്'],['lb','പൗണ്ട്'],['/g','/ഗ്രാം'],['/kg','/കിലോ'],['bid','വാങ്ങൽ'],['ask','വിൽപ്പന'],['source:','ഉറവിടം:'],
+['Copper is a ba','ചെമ്പ് ഒരു അടിസ്ഥാന ലോഹമാണ്; കൂട്ടുലോഹം/പഴയ ലോഹത്തിന്റെ ചെലവ് കണക്കാക്കാനുള്ള റഫറൻസായി കാണിക്കുന്നു (COMEX, പൗണ്ടിന് വില) — മുകളിലെ നാല് ലോഹങ്ങളെപ്പോലെ ട്രോയ് ഔൺസിൽ വിൽക്കുന്ന ആഭരണ ലോഹമല്ല ഇത്.'],
+['Refresh','റിഫ്രഷ്'],['Shop / entity ','റേറ്റ് കാർഡിനുള്ള കടയുടെ / സ്ഥാപനത്തിന്റെ പേര് (ഓപ്ഷണൽ)'],['Rate Card PDF ','റേറ്റ് കാർഡ് PDF · എല്ലാ കാരറ്റും'],
+['Market Indicat','വിപണി സൂചകങ്ങൾ'],['Gold / Silver ','സ്വർണം / വെള്ളി അനുപാതം'],['oz gold = ? oz','ഔൺസ് സ്വർണം = ? ഔൺസ് വെള്ളി'],['oz gold','ഔൺസ് സ്വർണം'],['oz silver','ഔൺസ് വെള്ളി'],
+['Gold Spread','സ്വർണ സ്‌പ്രെഡ്'],['Silver Spread','വെള്ളി സ്‌പ്രെഡ്'],['Platinum Sprea','പ്ലാറ്റിനം സ്‌പ്രെഡ്'],['bid-ask USD','വാങ്ങൽ-വിൽപ്പന വ്യത്യാസം (USD)'],
+['Market Open','വിപണി തുറന്നിരിക്കുന്നു'],['Daily Break','ദൈനംദിന ഇടവേള'],['Market Closed','വിപണി അടച്ചിരിക്കുന്നു'],
+['Opens in','തുറക്കാൻ'],['Resumes in','പുനരാരംഭിക്കാൻ'],['Break in','ഇടവേളയ്ക്ക്'],['Closes in','അടയ്ക്കാൻ'],
+['Timezone','സമയമേഖല'],['Indicative Tra','ദിവസം അനുസരിച്ചുള്ള സൂചക വ്യാപാര സമയം'],['Trading Sessio','വ്യാപാര സെഷനുകൾ'],['Daily break','ദൈനംദിന ഇടവേള'],
+['— most brokers','— മിക്ക ബ്രോക്കർമാരും റോൾഓവറിനായി അൽപസമയം വ്യാപാരം നിർത്തിവയ്ക്കും'],
+['happening now','ഇപ്പോൾ നടക്കുന്നു'],['Active now','ഇപ്പോൾ സജീവം'],['local time','പ്രാദേശിക സമയം'],
+['Mon','തിങ്കൾ'],['Tue','ചൊവ്വ'],['Wed','ബുധൻ'],['Thu','വ്യാഴം'],['Fri','വെള്ളി'],['Sat','ശനി'],['Sun','ഞായർ'],
+['Sydney / Asia','സിഡ്നി / ഏഷ്യ'],['London','ലണ്ടൻ'],['New York','ന്യൂയോർക്ക്'],['Peak Liquidity','ഉയർന്ന ലിക്വിഡിറ്റി'],
+['Dubai, UAE (GS','ദുബായ്, യുഎഇ (GST)'],['India (IST)','ഇന്ത്യ (IST)'],['Pakistan (PKT','പാകിസ്ഥാൻ (PKT)'],['Bangladesh','ബംഗ്ലാദേശ്'],['Sri Lanka','ശ്രീലങ്ക'],['Nepal','നേപ്പാൾ'],['Philippines','ഫിലിപ്പീൻസ്'],
+['Saudi Arabia','സൗദി അറേബ്യ'],['Egypt','ഈജിപ്ത്'],['London, UK','ലണ്ടൻ, യുകെ'],['New York, US','ന്യൂയോർക്ക്, യുഎസ്'],['Singapore','സിംഗപ്പൂർ'],['Hong Kong','ഹോങ്കോങ്'],['Sydney, Austra','സിഡ്നി, ഓസ്ട്രേലിയ'],
+['Closed Saturda','ശനി, ഞായർ ദിവസങ്ങളിൽ വിപണി അടച്ചിരിക്കും (ഇത് യുഎഇയുടെ വാരാന്ത്യവുമാണ്). സ്പോട്ട് സ്വർണം ആഗോള ഫോറെക്സ് വിപണികളോടൊപ്പം ഏകദേശം ഞായറാഴ്ച വൈകുന്നേരം മുതൽ വെള്ളിയാഴ്ച വൈകുന്നേരം വരെ (UTC) വ്യാപാരം ചെയ്യപ്പെടുന്നു; ദിവസവും ഒരു ചെറിയ സെറ്റിൽമെന്റ് ഇടവേളയുണ്ട്. മിനിറ്റ് തലത്തിലുള്ള കൃത്യമായ സമയം ബ്രോക്കർ/പ്ലാറ്റ്ഫോം അനുസരിച്ച് മാറും, യുഎസ്/യുകെ ഡേലൈറ്റ്-സേവിംഗ് മാറ്റങ്ങളിൽ അൽപം നീങ്ങാം — ഇത് പൊതുവായ മാർഗനിർദേശമായി മാത്രം കരുതുക, നിങ്ങളുടെ ട്രേഡിംഗ് പ്ലാറ്റ്ഫോമിന്റെ ഔദ്യോഗിക കലണ്ടറായി അല്ല.'],
+['Live Quotes','തത്സമയ ക്വോട്ടുകൾ'],['Charts','ചാർട്ടുകൾ'],['Advanced Chart','അഡ്വാൻസ്ഡ് ചാർട്ട്'],['Economic Calen','സാമ്പത്തിക കലണ്ടർ'],
+['⚠ MQL5 widget','⚠ MQL5 വിജറ്റ് ലഭ്യമല്ല — GoldBench തത്സമയ ഫീഡ് കാണിക്കുന്നു'],['waiting…','കാത്തിരിക്കുന്നു…'],['Retry MQL5 wid','MQL5 വിജറ്റ് വീണ്ടും ലോഡ് ചെയ്യുക'],
+['Rate Calculato','നിരക്ക് കാൽക്കുലേറ്റർ'],['UAE VAT','യുഎഇ വാറ്റ്'],['Reset','റീസെറ്റ്'],['Purity / Karat','ശുദ്ധി / കാരറ്റ്'],['Weight (grams)','തൂക്കം (ഗ്രാം)'],
+['Making Charge','പണിക്കൂലി'],['Per Gram','ഗ്രാമിന്'],['Whole / Flat','മൊത്തം / ഒറ്റത്തുക'],['% of Metal','ലോഹമൂല്യത്തിന്റെ %'],['Discount','കിഴിവ്'],['Flat (AED)','ഒറ്റത്തുക (AED)'],['% off','% കിഴിവ്'],
+['Metal Value','ലോഹ മൂല്യം'],['Subtotal','ഉപമൊത്തം'],['VAT','വാറ്റ്'],['TOTAL','ആകെ'],
+['Retail/Jewelle','റീട്ടെയിൽ / ആഭരണം'],['Investment Gra','നിക്ഷേപ ഗ്രേഡ് 99%+'],['[0% VAT]','[0% വാറ്റ്]'],
+['Customer (opti','ഉപഭോക്താവ് (ഓപ്ഷണൽ)'],['Shop / Entity ','കട / സ്ഥാപനം (ഓപ്ഷണൽ)'],['Customer name','ഉപഭോക്താവിന്റെ പേര്'],['Shop / entity ','കടയുടെ / സ്ഥാപനത്തിന്റെ പേര്'],
+['Download PDF Q','PDF ക്വട്ടേഷൻ ഡൗൺലോഡ് ചെയ്യുക'],['Uses the live ','ഡൗൺലോഡ് ചെയ്യുന്ന സമയത്തെ തത്സമയ നിരക്ക് ഉപയോഗിക്കുന്നു'],['Uses the live ','ഡൗൺലോഡ് ചെയ്യുന്ന സമയത്തെ തത്സമയ സ്വർണ നിരക്ക് ഉപയോഗിക്കുന്നു'],['Preparing…','തയ്യാറാക്കുന്നു…'],
+['Historical Gol','പഴയ സ്വർണ വില കാൽക്കുലേറ്റർ'],
+['Pick any date','ഏതെങ്കിലും തീയതി തിരഞ്ഞെടുക്കുക — ആ ദിവസത്തെ ഔൺസിനുള്ള സ്വർണ വില സ്വയം നിറയും (ഇന്ന് = GoldBench തത്സമയ സ്പോട്ട്, സമീപ തീയതികൾ = ദൈനംദിന ക്ലോസ്, പഴയവ = 1833 വരെ പ്രതിമാസ ശരാശരി). തുടർന്ന്: ഔൺസ് വില → ഗ്രാം വില → ടാഗ് ഗ്രാം → പണിക്കൂലി → 5% വാറ്റ് → ആകെ തുക. പഴയ ബില്ലുകളുടെ വില വീണ്ടും കണക്കാക്കാൻ ഉപകരിക്കും.'],
+['Date','തീയതി'],['Description','വിവരണം'],['Gold / oz (USD','സ്വർണം / ഔൺസ് (USD)'],['Tag gms','ടാഗ് ഗ്രാം'],['Karat','കാരറ്റ്'],['Per gram (AED)','ഗ്രാമിന് (AED)'],['Gold value','സ്വർണ മൂല്യം'],
+['MC / gm','പണിക്കൂലി / ഗ്രാം'],['MC total','പണിക്കൂലി ആകെ'],['Before VAT','വാറ്റിന് മുമ്പ്'],['Grand total','ആകെ തുക'],['Total','ആകെ'],['Item','ഇനം'],
+['+ Add row','+ വരി ചേർക്കുക'],['Refresh histor','ചരിത്രം റിഫ്രഷ് ചെയ്യുക'],['Remove row','വരി നീക്കം ചെയ്യുക'],['Total tag gram','ആകെ ടാഗ് ഗ്രാം'],['Making charges','പണിക്കൂലി'],['Total before V','വാറ്റിന് മുമ്പുള്ള ആകെ'],['GRAND TOTAL','ആകെ തുക'],
+['Per gram = (oz','ഗ്രാമിന് = (ഔൺസ് വില × 3.6725 ÷ 31.1035) × കാരറ്റ് ÷ 24 (24K = 100%, 22K = 91.67%, 21K = 87.5%, 18K = 75%). സ്വർണ മൂല്യം = ടാഗ് ഗ്രാം × ഗ്രാം വില. MC എന്നാൽ പണിക്കൂലി, ഗ്രാമിന് AED. വാറ്റ് സ്വർണ മൂല്യം + MC യുടെ മേൽ ഈടാക്കുന്നു. ഔൺസ് വില കൈകൊണ്ട് മാറ്റാം — തീയതി മാറ്റുന്നതുവരെ അത് "മാനുവൽ വില" ആയി തുടരും.'],
+['live spot','തത്സമയ സ്പോട്ട്'],['manual price','മാനുവൽ വില'],['daily','ദൈനംദിന ക്ലോസ്'],['monthly avg','പ്രതിമാസ ശരാശരി'],['latest availab','ഏറ്റവും പുതിയത് ലഭ്യം'],
+['Daily history ','ദൈനംദിന ചരിത്രം ലോഡ് ചെയ്തു (കാഷെയിൽ നിന്ന്)'],['Daily history ','ദൈനംദിന ചരിത്രം അപ്ഡേറ്റ് ചെയ്തു'],['Loading daily ','ദൈനംദിന ചരിത്രം ലോഡ് ചെയ്യുന്നു…'],
+['Older daily hi','പഴയ ദൈനംദിന ചരിത്രം ലഭ്യമല്ല — ഉൾച്ചേർത്ത 2025+ ദൈനംദിന ക്ലോസുകളും പ്രതിമാസ ശരാശരികളും ഉപയോഗിക്കുന്നു'],
+['Weight Convert','തൂക്ക കൺവെർട്ടർ'],['Enter Weight','തൂക്കം നൽകുക'],['Gold Karat Con','സ്വർണ കാരറ്റ് പരിവർത്തനം'],
+['Convert gold f','സ്വർണത്തെ ഒരു കാരറ്റിൽ നിന്ന് മറ്റൊന്നിലേക്ക് മാറ്റുക, കൂട്ടുലോഹ വിവരങ്ങളോടെ'],
+['Gold Weight','സ്വർണ തൂക്കം'],['From Karat','ഈ കാരറ്റിൽ നിന്ന്'],['To Karat','ഈ കാരറ്റിലേക്ക്'],['Calculate Conv','പരിവർത്തനം കണക്കാക്കുക'],['Same karat sel','ഒരേ കാരറ്റ് തിരഞ്ഞെടുത്തിരിക്കുന്നു.'],
+['Increasing Pur','ശുദ്ധി കൂട്ടൽ'],['Decreasing Pur','ശുദ്ധി കുറയ്ക്കൽ'],['Before','മുമ്പ്'],['After','ശേഷം'],['Pure Au','ശുദ്ധ സ്വർണം (Au)'],['Alloy','കൂട്ടുലോഹം'],
+['Alloy Mix Calc','കൂട്ടുലോഹ മിശ്രണ കാൽക്കുലേറ്റർ'],['Calculate exac','പ്രത്യേക കാരറ്റ് സ്വർണം ഉണ്ടാക്കാൻ ആവശ്യമായ കൂട്ടുലോഹത്തിന്റെ കൃത്യമായ അളവ് കണക്കാക്കുക'],
+['Target Karat','ലക്ഷ്യ കാരറ്റ്'],['Total Weight (','ആകെ തൂക്കം (ഗ്രാം)'],['Alloy Type','കൂട്ടുലോഹ തരം'],['Calculate Allo','കൂട്ടുലോഹ മിശ്രണം കണക്കാക്കുക'],
+['Red Gold (100%','റെഡ് ഗോൾഡ് (100% ചെമ്പ്)'],['Rose Gold (75%','റോസ് ഗോൾഡ് (75% ചെമ്പ് + 22.5% വെള്ളി + 2.5% നാകം)'],['Pink Gold (50%','പിങ്ക് ഗോൾഡ് (50% ചെമ്പ് + 45% വെള്ളി + 5% നാകം)'],
+['Yellow Gold (5','യെല്ലോ ഗോൾഡ് (50% ചെമ്പ് + 50% വെള്ളി)'],['Yellow Gold + ','യെല്ലോ ഗോൾഡ് + നാകം (40% ചെമ്പ് + 45% വെള്ളി + 15% നാകം)'],
+['White Gold - N','വൈറ്റ് ഗോൾഡ് - നിക്കൽ (85% നിക്കൽ + 10% ചെമ്പ് + 5% നാകം)'],['White Gold - P','വൈറ്റ് ഗോൾഡ് - പലേഡിയം (90% പലേഡിയം + 10% വെള്ളി)'],['Green Gold (10','ഗ്രീൻ ഗോൾഡ് (100% വെള്ളി)'],
+['Red Gold','റെഡ് ഗോൾഡ്'],['Rose Gold','റോസ് ഗോൾഡ്'],['Pink Gold','പിങ്ക് ഗോൾഡ്'],['Yellow Gold (Z','യെല്ലോ ഗോൾഡ് (നാകം)'],['Yellow Gold','യെല്ലോ ഗോൾഡ്'],
+['White Gold (Ni','വൈറ്റ് ഗോൾഡ് (നിക്കൽ)'],['White Gold (Pd','വൈറ്റ് ഗോൾഡ് (പലേഡിയം)'],['Green Gold','ഗ്രീൻ ഗോൾഡ്'],
+['Pure Gold (Au)','ശുദ്ധ സ്വർണം (Au)'],['Total Alloy','ആകെ കൂട്ടുലോഹം'],['Copper (Cu)','ചെമ്പ് (Cu)'],['Silver (Ag)','വെള്ളി (Ag)'],['Nickel (Ni)','നിക്കൽ (Ni)'],['Palladium (Pd)','പലേഡിയം (Pd)'],['Zinc (Zn)','നാകം (Zn)'],
+['Very hard. May','വളരെ കട്ടിയുള്ളത്. സൂക്ഷ്മ പണികൾക്ക് പൊട്ടിപ്പോകാം.'],['Most popular p','ഏറ്റവും ജനപ്രിയമായ പിങ്ക് നിറമുള്ള സ്വർണം.'],['Lighter pink t','ഇളം പിങ്ക് നിറം. പണിയാൻ എളുപ്പം.'],
+['Traditional je','പരമ്പരാഗത ആഭരണ സ്വർണം.'],['Zinc improves ','നാകം വാർപ്പ് മെച്ചപ്പെടുത്തുന്നു.'],['Needs rhodium ','റോഡിയം പ്ലേറ്റിംഗ് ആവശ്യമാണ്. അലർജി ഉണ്ടാകാം.'],
+['Hypoallergenic','അലർജി ഇല്ലാത്തത്. റോഡിയം ആവശ്യമില്ല.'],['Pure silver al','ശുദ്ധ വെള്ളി കൂട്ടുലോഹം. പ്രധാനമായും അലങ്കാരത്തിന്.'],
+['Melt:','ഉരുകൽ:'],['Deep Red','കടും ചുവപ്പ്'],['Rose Pink','റോസ് പിങ്ക്'],['Soft Pink','ഇളം പിങ്ക്'],['Rich Yellow','കടും മഞ്ഞ'],['Bright Yellow','തിളക്കമുള്ള മഞ്ഞ'],
+['Bright White','തിളക്കമുള്ള വെള്ള'],['Natural White','സ്വാഭാവിക വെള്ള'],['Green-Yellow','പച്ച-മഞ്ഞ'],['Very Hard','വളരെ കട്ടി'],['Medium-Hard','ഇടത്തരം-കട്ടി'],['Hard','കട്ടി'],['Medium','ഇടത്തരം'],['Soft','മൃദു'],
+['Silver Purity ','വെള്ളി ശുദ്ധി കൺവെർട്ടർ'],['Convert silver','വെള്ളിയെ ഒരു ശുദ്ധി നിലയിൽ നിന്ന് മറ്റൊന്നിലേക്ക് മാറ്റുക'],['Silver Weight ','വെള്ളി തൂക്കം (ഗ്രാം)'],
+['From Purity','ഈ ശുദ്ധിയിൽ നിന്ന്'],['To Purity','ഈ ശുദ്ധിയിലേക്ക്'],['Calculate Silv','വെള്ളി പരിവർത്തനം കണക്കാക്കുക'],['Pure Ag','ശുദ്ധ വെള്ളി (Ag)'],
+['Scrap Gold Val','പഴയ/സ്ക്രാപ്പ് സ്വർണ മൂല്യനിർണയം'],['Add multiple i','വ്യത്യസ്ത കാരറ്റുകളിലുള്ള നിരവധി ഇനങ്ങൾ ചേർത്ത് ആകെ ശുദ്ധ സ്വർണവും മൂല്യവും നേടുക'],
+['Weight (g)','തൂക്കം (ഗ്രാം)'],['+ Add Item','+ ഇനം ചേർക്കുക'],['No items added','ഇനങ്ങളൊന്നും ചേർത്തിട്ടില്ല'],['Total Weight','ആകെ തൂക്കം'],['Total Pure Gol','ആകെ ശുദ്ധ സ്വർണം'],['Avg Purity','ശരാശരി ശുദ്ധി'],['Value (AED)','മൂല്യം (AED)'],
+['Assay Report ','അസ്സേ റിപ്പോർട്ട് / AU% കൺവെർട്ടർ'],['Enter Gold AU%','ലാബ് അസ്സേ റിപ്പോർട്ടിലെ സ്വർണ AU% നൽകുക'],['Gold AU%','സ്വർണം AU%'],['Bar Weight (g)','ബാർ തൂക്കം (ഗ്രാം)'],
+['e.g. 879.72','ഉദാ. 879.72'],['e.g. 1857.81','ഉദാ. 1857.81'],['Fineness','ഫൈൻനെസ്'],['Nearest standa','ഏറ്റവും അടുത്ത മാനദണ്ഡം:'],['Bar Weight','ബാർ തൂക്കം'],['Pure Gold Valu','ശുദ്ധ സ്വർണ മൂല്യം'],['Pure Gold','ശുദ്ധ സ്വർണം'],
+['Melting Loss C','ഉരുക്കൽ നഷ്ടം കാൽക്കുലേറ്റർ'],['Calculate gold','ഉരുക്കിയ ശേഷമുള്ള സ്വർണ വീണ്ടെടുപ്പ് കണക്കാക്കുക'],['Before Melting','ഉരുക്കുന്നതിന് മുമ്പ് (ഗ്രാം)'],['After Melting ','ഉരുക്കിയ ശേഷം (ഗ്രാം)'],['Expected Loss ','പ്രതീക്ഷിക്കുന്ന നഷ്ടം %'],
+['0.5% (Bars/Ing','0.5% (ബാർ / കട്ടി)'],['1% (Clean Jewe','1% (വൃത്തിയുള്ള ആഭരണം)'],['2% (Mixed/Ston','2% (മിശ്രിതം / കല്ലുകൾ)'],['3% (Heavy Enam','3% (കനത്ത ഇനാമൽ)'],['5% (Low Grade','5% (താഴ്ന്ന നിലവാരമുള്ള സ്ക്രാപ്പ്)'],
+['Expected Loss','പ്രതീക്ഷിക്കുന്ന നഷ്ടം'],['Expected Recov','പ്രതീക്ഷിക്കുന്ന വീണ്ടെടുപ്പ്'],['Actual After','യഥാർത്ഥ തൂക്കം (ശേഷം)'],['Actual Loss','യഥാർത്ഥ നഷ്ടം'],['Recovery Rate','വീണ്ടെടുപ്പ് നിരക്ക്'],['Loss Value','നഷ്ട മൂല്യം'],
+['NORMAL','സാധാരണം'],['ABOVE EXPECTED','പ്രതീക്ഷയിലും കൂടുതൽ'],['Loss within ex','നഷ്ടം പ്രതീക്ഷിത പരിധിക്കുള്ളിലാണ്'],['Check for ston','കല്ലുകൾ/ഇനാമൽ പരിശോധിക്കുക.'],
+['Jewellery Orde','ആഭരണ ഓർഡർ എസ്റ്റിമേറ്റർ'],['Estimate custo','സ്വർണം + കല്ലുകൾ + പണിക്കൂലി + വാറ്റ് സഹിതം ഉപഭോക്താവിന്റെ ഓർഡർ കണക്കാക്കുക'],['Gold Weight (g','സ്വർണ തൂക്കം (ഗ്രാം)'],
+['Making Charge ','പണിക്കൂലി (AED/ഗ്രാം)'],['Stone / Diamon','കല്ല് / വജ്ര മൂല്യം (AED)'],['Other Charges ','മറ്റ് ചാർജുകൾ (AED)'],['Gold Value','സ്വർണ മൂല്യം'],['Making','പണിക്കൂലി'],['Stones','കല്ലുകൾ'],['Other','മറ്റുള്ളവ'],
+['CUSTOMER TOTAL','ഉപഭോക്താവിന്റെ ആകെ'],['Waiting for li','തത്സമയ നിരക്കിനായി കാത്തിരിക്കുന്നു...'],
+['Currency Conve','കറൻസി കൺവെർട്ടർ'],['Live daily rat','തത്സമയ ദൈനംദിന നിരക്കുകൾ | 40+ കറൻസികൾ'],['Amount','തുക'],['From','ഇതിൽ നിന്ന്'],['To','ഇതിലേക്ക്'],['Swap currencie','കറൻസികൾ പരസ്പരം മാറ്റുക'],
+['Currency rates','കറൻസി നിരക്കുകൾ ഇപ്പോൾ ലഭ്യമല്ല.'],['Retry','വീണ്ടും ശ്രമിക്കുക'],['Gold per Gram','ഗ്രാമിന് സ്വർണം'],['Popular Rates','ജനപ്രിയ നിരക്കുകൾ'],
+['Rates updated ','നിരക്കുകൾ fawazahmed0 എക്സ്ചേഞ്ച് API വഴി ദിവസവും അപ്ഡേറ്റ് ചെയ്യുന്നു'],['Disclaimer:','നിരാകരണം:'],
+['Information pr','നൽകിയിരിക്കുന്ന വിവരങ്ങൾ പൊതുവായ അറിവിനും വിദ്യാഭ്യാസ ആവശ്യങ്ങൾക്കും മാത്രമുള്ളതാണ്. ഇത് സാമ്പത്തിക, നിക്ഷേപ, വ്യാപാര ഉപദേശമല്ല. വിലകൾ സൂചകമാണ്, ഡീലർമാരുടെ യഥാർത്ഥ നിരക്കിൽ നിന്ന് വ്യത്യാസപ്പെടാം. യുഎഇ വാറ്റ് കണക്കുകൂട്ടൽ 2017-ലെ ഫെഡറൽ ഡിക്രി-നിയമം നമ്പർ 8, 2024-ലെ കാബിനറ്റ് തീരുമാനം നമ്പർ 127 എന്നിവ പ്രകാരമാണ്. നിക്ഷേപ/നികുതി തീരുമാനങ്ങൾക്ക് മുമ്പ് യോഗ്യതയുള്ള സാമ്പത്തിക ഉപദേഷ്ടാവിനെയോ FTA രജിസ്റ്റർ ചെയ്ത ടാക്സ് ഏജന്റിനെയോ സമീപിക്കുക. ഉപയോഗം സ്വന്തം ഉത്തരവാദിത്തത്തിൽ.'],
+['Idea and Code','ആശയവും കോഡിംഗും:'],['Copyright 2025','പകർപ്പവകാശം 2025-2026 Subash M. എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം.'],
+['Live data: Swi','തത്സമയ ഡാറ്റ: Swissquote / Gold-API.com (ബദൽ) | ചരിത്രം: Alpha Vantage | ചാർട്ടുകൾ: TradingView | കലണ്ടർ: Tradays (MQL5)'],
+['Enter a weight','ഡൗൺലോഡ് ചെയ്യുന്നതിന് മുമ്പ് തൂക്കം നൽകി തത്സമയ നിരക്കിനായി കാത്തിരിക്കുക.'],['Enter gold wei','ഡൗൺലോഡ് ചെയ്യുന്നതിന് മുമ്പ് സ്വർണ തൂക്കം നൽകി തത്സമയ നിരക്കിനായി കാത്തിരിക്കുക.'],
+['Waiting for th','തത്സമയ സ്വർണ നിരക്കിനായി കാത്തിരിക്കുന്നു — അൽപസമയം കഴിഞ്ഞ് വീണ്ടും ശ്രമിക്കുക.'],
+['Offline — open','ഓഫ്‌ലൈൻ — പ്രിന്റ് ചെയ്യാവുന്ന ക്വട്ടേഷൻ തുറന്നു. "Save as PDF" തിരഞ്ഞെടുക്കുക.'],['Offline — open','ഓഫ്‌ലൈൻ — പ്രിന്റ് ചെയ്യാവുന്ന റേറ്റ് കാർഡ് തുറന്നു. "Save as PDF" തിരഞ്ഞെടുക്കുക.'],
+['Allow pop-ups','പ്രിന്റ് ചെയ്യാവുന്ന ക്വട്ടേഷൻ തുറക്കാൻ പോപ്പ്-അപ്പുകൾ അനുവദിക്കുക.'],['Allow pop-ups','പ്രിന്റ് ചെയ്യാവുന്ന റേറ്റ് കാർഡ് തുറക്കാൻ പോപ്പ്-അപ്പുകൾ അനുവദിക്കുക.'],
+['AED','AED']
+];
+const CM={usd:'യുഎസ് ഡോളർ',aed:'യുഎഇ ദിർഹം',eur:'യൂറോ',gbp:'ബ്രിട്ടീഷ് പൗണ്ട്',inr:'ഇന്ത്യൻ രൂപ',sar:'സൗദി റിയാൽ',kwd:'കുവൈത്തി ദിനാർ',bhd:'ബഹ്‌റൈൻ ദിനാർ',omr:'ഒമാനി റിയാൽ',qar:'ഖത്തർ റിയാൽ',
+jpy:'ജാപ്പനീസ് യെൻ',cny:'ചൈനീസ് യുവാൻ',chf:'സ്വിസ് ഫ്രാങ്ക്',aud:'ഓസ്‌ട്രേലിയൻ ഡോളർ',cad:'കനേഡിയൻ ഡോളർ',sgd:'സിംഗപ്പൂർ ഡോളർ',myr:'മലേഷ്യൻ റിംഗിറ്റ്',pkr:'പാകിസ്ഥാനി രൂപ',lkr:'ശ്രീലങ്കൻ രൂപ',
+egp:'ഈജിപ്ഷ്യൻ പൗണ്ട്',bdt:'ബംഗ്ലാദേശി ടാക്ക',php:'ഫിലിപ്പീൻസ് പെസോ',npr:'നേപ്പാളി രൂപ',jod:'ജോർദാനിയൻ ദിനാർ',try:'ടർക്കിഷ് ലിറ',zar:'ദക്ഷിണാഫ്രിക്കൻ റാൻഡ്',thb:'തായ് ബാത്ത്',
+idr:'ഇന്തോനേഷ്യൻ റുപ്പിയ',vnd:'വിയറ്റ്നാമീസ് ഡോങ്',ils:'ഇസ്രായേലി ഷെക്കൽ',kes:'കെനിയൻ ഷില്ലിംഗ്',mad:'മൊറോക്കൻ ദിർഹം',hkd:'ഹോങ്കോങ് ഡോളർ',krw:'ദക്ഷിണ കൊറിയൻ വോൺ',sek:'സ്വീഡിഷ് ക്രോണ',
+nok:'നോർവീജിയൻ ക്രോണെ',dkk:'ഡാനിഷ് ക്രോണെ',mxn:'മെക്സിക്കൻ പെസോ',brl:'ബ്രസീലിയൻ റിയാൽ',rub:'റഷ്യൻ റൂബിൾ',nzd:'ന്യൂസിലൻഡ് ഡോളർ'};
+
+
+const DICT={ar:DA,hi:{},ur:{},ta:{},gu:{},ml:{}};
+X.forEach((r,i)=>{ if(r[0]==='AED')return; DICT.hi[r[0]]=r[1]; DICT.ur[r[0]]=r[2]; DICT.ta[r[0]]=TA[i][1]; DICT.gu[r[0]]=GU[i][1]; DICT.ml[r[0]]=ML[i][1]; });
+DICT.ml['UTC']='ആഗോള സമയം (UTC)';
+DICT.gu['UTC']='વૈશ્વિક સમય (UTC)';
+DICT.ta['UTC']='உலக நேரம் (UTC)';
+DICT.hi['UTC']='वैश्विक समय (UTC)'; DICT.ur['UTC']='عالمی وقت (UTC)';
+/* currency names: "USD - US Dollar" and bare "US Dollar" */
+[['usd','US Dollar'],['aed','UAE Dirham'],['eur','Euro'],['gbp','British Pound'],['inr','Indian Rupee'],['sar','Saudi Riyal'],['kwd','Kuwaiti Dinar'],
+['bhd','Bahraini Dinar'],['omr','Omani Rial'],['qar','Qatari Riyal'],['jpy','Japanese Yen'],['cny','Chinese Yuan'],['chf','Swiss Franc'],['aud','Australian Dollar'],
+['cad','Canadian Dollar'],['sgd','Singapore Dollar'],['myr','Malaysian Ringgit'],['pkr','Pakistani Rupee'],['lkr','Sri Lankan Rupee'],['egp','Egyptian Pound'],
+['bdt','Bangladeshi Taka'],['php','Philippine Peso'],['npr','Nepalese Rupee'],['jod','Jordanian Dinar'],['try','Turkish Lira'],['zar','South African Rand'],
+['thb','Thai Baht'],['idr','Indonesian Rupiah'],['vnd','Vietnamese Dong'],['ils','Israeli Shekel'],['kes','Kenyan Shilling'],['mad','Moroccan Dirham'],
+['hkd','Hong Kong Dollar'],['krw','South Korean Won'],['sek','Swedish Krona'],['nok','Norwegian Krone'],['dkk','Danish Krone'],['mxn','Mexican Peso'],
+['brl','Brazilian Real'],['rub','Russian Ruble'],['nzd','New Zealand Dollar']].forEach(c=>{
+  const code=c[0].toUpperCase(), n=(CH[c[0]]||'').split('|');
+  if(n.length<2)return;
+  DICT.hi[code+' - '+c[1]]=code+' - '+n[0]; DICT.hi[c[1]]=n[0];
+  DICT.ur[code+' - '+c[1]]=code+' - '+n[1]; DICT.ur[c[1]]=n[1];
+  if(CM[c[0]]){DICT.ml[code+' - '+c[1]]=code+' - '+CM[c[0]]; DICT.ml[c[1]]=CM[c[0]];}
+  if(CG[c[0]]){DICT.gu[code+' - '+c[1]]=code+' - '+CG[c[0]]; DICT.gu[c[1]]=CG[c[0]];}
+  if(CT[c[0]]){DICT.ta[code+' - '+c[1]]=code+' - '+CT[c[0]]; DICT.ta[c[1]]=CT[c[0]];}
+});
+
+const MANUAL={};
+['ar','hi','ur','ta','gu','ml'].forEach(l=>{MANUAL[l]=DICT[l]['manual price'];});
+
+/* ═══════════ 3. TRANSLATION ENGINE (one per language) ═══════════ */
+const MONRE='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)';
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\\/]/g,'\\$&');
+const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+const K=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const W=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const zip=(keys,vals)=>{const o={};keys.forEach((k,i)=>o[k]=vals[i]);return o;};
+
+/* language packs: calendar words + sentence templates for live-generated strings */
+const PACK={
+ ar:{
+  WD:zip(W,['الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد']),
+  MO:zip(K,['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']),
+  comma:'،', g:' غ', u:{d:' ي',h:' س',m:' د'},
+  ago:(n,u)=>'منذ '+n+' '+(u==='s'?'ث':'د'),
+  auto:n=>'تحديث تلقائي كل '+n+' ث', retry:n=>'إعادة المحاولة بعد '+n+' ث', days:n=>'· '+n+' يومًا',
+  melt:(a,b)=>'الانصهار: '+a+'-'+b+'°م',
+  alloyFor:(w,k,n)=>'مكوّنات الخليط لـ '+w+' غ من '+n+' عيار '+k,
+  addPure:n=>'أضف '+n+' غ ذهب خالص (24K)', addAlloy:n=>'أضف '+n+' غ من الخليط', addCu:n=>'أضف '+n+' غ نحاس',
+  pure:n=>'('+n+' غ خالص)', kGold:k=>'ذهب عيار '+k, actual:(a,b)=>'الفعلي: '+a+'% مقابل المتوقع: '+b+'%'
+ },
+ hi:{
+  WD:zip(W,['सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार','रविवार']),
+  MO:zip(K,['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर']),
+  comma:',', g:' ग्रा', u:{d:' दिन',h:' घं',m:' मि'},
+  ago:(n,u)=>n+(u==='s'?' सेकंड':' मिनट')+' पहले',
+  auto:n=>'हर '+n+' सेकंड में ऑटो अपडेट', retry:n=>n+' सेकंड में पुनः प्रयास', days:n=>'· '+n+' दिन',
+  melt:(a,b)=>'गलनांक: '+a+'-'+b+'°C',
+  alloyFor:(w,k,n)=>k+'K '+n+' के '+w+' ग्रा के लिए खोट मिश्रण',
+  addPure:n=>n+' ग्रा शुद्ध सोना (24K) मिलाएँ', addAlloy:n=>n+' ग्रा खोट मिलाएँ', addCu:n=>n+' ग्रा तांबा मिलाएँ',
+  pure:n=>'('+n+' ग्रा शुद्ध)', kGold:k=>k+'K सोना', actual:(a,b)=>'वास्तविक: '+a+'% बनाम अपेक्षित: '+b+'%'
+ },
+ ur:{
+  WD:zip(W,['پیر','منگل','بدھ','جمعرات','جمعہ','ہفتہ','اتوار']),
+  MO:zip(K,['جنوری','فروری','مارچ','اپریل','مئی','جون','جولائی','اگست','ستمبر','اکتوبر','نومبر','دسمبر']),
+  comma:'،', g:' گرام', u:{d:' دن',h:' گھنٹے',m:' منٹ'},
+  ago:(n,u)=>n+(u==='s'?' سیکنڈ':' منٹ')+' پہلے',
+  auto:n=>'ہر '+n+' سیکنڈ میں خودکار اپ ڈیٹ', retry:n=>n+' سیکنڈ میں دوبارہ کوشش', days:n=>'· '+n+' دن',
+  melt:(a,b)=>'نقطۂ پگھلاؤ: '+a+'-'+b+'°C',
+  alloyFor:(w,k,n)=>w+' گرام '+k+'K '+n+' کے لیے کھوٹ مکسچر',
+  addPure:n=>n+' گرام خالص سونا (24K) ملائیں', addAlloy:n=>n+' گرام کھوٹ ملائیں', addCu:n=>n+' گرام تانبا ملائیں',
+  pure:n=>'('+n+' گرام خالص)', kGold:k=>k+'K سونا', actual:(a,b)=>'اصل: '+a+'% بمقابلہ متوقع: '+b+'%'
+ },
+ ta:{
+  WD:zip(W,['திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி','ஞாயிறு']),
+  MO:zip(K,['ஜனவரி','பிப்ரவரி','மார்ச்','ஏப்ரல்','மே','ஜூன்','ஜூலை','ஆகஸ்ட்','செப்டம்பர்','அக்டோபர்','நவம்பர்','டிசம்பர்']),
+  comma:',', g:' கி', u:{d:' நாள்',h:' மணி',m:' நிமி'},
+  ago:(n,u)=>n+(u==='s'?' வினாடிக்கு':' நிமிடத்திற்கு')+' முன்',
+  auto:n=>'ஒவ்வொரு '+n+' வினாடிக்கும் தானாக புதுப்பிப்பு', retry:n=>n+' வினாடியில் மீண்டும் முயற்சி', days:n=>'· '+n+' நாட்கள்',
+  melt:(a,b)=>'உருகுநிலை: '+a+'-'+b+'°C',
+  alloyFor:(w,k,n)=>w+' கி '+k+'K '+n+'க்கான கலப்பு கலவை',
+  addPure:n=>n+' கி தூய தங்கம் (24K) சேர்க்கவும்', addAlloy:n=>n+' கி கலப்பு சேர்க்கவும்', addCu:n=>n+' கி செம்பு சேர்க்கவும்',
+  pure:n=>'('+n+' கி தூய)', kGold:k=>k+'K தங்கம்', actual:(a,b)=>'உண்மை: '+a+'% எதிர்பார்ப்பு: '+b+'%'
+ },
+ gu:{
+  WD:zip(W,['સોમવાર','મંગળવાર','બુધવાર','ગુરુવાર','શુક્રવાર','શનિવાર','રવિવાર']),
+  MO:zip(K,['જાન્યુઆરી','ફેબ્રુઆરી','માર્ચ','એપ્રિલ','મે','જૂન','જુલાઈ','ઓગસ્ટ','સપ્ટેમ્બર','ઓક્ટોબર','નવેમ્બર','ડિસેમ્બર']),
+  comma:',', g:' ગ્રા', u:{d:' દિવસ',h:' કલાક',m:' મિનિટ'},
+  ago:(n,u)=>n+(u==='s'?' સેકન્ડ':' મિનિટ')+' પહેલાં',
+  auto:n=>'દર '+n+' સેકન્ડે ઑટો અપડેટ', retry:n=>n+' સેકન્ડમાં ફરી પ્રયાસ', days:n=>'· '+n+' દિવસ',
+  melt:(a,b)=>'ગલનબિંદુ: '+a+'-'+b+'°C',
+  alloyFor:(w,k,n)=>k+'K '+n+' ના '+w+' ગ્રા માટે મિશ્રધાતુ મિશ્રણ',
+  addPure:n=>n+' ગ્રા શુદ્ધ સોનું (24K) ઉમેરો', addAlloy:n=>n+' ગ્રા મિશ્રધાતુ ઉમેરો', addCu:n=>n+' ગ્રા તાંબું ઉમેરો',
+  pure:n=>'('+n+' ગ્રા શુદ્ધ)', kGold:k=>k+'K સોનું', actual:(a,b)=>'વાસ્તવિક: '+a+'% વિરુદ્ધ અપેક્ષિત: '+b+'%'
+ },
+ ml:{
+  WD:zip(W,['തിങ്കൾ','ചൊവ്വ','ബുധൻ','വ്യാഴം','വെള്ളി','ശനി','ഞായർ']),
+  MO:zip(K,['ജനുവരി','ഫെബ്രുവരി','മാർച്ച്','ഏപ്രിൽ','മേയ്','ജൂൺ','ജൂലൈ','ഓഗസ്റ്റ്','സെപ്റ്റംബർ','ഒക്ടോബർ','നവംബർ','ഡിസംബർ']),
+  comma:',', g:' ഗ്രാം', u:{d:' ദിവസം',h:' മണി',m:' മിനിറ്റ്'},
+  ago:(n,u)=>n+(u==='s'?' സെക്കൻഡ്':' മിനിറ്റ്')+' മുമ്പ്',
+  auto:n=>'ഓരോ '+n+' സെക്കൻഡിലും സ്വയം അപ്ഡേറ്റ്', retry:n=>n+' സെക്കൻഡിൽ വീണ്ടും ശ്രമിക്കും', days:n=>'· '+n+' ദിവസം',
+  melt:(a,b)=>'ഉരുകൽ നില: '+a+'-'+b+'°C',
+  alloyFor:(w,k,n)=>w+' ഗ്രാം '+k+'K '+n+'-നുള്ള കൂട്ടുലോഹ മിശ്രണം',
+  addPure:n=>n+' ഗ്രാം ശുദ്ധ സ്വർണം (24K) ചേർക്കുക', addAlloy:n=>n+' ഗ്രാം കൂട്ടുലോഹം ചേർക്കുക', addCu:n=>n+' ഗ്രാം ചെമ്പ് ചേർക്കുക',
+  pure:n=>'('+n+' ഗ്രാം ശുദ്ധം)', kGold:k=>k+'K സ്വർണം', actual:(a,b)=>'യഥാർത്ഥം: '+a+'% പ്രതീക്ഷിതം: '+b+'%'
+ }
+};
+
+function makeEngine(l){
+  const D=DICT[l], P=PACK[l];
+  const keys=Object.keys(D).filter(k=>/[A-Za-z]/.test(k)).sort((a,b)=>b.length-a.length);
+  const SUBRE=new RegExp('(^|[^A-Za-z])('+keys.map(esc).join('|')+')(?![A-Za-z])','g');
+  function dur(s){
+    const m=/^(?:(\d+)d)?\s?(?:(\d+)h)?\s?(?:(\d+)m)?$/.exec(s);
+    if(!m||(!m[1]&&!m[2]&&!m[3]))return null;
+    const p=[];
+    if(m[1])p.push(m[1]+P.u.d);if(m[2])p.push(m[2]+P.u.h);if(m[3])p.push(m[3]+P.u.m);
+    return p.join(' ');
+  }
+  const PATS=[
+    [/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),? (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),?/,(m,w,d,mo)=>P.WD[w]+P.comma+' '+d+' '+P.MO[mo]+P.comma],
+    [/(?:\bfrom )?(\d+)s ago/g,(m,n)=>P.ago(n,'s')],
+    [/(?:\bfrom )?(\d+)m ago/g,(m,n)=>P.ago(n,'m')],
+    [/^auto (\d+)s$/,(m,n)=>P.auto(n)],
+    [/retrying in (\d+)s/,(m,n)=>P.retry(n)],
+    [/· (\d+) days\b/,(m,n)=>P.days(n)],
+    [new RegExp('\\b'+MONRE+' (\\d{4})\\b','g'),(m,mo,y)=>P.MO[mo]+' '+y],
+    [/Melt: (\d+)-(\d+)°C/,(m,a,b)=>P.melt(a,b)],
+    [/^Alloy for ([\d.]+)g of (\d+)K (.+)$/,(m,w,k,n)=>P.alloyFor(w,k,eng.tr(n))],
+    [/Add ([\d.]+)g pure gold \(24K\)/,(m,n)=>P.addPure(n)],
+    [/Add ([\d.]+)g alloy/,(m,n)=>P.addAlloy(n)],
+    [/Add ([\d.]+)g copper/,(m,n)=>P.addCu(n)],
+    [/\(([\d.]+)g pure\)/,(m,n)=>P.pure(n)],
+    [/^(\d+)K Gold$/,(m,k)=>P.kGold(k)],
+    [/Actual: ([\d.]+)% vs expected: ([\d.]+)%/,(m,a,b)=>P.actual(a,b)]
+  ];
+  const gre=/(\d)\s?g\b/g, gsub='$1'+P.g;
+  const eng={
+    tr(s){
+      if(has(D,s))return D[s];
+      const d=dur(s);if(d)return d;
+      let t=s;
+      for(let i=0;i<PATS.length;i++)t=t.replace(PATS[i][0],PATS[i][1]);
+      t=t.replace(SUBRE,(m,p,k)=>p+D[k]);
+      t=t.replace(gre,gsub);
+      return t;
+    }
+  };
+  return eng;
+}
+const ENG={};
+function tr(s){const e=ENG[LANG]||(ENG[LANG]=makeEngine(LANG));return e.tr(s);}
+
+/* ═══════════ 4. DOM WALKER ═══════════ */
+const SKIP='script,style,textarea,iframe,[data-nolang],.tkr,#chartsGrid,#advChart,#ecoCalWrap,.tradingview-widget-container';
+const ATTRS=['placeholder','title','aria-label','data-label'];
+const tOrig=new WeakMap();   // text node -> {en, tr}
+const aOrig=new WeakMap();   // element   -> {attr:{en,tr}}
+
+function procText(n){
+  if(LANG==='en')return;
+  const p=n.parentNode;
+  if(!p||p.nodeType!==1||p.closest(SKIP))return;
+  const cur=n.nodeValue,rec=tOrig.get(n);
+  if(rec&&cur===rec.tr)return;
+  const core=cur.replace(/\s+/g,' ').trim();
+  if(!core||!/[A-Za-z]/.test(core))return;
+  const out=tr(core);
+  if(out===core)return;
+  const lead=cur.match(/^\s*/)[0],trail=cur.match(/\s*$/)[0];
+  const res=lead+out+trail;
+  /* keep the very first English text so every language switch starts from English */
+  tOrig.set(n,{en:cur,tr:res});
+  n.nodeValue=res;
+}
+function procAttrs(el){
+  if(LANG==='en'||!el.hasAttribute)return;
+  for(let i=0;i<ATTRS.length;i++){
+    const a=ATTRS[i];
+    if(!el.hasAttribute(a))continue;
+    const cur=el.getAttribute(a);
+    let recs=aOrig.get(el);
+    if(recs&&recs[a]&&recs[a].tr===cur)continue;
+    const core=cur.replace(/\s+/g,' ').trim();
+    if(!core||!/[A-Za-z]/.test(core))continue;
+    const out=tr(core);
+    if(out===core)continue;
+    if(!recs){recs={};aOrig.set(el,recs);}
+    recs[a]={en:cur,tr:out};
+    el.setAttribute(a,out);
+  }
+}
+function walk(root){
+  if(!root)return;
+  if(root.nodeType===3){procText(root);return;}
+  if(root.nodeType!==1)return;
+  if(root.closest(SKIP))return;
+  procAttrs(root);
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);
+  let n;
+  while((n=w.nextNode())){
+    if(n.nodeType===3)procText(n);else procAttrs(n);
+  }
+}
+function restore(){
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);
+  let n;
+  while((n=w.nextNode())){
+    if(n.nodeType===3){
+      const r=tOrig.get(n);
+      if(r&&n.nodeValue===r.tr){n.nodeValue=r.en;tOrig.delete(n);}
+    }else{
+      const r=aOrig.get(n);
+      if(r){for(const a in r){if(n.getAttribute(a)===r[a].tr)n.setAttribute(a,r[a].en);}aOrig.delete(n);}
+    }
+  }
+}
+/* the app rewrites text every second / every 30s — translate whatever it writes */
+new MutationObserver(ms=>{
+  if(LANG==='en')return;
+  for(const m of ms){
+    if(m.type==='characterData')procText(m.target);
+    else if(m.type==='childList')m.addedNodes.forEach(walk);
+    else if(m.type==='attributes')procAttrs(m.target);
+  }
+}).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTRS});
+
+/* ═══════════ 5. HOOKS INTO THE EXISTING APP ═══════════ */
+const TVLOC={ar:'ar_AE',hi:'in',ur:'ur',ta:'in',gu:'in',ml:'in'};
+const ECOLANG={ar:'ar',hi:'en',ur:'en',ta:'en',gu:'en',ml:'en'};   /* Tradays has no Hindi/Urdu → stays English */
+if(typeof window.injectTV==='function'){
+  const _tv=window.injectTV;
+  window.injectTV=function(c,type,cfg){
+    if(LANG!=='en'&&cfg&&cfg.locale)cfg.locale=TVLOC[LANG];
+    return _tv.apply(this,arguments);
+  };
+}
+if(typeof window.injectEcoCal==='function'){
+  const _ec=window.injectEcoCal;
+  window.injectEcoCal=function(){
+    const js=JSON.stringify;
+    JSON.stringify=function(o){
+      if(LANG!=='en'&&o&&o.fw==='html'&&o.lang==='en'){
+        arguments[0]=Object.assign({},o,{lang:ECOLANG[LANG]});
+      }
+      return js.apply(this,arguments);
+    };
+    try{_ec();}finally{JSON.stringify=js;}
+  };
+}
+/* history calculator detects hand-typed prices by reading the hint text */
+if(typeof window.hFill==='function'&&typeof window.hCalc==='function'){
+  window.hRefreshAll=function(){
+    document.querySelectorAll('#hRows tr').forEach(tr=>{
+      const h=tr.querySelector('.h-hint');
+      const t=h?h.textContent:'';
+      if(t!=='manual price'&&t!==MANUAL.ar&&t!==MANUAL.hi&&t!==MANUAL.ur&&t!==MANUAL.ta&&t!==MANUAL.gu&&t!==MANUAL.ml)window.hFill(tr);
+    });
+    window.hCalc();
+  };
+}
+
+/* ═══════════ 6. FONTS + LANGUAGE PICKER ═══════════ */
+const FONTS={
+  ar:'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap',
+  hi:'https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700;800&display=swap',
+  ur:'https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;700&display=swap',
+  ta:'https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700;800&display=swap',
+  gu:'https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;700;800&display=swap',
+  ml:'https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;700;800&display=swap'
+};
+const fontDone={};
+function loadFont(l){
+  if(!FONTS[l]||fontDone[l])return;fontDone[l]=1;
+  const k=document.createElement('link');k.rel='stylesheet';k.href=FONTS[l];document.head.appendChild(k);
+}
+const sel=document.createElement('select');
+sel.id='gbLangBtn';sel.className='pill';sel.setAttribute('data-nolang','');
+sel.setAttribute('aria-label','Language / اللغة / भाषा / زبان / மொழி / ભાષા / ഭാഷ');sel.title='Language / اللغة / भाषा / زبان / மொழி';
+LANGS.forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=LABEL[l];sel.appendChild(o);});
+sel.addEventListener('change',()=>setLang(sel.value,true));
+const hr=document.querySelector('.hdr-r');
+if(hr)hr.insertBefore(sel,hr.firstChild);
+else{sel.style.cssText='position:fixed;top:10px;left:10px;z-index:300';document.body.appendChild(sel);}
+
+function setLang(l,reload){
+  if(LANGS.indexOf(l)<0)l='en';
+  restore();                       /* always go back to English first … */
+  LANG=l;
+  const h=document.documentElement;
+  h.lang=l;h.dir=RTL[l]?'rtl':'ltr';
+  try{localStorage.setItem(LS_KEY,l);}catch(e){}
+  if(l!=='en'){loadFont(l);walk(document.body);}   /* … then translate from English */
+  document.title=TITLES[l];
+  sel.value=l;
+  if(reload&&typeof window.loadWidgets==='function'){try{window.loadWidgets();}catch(e){}}
+}
+window.GBLang={set:l=>setLang(l,true),get:()=>LANG};
+
+/* ═══════════ 7. INIT ═══════════ */
+setLang(LANG,LANG!=='en');
+})();
+</script>
 </body>
 </html>
