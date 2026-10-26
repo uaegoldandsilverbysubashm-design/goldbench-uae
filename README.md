@@ -2,7 +2,7 @@
 
 **Live precious metals dashboard for the UAE** — gold, silver, platinum and palladium rates in AED, with jeweller-grade calculators, all in a single HTML file.
 
-**Live site:** https://uaegoldandsilverbysubashm-design.github.io/goldbench-uae/
+**Live site:** (https://goldbenchuae.vercel.app/)
 
 ## Languages
 
