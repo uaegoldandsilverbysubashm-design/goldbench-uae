@@ -1,45 +1,54 @@
 # GoldBench UAE
 
-A live precious-metals dashboard for the UAE: gold, silver and platinum rates in AED, plus jewellery pricing calculators and a historical gold price calculator.
+**Live precious metals dashboard for the UAE** — gold, silver, platinum and palladium rates in AED, with jeweller-grade calculators, all in a single HTML file.
 
-🔗 **Live site:** https://goldbenchuae.vercel.app
+**Live site:** https://uaegoldandsilverbysubashm-design.github.io/goldbench-uae/
 
-> **For educational and research purposes only.** See the [Disclaimer](#disclaimer).
+## Languages
+
+Pick a language from the dropdown in the header. English is the default; your choice is remembered in your browser.
+
+| # | Language | Direction |
+|---|----------|-----------|
+| 1 | English | LTR |
+| 2 | العربية (Arabic) | RTL |
+| 3 | हिन्दी (Hindi) | LTR |
+| 4 | ગુજરાતી (Gujarati) | LTR |
+| 5 | தமிழ் (Tamil) | LTR |
+| 6 | മലയാളം (Malayalam) | LTR |
+| 7 | اردو (Urdu) | RTL |
+
+Everything on the page translates, including text that updates live (clock, "5m ago", results, toasts). Arabic and Urdu switch the layout to right-to-left. Numbers stay as Western digits (0–9).
+
+**Limits:** downloaded PDFs are English only; the economic calendar is English except in Arabic; TradingView charts use English (India) for Hindi, Gujarati, Tamil and Malayalam.
 
 ## Features
-- **Live rates**: gold, silver and platinum spot prices (USD/oz) converted to AED per gram, by karat
-- **Rate Calculator**: gold value, making charges and VAT for any weight and karat
-- **Weight Converter**: grams, ounces, tola and more
-- **History Calc**: price lookup for any past date with a multi-row quote table (gold value, making charges, VAT, grand total)
-  - Today: live spot price
-  - Past dates: daily close, falling back to monthly averages back to 1833
-- Dark and light themes, mobile-friendly layout
+
+- Live gold, silver, platinum, palladium (and copper reference) prices in AED, USD, per gram, tola, troy ounce, pavan and more
+- Market status, trading sessions and countdowns (Dubai time)
+- Market indicators: gold/silver ratio and bid–ask spreads
+- Rate calculator with making charge, discount and UAE 5% VAT, with PDF quotation
+- Historical gold calculator (daily closes and monthly averages back to 1833)
+- Karat tools: karat conversion, alloy mix, silver purity, scrap valuation, assay (AU%) converter, melting loss, jewellery order estimator
+- Currency converter (40+ currencies)
+- TradingView charts and economic calendar
+- Dark / light theme, mobile friendly
+
+## Usage
+
+No build step. Open `index.html` in a browser, or use the GitHub Pages link above.
+
+To host it yourself, copy `index.html` to any static host. To publish on GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / root**.
 
 ## Data sources
-- Live spot: Swissquote (primary), gold-api.com (fallback)
-- Historical: Alpha Vantage `GOLD_SILVER_HISTORY` plus embedded monthly and daily data
-- Charts: TradingView; economic calendar: Tradays (MQL5)
-- AED peg: 1 USD = 3.6725 AED
 
-## Calculation
-```
-price per gram = USD/oz × 3.6725 ÷ 31.1035 × (karat ÷ 24)
-total          = (gold value + making charges) + 5% VAT
-```
-
-## Tech
-A single static `index.html` with no build step, hosted on Vercel. Pushes to `main` deploy automatically.
-
-## Updating
-1. Edit or replace `index.html` in this repository.
-2. Commit to `main`. Vercel redeploys within about a minute.
-3. Hard refresh the site (Ctrl+Shift+R) to see the change.
-
-## Security
-See [SECURITY.md](SECURITY.md) for how to report a vulnerability.
+Swissquote / Gold-API.com (fallback) for live prices · Alpha Vantage for history · fawazahmed0 Exchange API for currencies · TradingView for charts · Tradays (MQL5) for the calendar.
 
 ## Disclaimer
-GoldBench UAE is built **purely for educational and research purposes**. Rates and calculations are indicative only and are not financial, investment or trading advice. Do not use them as the basis for buying, selling or pricing real transactions. Always confirm against an official trading, refinery or exchange rate. The author accepts no liability for decisions made using this tool.
+
+For general information and education only. Not financial, investment or trading advice. Prices are indicative and may differ from actual dealer rates. UAE VAT calculations follow Federal Decree-Law No. 8 of 2017 and Cabinet Decision No. 127 of 2024. Consult a qualified financial advisor or FTA-registered tax agent before making investment or tax decisions. Use at your own risk.
 
 ## Credits
-Idea and coded by **Subash M**. © 2025–2026 Subash M. All rights reserved.
+
+Idea and coded by **Subash M**.
+© 2025–2026 Subash M. All rights reserved.
